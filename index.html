@@ -1,1952 +1,1057 @@
-function selectOption(option, index) {
-            // Eliminar la clase seleccionada de todas las opciones
-            const options = document.querySelectorAll('.option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            
-            // Añadir clase seleccionada a la opción clickeada
-            option.classList.add('selected');
-            
-            // Guardar respuesta
-            userAnswers[currentQuestion] = index;
-            
-            // Habilitar botón siguiente
-            document.getElementById('next-button').disabled = false;
-        }
-        
-        function nextQuestion() {
-            if (currentQuestion < quizData.length - 1) {
-                currentQuestion++;
-                displayQuestion();
-            }
-        }
-        
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                displayQuestion();
-            }
-        }
-        
-        function showResults() {
-            document.getElementById('questions').style.display = 'none';
-            document.getElementById('results').style.display = 'block';
-            
-            // Calcular puntuaciones por dimensión
-            const dimensions = ["Liderazgo", "Estrategia", "Cultura", "Operaciones", "Tecnología", "Finanzas", "Clientes", "Innovación"];
-            const scores = dimensions.map(dim => {
-                const relevantQuestions = quizData.filter(q => q.dimension === dim);
-                if (relevantQuestions.length === 0) return 0;
-                
-                let total = 0;
-                relevantQuestions.forEach((q, i) => {
-                    const questionIndex = quizData.indexOf(q);
-                    if (userAnswers[questionIndex] !== undefined) {
-                        total += q.scores[userAnswers[questionIndex]];
-                    }
-                });
-                
-                return relevantQuestions.length > 0 ? Math.round((total / relevantQuestions.length) * 25) : 0;
-            });
-            
-            // Generar gráfico de resultados
-            createResultChart(dimensions, scores);
-            
-            // Generar recomendaciones basadas en puntuaciones
-            generateRecommendations(dimensions, scores);
-        }
-        
-        function createResultChart(dimensions, scores) {
-            // Crear un contenedor para el gráfico
-            const chartContainer = document.querySelector('.result-chart');
-            chartContainer.innerHTML = '';
-            
-            // Crear un elemento canvas para el gráfico
-            const canvas = document.createElement('canvas');
-            canvas.id = 'octagon-chart';
-            canvas.width = 400;
-            canvas.height = 400;
-            chartContainer.appendChild(canvas);
-            
-            // Dibujar el gráfico
-            const ctx = canvas.getContext('2d');
-            
-            // Configuración
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const maxRadius = Math.min(centerX, centerY) - 20;
-            
-            // Dibujar fondo del gráfico
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, maxRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = '#e8f0fe';
-            ctx.fill();
-            
-            // Dibujar círculos de referencia
-            for (let i = 1; i <= 4; i++) {
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, maxRadius * i / 4, 0, 2 * Math.PI);
-                ctx.strokeStyle = '#ccc';
-                ctx.stroke();
-            }
-            
-            // Dibujar líneas radiales
-            for (let i = 0; i < dimensions.length; i++) {
-                const angle = (i * 2 * Math.PI / dimensions.length) - Math.PI / 2;
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.lineTo(
-                    centerX + maxRadius * Math.cos(angle),
-                    centerY + maxRadius * Math.sin(angle)
-                );
-                ctx.strokeStyle = '#ccc';
-                ctx.stroke();
-                
-                // Añadir etiquetas de dimensiones
-                const labelX = centerX + (maxRadius + 15) * Math.cos(angle);
-                const labelY = centerY + (maxRadius + 15) * Math.sin(angle);
-                
-                ctx.save();
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#1a73e8';
-                ctx.font = 'bold 12px Arial';
-                ctx.fillText(dimensions[i], labelX, labelY);
-                ctx.restore();
-            }
-            
-            // Dibujar puntuaciones
-            ctx.beginPath();
-            for (let i = 0; i < dimensions.length; i++) {
-                const angle = (i * 2 * Math.PI / dimensions.length) - Math.PI / 2;
-                const score = scores[i] / 100; // Normalizar a 0-1
-                
-                const pointX = centerX + maxRadius * score * Math.cos(angle);
-                const pointY = centerY + maxRadius * score * Math.sin(angle);
-                
-                if (i === 0) {
-                    ctx.moveTo(pointX, pointY);
-                } else {
-                    ctx.lineTo(pointX, pointY);
-                }
-            }
-            
-            // Cerrar y dibujar polígono de puntuación
-            ctx.closePath();
-            ctx.fillStyle = 'rgba(26, 115, 232, 0.3)';
-            ctx.fill();
-            ctx.strokeStyle = '#1a73e8';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            // Añadir puntos en cada vértice
-            for (let i = 0; i < dimensions.length; i++) {
-                const angle = (i * 2 * Math.PI / dimensions.length) - Math.PI / 2;
-                const score = scores[i] / 100; // Normalizar a 0-1
-                
-                const pointX = centerX + maxRadius * score * Math.cos(angle);
-                const pointY = centerY + maxRadius * score * Math.sin(angle);
-                
-                ctx.beginPath();
-                ctx.arc(pointX, pointY, 5, 0, 2 * Math.PI);
-                ctx.fillStyle = '#1a73e8';
-                ctx.fill();
-            }
-        }
-        
-        function generateRecommendations(dimensions, scores) {
-            const recommendationContent = document.getElementById('recommendation-content');
-            recommendationContent.innerHTML = '';
-            
-            // Encontrar las dimensiones más bajas (áreas de mejora)
-            const sortedDimensions = [...dimensions];
-            const sortedScores = [...scores];
-            
-            // Crear pares de dimensión-puntuación y ordenar por puntuación
-            const pairs = dimensions.map((dim, i) => ({ dimension: dim, score: scores[i] }));
-            pairs.sort((a, b) => a.score - b.score);
-            
-            // Crear recomendaciones para las 3 dimensiones más bajas
-            const lowDimensions = pairs.slice(0, 3);
-            
-            // Título principal
-            const title = document.createElement('h4');
-            title.textContent = 'Áreas Prioritarias de Mejora';
-            title.style.marginBottom = '15px';
-            title.style.color = 'var(--primary-color)';
-            recommendationContent.appendChild(title);
-            
-            // Introducción
-            const intro = document.createElement('p');
-            intro.textContent = 'Basado en su evaluación, hemos identificado las siguientes áreas donde su organización podría beneficiarse más de nuestro Modelo de Octágono:';
-            intro.style.marginBottom = '20px';
-            recommendationContent.appendChild(intro);
-            
-            // Crear recomendaciones para cada dimensión baja
-            lowDimensions.forEach(pair => {
-                const dimensionRecommendation = document.createElement('div');
-                dimensionRecommendation.className = 'dimension-recommendation';
-                dimensionRecommendation.style.marginBottom = '20px';
-                
-                const dimensionTitle = document.createElement('h5');
-                dimensionTitle.textContent = pair.dimension;
-                dimensionTitle.style.color = 'var(--primary-color)';
-                dimensionTitle.style.marginBottom = '5px';
-                dimensionRecommendation.appendChild(dimensionTitle);
-                
-                const dimensionScore = document.createElement('div');
-                dimensionScore.className = 'dimension-score';
-                dimensionScore.textContent = `Puntuación: ${pair.score}%`;
-                dimensionScore.style.marginBottom = '10px';
-                dimensionScore.style.fontWeight = 'bold';
-                dimensionRecommendation.appendChild(dimensionScore);
-                
-                const recommendations = document.createElement('p');
-                
-                // Personalizar recomendaciones según la dimensión
-                switch(pair.dimension) {
-                    case 'Liderazgo':
-                        recommendations.textContent = 'Recomendamos implementar programas de desarrollo de liderazgo, mejorar la comunicación entre directivos y equipos, y establecer mecanismos claros de responsabilidad y rendición de cuentas.';
-                        break;
-                    case 'Estrategia':
-                        recommendations.textContent = 'Considere desarrollar un proceso formal de planificación estratégica, con revisiones trimestrales y KPIs claramente definidos. Involucre a más niveles de la organización en el proceso estratégico.';
-                        break;
-                    case 'Cultura':
-                        recommendations.textContent = 'Trabaje en definir y comunicar valores organizacionales claros, implementar programas de reconocimiento que refuercen estos valores, y crear espacios para el feedback continuo entre todos los niveles.';
-                        break;
-                    case 'Operaciones':
-                        recommendations.textContent = 'Identifique y elimine cuellos de botella en sus procesos, implemente metodologías de mejora continua, y asegúrese de que sus operaciones estén alineadas con su estrategia general.';
-                        break;
-                    case 'Tecnología':
-                        recommendations.textContent = 'Realice una auditoría de su stack tecnológico actual, identifique oportunidades para la automatización y digitalización, y desarrolle un roadmap tecnológico alineado con sus objetivos estratégicos.';
-                        break;
-                    case 'Finanzas':
-                        recommendations.textContent = 'Mejore la transparencia financiera dentro de la organización, implemente herramientas de análisis financiero más robustas, y alinee su presupuesto con sus prioridades estratégicas.';
-                        break;
-                    case 'Clientes':
-                        recommendations.textContent = 'Establezca mecanismos sistemáticos para recoger y actuar sobre el feedback de los clientes, mejore sus procesos de servicio al cliente, y desarrolle indicadores claros de satisfacción del cliente.';
-                        break;
-                    case 'Innovación':
-                        recommendations.textContent = 'Cree espacios dedicados para la innovación, implemente procesos para capturar y evaluar nuevas ideas, y fomente una cultura donde la experimentación sea valorada y el fracaso sea visto como aprendizaje.';
-                        break;
-                    default:
-                        recommendations.textContent = 'Trabajar con nuestros consultores para desarrollar un plan personalizado de mejora en esta área.';
-                }
-                
-                dimensionRecommendation.appendChild(recommendations);
-                recommendationContent.appendChild(dimensionRecommendation);
-            });
-            
-            // Llamada a la acción
-            const cta = document.createElement('div');
-            cta.className = 'recommendation-cta';
-            cta.style.marginTop = '30px';
-            cta.style.textAlign = 'center';
-            
-            const ctaMessage = document.createElement('p');
-            ctaMessage.textContent = 'Para un análisis más detallado y un plan de implementación personalizado, póngase en contacto con nuestro equipo de consultores:';
-            ctaMessage.style.marginBottom = '15px';
-            cta.appendChild(ctaMessage);
-            
-            const ctaButton = document.createElement('a');
-            ctaButton.href = '#contact';
-            ctaButton.className = 'cta-button';
-            ctaButton.textContent = 'Solicitar Consulta';
-            ctaButton.style.display = 'inline-block';
-            cta.appendChild(ctaButton);
-            
-            recommendationContent.appendChild(cta);
-        }
-
-        // Chat functionality with GROQ integration
-        // Variables para la configuración de GROQ
-        const GROQ_API_KEY = ""; // Aquí deberás colocar tu API key de GROQ
-        const GROQ_MODEL = "llama3-70b-8192"; // Modelo a utilizar
-        
-        // Documentos de conocimiento para el chatbot
-        const knowledgeBase = [
-            {
-                title: "Modelo de Octágono",
-                content: "El Modelo de Octágono de Sage-Wise es un marco integrado que equilibra ocho dimensiones críticas de excelencia organizacional: Liderazgo, Estrategia, Cultura, Operaciones, Tecnología, Finanzas, Clientes e Innovación. Cada dimensión representa un componente vital para el éxito sostenible de una organización. El modelo se basa en el principio de que estas dimensiones están interconectadas y deben abordarse de manera holística para lograr una transformación organizacional efectiva."
-            },
-            {
-                title: "Liderazgo",
-                content: "En el Modelo de Octágono, el Liderazgo establece la visión, inspira al equipo y conduce el cambio organizacional. Los líderes efectivos crean una cultura de responsabilidad, fomentan la innovación y aseguran el alineamiento estratégico en toda la organización. El liderazgo efectivo no se trata solo de dar órdenes, sino de empoderar a los equipos, facilitar la colaboración y modelar los valores que desean ver en la organización."
-            },
-            {
-                title: "Estrategia",
-                content: "La dimensión de Estrategia del Modelo de Octágono define la dirección a largo plazo y establece cómo la organización alcanzará sus objetivos. Incluye la planificación estratégica, el análisis competitivo, la gestión de riesgos y la asignación de recursos. Una estrategia efectiva debe ser clara, comunicable, adaptable a cambios en el entorno y alineada con las capacidades organizacionales."
-            },
-            {
-                title: "Cultura",
-                content: "La Cultura en el Modelo de Octágono representa los valores, comportamientos y prácticas compartidas que definen el entorno de trabajo. Una cultura organizacional sólida mejora el compromiso de los empleados, promueve la colaboración y facilita la adaptación al cambio. La cultura debe ser intencionalmente diseñada y constantemente reforzada a través de sistemas, políticas y comportamientos de liderazgo."
-            },
-            {
-                title: "Operaciones",
-                content: "Las Operaciones en el Modelo de Octágono se refieren a cómo la organización entrega valor a través de sus procesos, sistemas y estructuras. Operaciones efectivas maximizan la eficiencia, mantienen la calidad y responden ágilmente a las necesidades cambiantes. Esto incluye gestión de procesos, cadena de suministro, producción, entrega de servicios y gestión de la calidad."
-            },
-            {
-                title: "Tecnología",
-                content: "La dimensión de Tecnología en el Modelo de Octágono abarca las herramientas, sistemas y capacidades digitales que potencian a la organización. Una estrategia tecnológica efectiva habilita la innovación, mejora la eficiencia operativa y crea ventajas competitivas. Incluye infraestructura de TI, arquitectura de sistemas, gestión de datos, herramientas de colaboración, automatización y tecnologías emergentes."
-            },
-            {
-                title: "Finanzas",
-                content: "Las Finanzas en el Modelo de Octágono representan la gestión de recursos económicos y la creación de valor financiero sostenible. Una gestión financiera sólida proporciona los recursos necesarios para ejecutar la estrategia, mide el rendimiento y asegura la sostenibilidad a largo plazo. Incluye planificación financiera, gestión de presupuesto, contabilidad, inversiones, financiamiento y análisis financiero."
-            },
-            {
-                title: "Clientes",
-                content: "La dimensión de Clientes en el Modelo de Octágono se enfoca en entender, atraer y retener a los clientes a través de experiencias excepcionales. Una orientación sólida hacia el cliente promueve la lealtad, aumenta la retención y conduce al crecimiento orgánico. Incluye investigación de mercado, diseño de experiencia del cliente, gestión de relaciones con clientes, servicio al cliente y análisis de comportamiento de clientes."
-            },
-            {
-                title: "Innovación",
-                content: "La Innovación en el Modelo de Octágono impulsa la evolución y renovación continua de la organización. Una cultura de innovación efectiva facilita la adaptación al cambio, crea nuevas fuentes de valor y mantiene la relevancia en mercados dinámicos. Incluye gestión de la innovación, desarrollo de nuevos productos/servicios, experimentación, I+D, y fomento de la creatividad organizacional."
-            },
-            {
-                title: "Interconexiones del Modelo",
-                content: "En el Modelo de Octágono, cada dimensión está conectada con las adyacentes, creando conexiones críticas que deben gestionarse. Por ejemplo, el Liderazgo Estratégico conecta la visión con la ejecución, la Cultura Operativa asegura que los valores se reflejen en los procesos diarios, y la Innovación Centrada en el Cliente garantiza que las nuevas soluciones respondan a necesidades reales del mercado. Estas interconexiones son tan importantes como las dimensiones individuales."
-            },
-            {
-                title: "Metodología de Implementación",
-                content: "La metodología Sage-Wise para implementar el Modelo de Octágono sigue cinco fases: 1) Diagnóstico: evaluación detallada del estado actual en las ocho dimensiones. 2) Visión: definición del estado futuro deseado. 3) Planificación: desarrollo de iniciativas específicas para cerrar brechas. 4) Implementación: ejecución de iniciativas con gestión de cambio efectiva. 5) Sostenibilidad: mecanismos para mantener y evolucionar los cambios. Este enfoque sistemático garantiza transformaciones sostenibles."
-            },
-            {
-                title: "Beneficios del Modelo de Octágono",
-                content: "La implementación del Modelo de Octágono de Sage-Wise genera múltiples beneficios: mayor alineamiento organizacional, mejora en la toma de decisiones, aumento de la agilidad para responder al cambio, mejora en la experiencia del cliente, incremento en la eficiencia operativa, fortalecimiento de la cultura organizacional, mayor capacidad de innovación, y resultados financieros sostenibles. Las organizaciones que implementan el modelo completo típicamente ven mejoras de rendimiento del 25-40% en indicadores clave."
-            }
-        ];
-
-        async function sendMessage() {
-            const input = document.getElementById('message-input');
-            const message = input.value.trim();
-            
-            if (message) {
-                // Mostrar mensaje del usuario
-                addMessage(message, 'user');
-                input.value = '';
-                
-                // Añadir indicador de carga
-                const loadingIndicator = document.createElement('div');
-                loadingIndicator.className = 'message bot-message';
-                loadingIndicator.id = 'loading-indicator';
-                loadingIndicator.textContent = 'Pensando...';
-                document.getElementById('chat-messages').appendChild(loadingIndicator);
-                
-                try {
-                    // Si tienes implementada la API key de GROQ, esto hará la llamada a la API
-                    if (GROQ_API_KEY) {
-                        const response = await callGROQ(message);
-                        removeLoadingIndicator();
-                        addMessage(response, 'bot');
-                    } else {
-                        // Respuesta simulada si no hay API key
-                        await simulateResponse(message);
-                    }
-                } catch (error) {
-                    console.error('Error al procesar el mensaje:', error);
-                    removeLoadingIndicator();
-                    addMessage('Lo siento, ocurrió un error al procesar tu pregunta. Por favor, intenta de nuevo.', 'bot');
-                }
-            }
-        }
-        
-        function removeLoadingIndicator() {
-            const indicator = document.getElementById('loading-indicator');
-            if (indicator) {
-                indicator.remove();
-            }
-        }
-
-        // Función para llamar a la API de GROQ
-        async function callGROQ(userMessage) {
-            // Preparar el contexto con los documentos de la base de conocimiento
-            const context = knowledgeBase.map(doc => `${doc.title}:\n${doc.content}`).join('\n\n');
-            
-            const prompt = `
-            Eres El Explicador, un asistente especializado en la metodología Sage-Wise y el Modelo de Octágono.
-            Responde preguntas basándote en la siguiente información:
-            
-            ${context}
-            
-            Pregunta del usuario: ${userMessage}
-            
-            Responde de manera clara, concisa y educada. Si la información no está en el contexto proporcionado, indícalo amablemente.
-            Usa un tono profesional pero accesible. Formatea tu respuesta para que sea fácil de leer.
-            `;
-            
-            try {
-                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GROQ_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: GROQ_MODEL,
-                        messages: [
-                            { role: "system", content: "Eres El Explicador, un asistente especializado en la metodología Sage-Wise." },
-                            { role: "user", content: prompt }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1000
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error en la API: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                return data.choices[0].message.content;
-            } catch (error) {
-                console.error('Error al llamar a la API de GROQ:', error);
-                throw error;
-            }
-        }
-        
-        // Función para simular respuestas cuando no hay API key configurada
-        async function simulateResponse(userMessage) {
-            removeLoadingIndicator();
-            
-            // Simular tiempo de respuesta
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Buscar en la base de conocimiento local
-            const lowerMessage = userMessage.toLowerCase();
-            
-            // Búsqueda más sofisticada en la base de conocimiento
-            let bestMatch = null;
-            let bestScore = 0;
-            
-            for (const doc of knowledgeBase) {
-                // Crear una puntuación simple basada en la coincidencia de palabras clave
-                const titleWords = doc.title.toLowerCase().split(/\s+/);
-                const contentWords = doc.content.toLowerCase().split(/\s+/);
-                const messageWords = lowerMessage.split(/\s+/);
-                
-                let matchScore = 0;
-                
-                // Dar más peso a las coincidencias en el título
-                for (const word of messageWords) {
-                    if (word.length < 3) continue; // Ignorar palabras muy cortas
-                    
-                    if (titleWords.some(w => w.includes(word) || word.includes(w))) {
-                        matchScore += 3;
-                    }
-                    
-                    if (contentWords.some(w => w.includes(word) || word.includes(w))) {
-                        matchScore += 1;
-                    }
-                }
-                
-                // También buscar coincidencias de frases exactas
-                if (doc.title.toLowerCase().includes(lowerMessage) || 
-                    doc.content.toLowerCase().includes(lowerMessage)) {
-                    matchScore += 5;
-                }
-                
-                if (matchScore > bestScore) {
-                    bestScore = matchScore;
-                    bestMatch = doc;
-                }
-            }
-            
-            // Si encontramos una buena coincidencia
-            if (bestMatch && bestScore > 2) {
-                let response = `${bestMatch.content}`;
-                
-                // Añadir información sobre dimensiones relacionadas si es relevante
-                if (bestMatch.title.includes("Modelo de Octágono") || 
-                    bestMatch.title.includes("Interconexiones")) {
-                    response += "\n\nSi deseas conocer más sobre alguna dimensión específica del modelo, puedes preguntarme sobre Liderazgo, Estrategia, Cultura, Operaciones, Tecnología, Finanzas, Clientes o Innovación.";
-                }
-                
-                addMessage(response, 'bot');
-                return;
-            }
-            
-            // Respuestas específicas para preguntas comunes
-            if (lowerMessage.includes('octágono') || lowerMessage.includes('octagon') || lowerMessage.includes('modelo')) {
-                addMessage("El Modelo de Octágono de Sage-Wise es un marco integrado que equilibra ocho dimensiones críticas de excelencia organizacional: Liderazgo, Estrategia, Cultura, Operaciones, Tecnología, Finanzas, Clientes e Innovación. Cada dimensión representa un componente vital para el éxito sostenible de una organización. El modelo se basa en el principio de que estas dimensiones están interconectadas y deben abordarse de manera holística para lograr una transformación organizacional efectiva.", 'bot');
-            } 
-            else if (lowerMessage.includes('liderazgo') || lowerMessage.includes('leadership')) {
-                addMessage("En el Modelo de Octágono, el Liderazgo establece la visión, inspira al equipo y conduce el cambio organizacional. Los líderes efectivos crean una cultura de responsabilidad, fomentan la innovación y aseguran el alineamiento estratégico en toda la organización. El liderazgo efectivo no se trata solo de dar órdenes, sino de empoderar a los equipos, facilitar la colaboración y modelar los valores que desean ver en la organización.", 'bot');
-            }
-            else if (lowerMessage.includes('estrategia') || lowerMessage.includes('strategy')) {
-                addMessage("La dimensión de Estrategia del Modelo de Octágono define la dirección a largo plazo y establece cómo la organización alcanzará sus objetivos. Incluye la planificación estratégica, el análisis competitivo, la gestión de riesgos y la asignación de recursos. Una estrategia efectiva debe ser clara, comunicable, adaptable a cambios en el entorno y alineada con las capacidades organizacionales.", 'bot');
-            }
-            else if (lowerMessage.includes('cultura') || lowerMessage.includes('culture')) {
-                addMessage("La Cultura en el Modelo de Octágono representa los valores, comportamientos y prácticas compartidas que definen el entorno de trabajo. Una cultura organizacional sólida mejora el compromiso de los empleados, promueve la colaboración y facilita la adaptación al cambio. La cultura debe ser intencionalmente diseñada y constantemente reforzada a través de sistemas, políticas y comportamientos de liderazgo.", 'bot');
-            }
-            else if (lowerMessage.includes('operaciones') || lowerMessage.includes('operations')) {
-                addMessage("Las Operaciones en el Modelo de Octágono se refieren a cómo la organización entrega valor a través de sus procesos, sistemas y estructuras. Operaciones efectivas maximizan la eficiencia, mantienen la calidad y responden ágilmente a las necesidades cambiantes. Esto incluye gestión de procesos, cadena de suministro, producción, entrega de servicios y gestión de la calidad.", 'bot');
-            }
-            else if (lowerMessage.includes('tecnología') || lowerMessage.includes('technology')) {
-                addMessage("La dimensión de Tecnología en el Modelo de Octágono abarca las herramientas, sistemas y capacidades digitales que potencian a la organización. Una estrategia tecnológica efectiva habilita la innovación, mejora la eficiencia operativa y crea ventajas competitivas. Incluye infraestructura de TI, arquitectura de sistemas, gestión de datos, herramientas de colaboración, automatización y tecnologías emergentes.", 'bot');
-            }
-            else if (lowerMessage.includes('finanzas') || lowerMessage.includes('finance')) {
-                addMessage("Las Finanzas en el Modelo de Octágono representan la gestión de recursos económicos y la creación de valor financiero sostenible. Una gestión financiera sólida proporciona los recursos necesarios para ejecutar la estrategia, mide el rendimiento y asegura la sostenibilidad a largo plazo. Incluye planificación financiera, gestión de presupuesto, contabilidad, inversiones, financiamiento y análisis financiero.", 'bot');
-            }
-            else if (lowerMessage.includes('clientes') || lowerMessage.includes('customers')) {
-                addMessage("La dimensión de Clientes en el Modelo de Octágono se enfoca en entender, atraer y retener a los clientes a través de experiencias excepcionales. Una orientación sólida hacia el cliente promueve la lealtad, aumenta la retención y conduce al crecimiento orgánico. Incluye investigación de mercado, diseño de experiencia del cliente, gestión de relaciones con clientes, servicio al cliente y análisis de comportamiento de clientes.", 'bot');
-            }
-            else if (lowerMessage.includes('innovación') || lowerMessage.includes('innovation')) {
-                addMessage("La Innovación en el Modelo de Octágono impulsa la evolución y renovación continua de la organización. Una cultura de innovación efectiva facilita la adaptación al cambio, crea nuevas fuentes de valor y mantiene la relevancia en mercados dinámicos. Incluye gestión de la innovación, desarrollo de nuevos productos/servicios, experimentación, I+D, y fomento de la creatividad organizacional.", 'bot');
-            }
-            else if (lowerMessage.includes('metodología') || lowerMessage.includes('methodology') || lowerMessage.includes('implementación') || lowerMessage.includes('implementation')) {
-                addMessage("La metodología Sage-Wise para implementar el Modelo de Octágono sigue cinco fases: 1) Diagnóstico: evaluación detallada del estado actual en las ocho dimensiones. 2) Visión: definición del estado futuro deseado. 3) Planificación: desarrollo de iniciativas específicas para cerrar brechas. 4) Implementación: ejecución de iniciativas con gestión de cambio efectiva. 5) Sostenibilidad: mecanismos para mantener y evolucionar los cambios. Este enfoque sistemático garantiza transformaciones sostenibles.", 'bot');
-            }
-            else if (lowerMessage.includes('beneficios') || lowerMessage.includes('benefits') || lowerMessage.includes('ventajas') || lowerMessage.includes('advantages')) {
-                addMessage("La implementación del Modelo de Octágono de Sage-Wise genera múltiples beneficios: mayor alineamiento organizacional, mejora en la toma de decisiones, aumento de la agilidad para responder al cambio, mejora en la experiencia del cliente, incremento en la eficiencia operativa, fortalecimiento de la cultura organizacional, mayor capacidad de innovación, y resultados financieros sostenibles. Las organizaciones que implementan el modelo completo típicamente ven mejoras de rendimiento del 25-40% en indicadores clave.", 'bot');
-            }
-            else if (lowerMessage.includes('hola') || lowerMessage.includes('buenos días') || lowerMessage.includes('buenas tardes') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-                addMessage("¡Hola! Soy El Explicador, tu guía especializado en la metodología Sage-Wise y el Modelo de Octágono. Puedo responder tus preguntas sobre las ocho dimensiones del modelo: Liderazgo, Estrategia, Cultura, Operaciones, Tecnología, Finanzas, Clientes e Innovación. También puedo explicarte cómo estas dimensiones se interconectan y los beneficios de implementar el modelo. ¿En qué puedo ayudarte hoy?", 'bot');
-            }
-            else if (lowerMessage.includes('gracias') || lowerMessage.includes('thank you') || lowerMessage.includes('thanks')) {
-                addMessage("¡De nada! Es un placer ayudarte a entender la metodología Sage-Wise. Si tienes más preguntas sobre el Modelo de Octágono o cualquiera de sus dimensiones, no dudes en consultarme.", 'bot');
-            }
-            else if (lowerMessage.includes('quién eres') || lowerMessage.includes('who are you') || lowerMessage.includes('qué eres') || lowerMessage.includes('what are you')) {
-                addMessage("Soy El Explicador, un asistente virtual especializado en la metodología Sage-Wise y el Modelo de Octágono. Estoy diseñado para responder tus preguntas sobre las ocho dimensiones del modelo y cómo pueden ayudar a transformar tu organización. Aunque actualmente opero en modo de simulación, con una API key de GROQ puedo ofrecer respuestas aún más detalladas y precisas.", 'bot');
-            }
-            else {
-                addMessage("Para obtener respuestas más precisas, necesito que configures tu API key de GROQ. Por ahora, puedo responder preguntas básicas sobre el Modelo de Octágono de Sage-Wise y sus dimensiones como Liderazgo, Estrategia, Cultura, Operaciones, Tecnología, Finanzas, Clientes e Innovación. ¿Hay algo específico sobre alguna de estas dimensiones que te gustaría conocer?", 'bot');
-            }
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        function addMessage(text, sender) {
-            const messagesContainer = document.getElementById('chat-messages');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-            
-            // Formatear el texto con saltos de línea
-            const formattedText = text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
-            messageElement.innerHTML = formattedText;
-            
-            messagesContainer.appendChild(messageElement);
-            
-            // Auto scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-    </script>
-</body>
-</html>                vertexDot.style.transform = `translate3d(-50%, -50%, ${z}px)`;
-                vertexDot.style.zIndex = Math.round(z) + 10;
-                vertexDot.setAttribute('data-index', i);
-                
-                // Añadir efecto de profundidad con sombras basadas en la posición Z
-                const shadowIntensity = Math.max(0, (heightOffset - z) / heightOffset);
-                vertexDot.style.boxShadow = `0 ${2 + shadowIntensity * 6}px ${3 + shadowIntensity * 7}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.2})`;
-                
-                // Eventos para el tooltip
-                vertexDot.addEventListener('mouseover', function(e) {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    tooltip.innerHTML = `<h4>${vertexLabels[index]}</h4><p>${vertexDescriptions[index]}</p>`;
-                    
-                    // Posicionar tooltip cerca del cursor
-                    const rect = octagonContainer.getBoundingClientRect();
-                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                    tooltip.style.top = (e.clientY - rect.top + 10) + 'px';
-                    
-                    // Mostrar tooltip
-                    tooltip.style.opacity = 1;
-                    tooltip.style.visibility = 'visible';
-                    
-                    // Resaltar vértice actual
-                    this.style.transform = `translate3d(-50%, -50%, ${z + 10}px) scale(1.5)`;
-                    this.style.backgroundColor = 'var(--secondary-color)';
-                    this.style.boxShadow = `0 ${4 + shadowIntensity * 8}px ${6 + shadowIntensity * 10}px rgba(26, 115, 232, 0.4)`;
-                });
-                
-                vertexDot.addEventListener('mouseout', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const z = vertices[index].z;
-                    const shadowIntensity = Math.max(0, (heightOffset - z) / heightOffset);
-                    
-                    // Restaurar vértice
-                    this.style.transform = `translate3d(-50%, -50%, ${z}px)`;
-                    this.style.backgroundColor = 'var(--primary-color)';
-                    this.style.boxShadow = `0 ${2 + shadowIntensity * 6}px ${3 + shadowIntensity * 7}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.2})`;
-                });
-                
-                octagonContainer.appendChild(vertexDot);
-                
-                // Crear etiqueta del vértice
-                const vertexLabel = document.createElement('div');
-                vertexLabel.className = 'octagon-vertex-label';
-                vertexLabel.textContent = vertexLabels[i];
-                vertexLabel.style.left = `${x * 1.2 + radius}px`;
-                vertexLabel.style.top = `${y * 1.2 + radius}px`;
-                vertexLabel.style.transform = `translate3d(-50%, -50%, ${z}px)`;
-                vertexLabel.style.zIndex = Math.round(z) + 5;
-                vertexLabel.setAttribute('data-index', i);
-                
-                // Añadir efecto 3D al texto con sombras
-                vertexLabel.style.textShadow = `0 ${1 + shadowIntensity * 2}px ${2 + shadowIntensity * 2}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.1})`;
-                
-                // Eventos para el tooltip en la etiqueta
-                vertexLabel.addEventListener('mouseover', function(e) {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    tooltip.innerHTML = `<h4>${vertexLabels[index]}</h4><p>${vertexDescriptions[index]}</p>`;
-                    
-                    // Posicionar tooltip cerca del cursor
-                    const rect = octagonContainer.getBoundingClientRect();
-                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                    tooltip.style.top = (e.clientY - rect.top + 10) + 'px';
-                    
-                    // Mostrar tooltip
-                    tooltip.style.opacity = 1;
-                    tooltip.style.visibility = 'visible';
-                    
-                    // Resaltar vértice relacionado
-                    const relatedVertex = document.querySelectorAll('.octagon-vertex')[index];
-                    const z = vertices[index].z;
-                    relatedVertex.style.transform = `translate3d(-50%, -50%, ${z + 10}px) scale(1.5)`;
-                    relatedVertex.style.backgroundColor = 'var(--secondary-color)';
-                    
-                    const shadowIntensity = Math.max(0, (heightOffset - z) / heightOffset);
-                    relatedVertex.style.boxShadow = `0 ${4 + shadowIntensity * 8}px ${6 + shadowIntensity * 10}px rgba(26, 115, 232, 0.4)`;
-                    
-                    // Resaltar etiqueta
-                    this.style.color = 'var(--secondary-color)';
-                    this.style.fontWeight = 'bold';
-                    this.style.textShadow = `0 0 3px rgba(26, 115, 232, 0.3)`;
-                });
-                
-                vertexLabel.addEventListener('mouseout', function() {
-                    // Restaurar vértice
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const relatedVertex = document.querySelectorAll('.octagon-vertex')[index];
-                    const z = vertices[index].z;
-                    relatedVertex.style.transform = `translate3d(-50%, -50%, ${z}px)`;
-                    relatedVertex.style.backgroundColor = 'var(--primary-color)';
-                    
-                    const shadowIntensity = Math.max(0, (heightOffset - z) / heightOffset);
-                    relatedVertex.style.boxShadow = `0 ${2 + shadowIntensity * 6}px ${3 + shadowIntensity * 7}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.2})`;
-                    
-                    // Restaurar etiqueta
-                    this.style.color = 'var(--primary-color)';
-                    this.style.fontWeight = 'normal';
-                    this.style.textShadow = `0 ${1 + shadowIntensity * 2}px ${2 + shadowIntensity * 2}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.1})`;
-                });
-                
-                octagonContainer.appendChild(vertexLabel);
-            }
-            
-            // Create sides
-            const sideLabels = [
-                "Liderazgo Estratégico", "Estrategia Cultural", "Cultura Operativa", 
-                "Operaciones Tecnológicas", "Tecnología Financiera", "Finanzas para Clientes", 
-                "Innovación Centrada en Cliente", "Liderazgo Innovador"
-            ];
-            
-            const sideDescriptions = [
-                "La conexión entre el liderazgo y la estrategia asegura que la visión se traduzca en planes accionables. Los líderes deben comunicar claramente la dirección estratégica y asegurar el alineamiento en toda la organización.",
-                "La estrategia cultural alinea los valores organizacionales con los objetivos comerciales. Una estrategia efectiva considera cómo la cultura apoya o dificulta la ejecución de los planes.",
-                "La cultura operativa integra valores y prácticas en los procesos diarios de trabajo. Los procedimientos operativos deben reforzar los comportamientos culturales deseados.",
-                "Las operaciones tecnológicas optimizan los procesos mediante la implementación de herramientas adecuadas. La tecnología debe integrarse en los flujos de trabajo para mejorar la eficiencia sin crear complejidad innecesaria.",
-                "La tecnología financiera mejora la gestión de recursos y la eficiencia económica. Las soluciones tecnológicas deben proporcionar visibilidad y control sobre los indicadores financieros clave.",
-                "Las finanzas centradas en el cliente priorizan inversiones que mejoran la experiencia del cliente. La asignación de recursos debe considerar el impacto en la satisfacción y retención de clientes.",
-                "La innovación centrada en el cliente desarrolla soluciones basadas en necesidades reales del mercado. La retroalimentación del cliente debe guiar el proceso de innovación y desarrollo de productos.",
-                "El liderazgo innovador fomenta la creatividad y el pensamiento disruptivo en toda la organización. Los líderes deben crear un entorno seguro para la experimentación y aprendizaje."
-            ];
-            
-            for (let i = 0; i < 8; i++) {
-                const startVertex = vertices[i];
-                const endVertex = vertices[(i + 1) % 8];
-                
-                // Crear planos 3D para los lados
-                const side = document.createElement('div');
-                side.className = 'octagon-side';
-                side.setAttribute('data-index', i);
-                
-                // Calcular longitud entre vértices
-                const length = Math.sqrt(
-                    Math.pow(endVertex.x - startVertex.x, 2) + 
-                    Math.pow(endVertex.y - startVertex.y, 2)
-                );
-                
-                const centerX = (startVertex.x + endVertex.x) / 2;
-                const centerY = (startVertex.y + endVertex.y) / 2;
-                const centerZ = (startVertex.z + endVertex.z) / 2;
-                
-                const angle = Math.atan2(
-                    endVertex.y - startVertex.y,
-                    endVertex.x - startVertex.x
-                ) * (180 / Math.PI);
-                
-                side.style.width = `${length}px`;
-                side.style.height = '30px';
-                side.style.left = `${centerX + radius - length/2}px`;
-                side.style.top = `${centerY + radius - 15}px`;
-                
-                // Aplicar transformación 3D con Z
-                const zDepth = centerZ;
-                side.style.transform = `translate3d(0, 0, ${zDepth}px) rotate(${angle}deg)`;
-                side.style.zIndex = Math.round(centerZ) + 5;
-                
-                // Aplicar sombra basada en la profundidad Z
-                const shadowIntensity = Math.max(0, (heightOffset - centerZ) / heightOffset);
-                side.style.boxShadow = `0 ${1 + shadowIntensity * 3}px ${2 + shadowIntensity * 5}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.15})`;
-                
-                // Ajustar opacidad basado en posición para efecto 3D
-                const opacityBase = 0.1 + (centerZ / (heightOffset * 2)) * 0.2;
-                side.style.backgroundColor = `rgba(26, 115, 232, ${opacityBase})`;
-                
-                // Eventos para tooltip
-                side.addEventListener('mouseover', function(e) {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    tooltip.innerHTML = `<h4>${sideLabels[index]}</h4><p>${sideDescriptions[index]}</p>`;
-                    
-                    // Posicionar tooltip cerca del cursor
-                    const rect = octagonContainer.getBoundingClientRect();
-                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                    tooltip.style.top = (e.clientY - rect.top + 10) + 'px';
-                    
-                    // Mostrar tooltip
-                    tooltip.style.opacity = 1;
-                    tooltip.style.visibility = 'visible';
-                    
-                    // Resaltar este lado
-                    this.style.backgroundColor = `rgba(26, 115, 232, ${opacityBase + 0.2})`;
-                    this.style.borderWidth = '3px';
-                    this.style.boxShadow = `0 ${2 + shadowIntensity * 4}px ${3 + shadowIntensity * 6}px rgba(26, 115, 232, 0.4)`;
-                    this.style.transform = `translate3d(0, 0, ${zDepth + 5}px) rotate(${angle}deg)`;
-                    
-                    // Resaltar etiqueta relacionada
-                    const relatedLabel = document.querySelectorAll('.octagon-side-label')[index];
-                    relatedLabel.style.color = 'var(--secondary-color)';
-                    relatedLabel.style.fontWeight = 'bold';
-                    relatedLabel.style.textShadow = '0 0 3px rgba(26, 115, 232, 0.3)';
-                });
-                
-                side.addEventListener('mouseout', function() {
-                    // Restaurar lado
-                    this.style.backgroundColor = `rgba(26, 115, 232, ${opacityBase})`;
-                    this.style.borderWidth = '2px';
-                    this.style.boxShadow = `0 ${1 + shadowIntensity * 3}px ${2 + shadowIntensity * 5}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.15})`;
-                    this.style.transform = `translate3d(0, 0, ${zDepth}px) rotate(${angle}deg)`;
-                    
-                    // Restaurar etiqueta
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const relatedLabel = document.querySelectorAll('.octagon-side-label')[index];
-                    relatedLabel.style.color = 'var(--primary-color)';
-                    relatedLabel.style.fontWeight = 'normal';
-                    relatedLabel.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.1)';
-                });
-                
-                octagonContainer.appendChild(side);
-                
-                // Crear etiqueta del lado
-                const sideLabel = document.createElement('div');
-                sideLabel.className = 'octagon-side-label';
-                sideLabel.textContent = sideLabels[i];
-                sideLabel.style.left = `${centerX + radius}px`;
-                sideLabel.style.top = `${centerY + radius - 35}px`;
-                sideLabel.setAttribute('data-index', i);
-                
-                // Aplicar posición Z para efecto 3D
-                sideLabel.style.transform = `translate3d(-50%, -50%, ${centerZ}px)`;
-                sideLabel.style.zIndex = Math.round(centerZ) + 5;
-                
-                // Aplicar sombra de texto basada en profundidad
-                sideLabel.style.textShadow = `0 ${1 + shadowIntensity * 2}px ${1 + shadowIntensity * 2}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.1})`;
-                
-                // Eventos para tooltip en la etiqueta
-                sideLabel.addEventListener('mouseover', function(e) {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    tooltip.innerHTML = `<h4>${sideLabels[index]}</h4><p>${sideDescriptions[index]}</p>`;
-                    
-                    // Posicionar tooltip cerca del cursor
-                    const rect = octagonContainer.getBoundingClientRect();
-                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                    tooltip.style.top = (e.clientY - rect.top + 10) + 'px';
-                    
-                    // Mostrar tooltip
-                    tooltip.style.opacity = 1;
-                    tooltip.style.visibility = 'visible';
-                    
-                    // Resaltar lado relacionado
-                    const relatedSide = document.querySelectorAll('.octagon-side')[index];
-                    const startVertex = vertices[index];
-                    const endVertex = vertices[(index + 1) % 8];
-                    const centerZ = (startVertex.z + endVertex.z) / 2;
-                    const zDepth = centerZ;
-                    const angle = Math.atan2(
-                        endVertex.y - startVertex.y,
-                        endVertex.x - startVertex.x
-                    ) * (180 / Math.PI);
-                    
-                    const shadowIntensity = Math.max(0, (heightOffset - centerZ) / heightOffset);
-                    const opacityBase = 0.1 + (centerZ / (heightOffset * 2)) * 0.2;
-                    
-                    relatedSide.style.backgroundColor = `rgba(26, 115, 232, ${opacityBase + 0.2})`;
-                    relatedSide.style.borderWidth = '3px';
-                    relatedSide.style.boxShadow = `0 ${2 + shadowIntensity * 4}px ${3 + shadowIntensity * 6}px rgba(26, 115, 232, 0.4)`;
-                    relatedSide.style.transform = `translate3d(0, 0, ${zDepth + 5}px) rotate(${angle}deg)`;
-                    
-                    // Resaltar esta etiqueta
-                    this.style.color = 'var(--secondary-color)';
-                    this.style.fontWeight = 'bold';
-                    this.style.textShadow = '0 0 3px rgba(26, 115, 232, 0.3)';
-                    this.style.transform = `translate3d(-50%, -50%, ${centerZ + 5}px)`;
-                });
-                
-                sideLabel.addEventListener('mouseout', function() {
-                    // Restaurar lado
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const relatedSide = document.querySelectorAll('.octagon-side')[index];
-                    
-                    const startVertex = vertices[index];
-                    const endVertex = vertices[(index + 1) % 8];
-                    const centerZ = (startVertex.z + endVertex.z) / 2;
-                    const zDepth = centerZ;
-                    const angle = Math.atan2(
-                        endVertex.y - startVertex.y,
-                        endVertex.x - startVertex.x
-                    ) * (180 / Math.PI);
-                    
-                    const shadowIntensity = Math.max(0, (heightOffset - centerZ) / heightOffset);
-                    const opacityBase = 0.1 + (centerZ / (heightOffset * 2)) * 0.2;
-                    
-                    relatedSide.style.backgroundColor = `rgba(26, 115, 232, ${opacityBase})`;
-                    relatedSide.style.borderWidth = '2px';
-                    relatedSide.style.boxShadow = `0 ${1 + shadowIntensity * 3}px ${2 + shadowIntensity * 5}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.15})`;
-                    relatedSide.style.transform = `translate3d(0, 0, ${zDepth}px) rotate(${angle}deg)`;
-                    
-                    // Restaurar esta etiqueta
-                    this.style.color = 'var(--primary-color)';
-                    this.style.fontWeight = 'normal';
-                    this.style.textShadow = `0 ${1 + shadowIntensity * 2}px ${1 + shadowIntensity * 2}px rgba(0, 0, 0, ${0.1 + shadowIntensity * 0.1})`;
-                    this.style.transform = `translate3d(-50%, -50%, ${centerZ}px)`;
-                });
-                
-                octagonContainer.appendChild(sideLabel);
-            }
-            
-            // Añadir planos superiores e inferiores para el efecto 3D completo
-            const topPlane = document.createElement('div');
-            topPlane.className = 'octagon-plane top-plane';
-            topPlane.style.width = `${radius * 1.5}px`;
-            topPlane.style.height = `${radius * 1.5}px`;
-            topPlane.style.left = `${radius * 0.25}px`;
-            topPlane.style.top = `${radius * 0.25}px`;
-            topPlane.style.transform = `translate3d(0, 0, ${heightOffset / 2}px)`;
-            topPlane.style.backgroundColor = `rgba(26, 115, 232, 0.05)`;
-            topPlane.style.borderRadius = '50%';
-            topPlane.style.zIndex = Math.round(heightOffset / 2);
-            topPlane.style.borderTop = '1px solid rgba(26, 115, 232, 0.3)';
-            topPlane.style.borderBottom = '1px solid rgba(26, 115, 232, 0.1)';
-            topPlane.style.boxShadow = 'inset 0 2px 15px rgba(26, 115, 232, 0.1)';
-            octagonContainer.appendChild(topPlane);
-            
-            const bottomPlane = document.createElement('div');
-            bottomPlane.className = 'octagon-plane bottom-plane';
-            bottomPlane.style.width = `${radius * 1.5}px`;
-            bottomPlane.style.height = `${radius * 1.5}px`;
-            bottomPlane.style.left = `${radius * 0.25}px`;
-            bottomPlane.style.top = `${radius * 0.25}px`;
-            bottomPlane.style.transform = `translate3d(0, 0, ${-heightOffset / 2}px)`;
-            bottomPlane.style.backgroundColor = `rgba(26, 115, 232, 0.03)`;
-            bottomPlane.style.borderRadius = '50%';
-            bottomPlane.style.zIndex = Math.round(-heightOffset / 2);
-            bottomPlane.style.borderTop = '1px solid rgba(26, 115, 232, 0.1)';
-            bottomPlane.style.borderBottom = '1px solid rgba(26, 115, 232, 0.3)';
-            bottomPlane.style.boxShadow = 'inset 0 -2px 15px rgba(26, 115, 232, 0.1)';
-            octagonContainer.appendChild(bottomPlane);
-        }
-        
-        // Actualizar rotación del octágono cuando cambie la vista de la ventana
-        window.addEventListener('resize', function() {
-            setTimeout(() => {
-                // Aplicar una rotación ligeramente diferente para que el usuario note que se ha recalculado
-                const octagonContainer = document.getElementById('octagon');
-                if (octagonContainer) {
-                    octagonContainer.style.transition = 'transform 1s ease-in-out';
-                    octagonContainer.style.transform = 'rotateX(63deg) rotateY(8deg) rotateZ(48deg)';
-                }
-            }, 100);
-        });
-        
-        // Añadir animación de rotación automática suave para el octágono
-        let animationId;
-        let isAutoRotating = false;
-        
-        function toggleAutoRotation() {
-            if (isAutoRotating) {
-                stopAutoRotation();
-            } else {
-                startAutoRotation();
-            }
-        }
-        
-        function startAutoRotation() {
-            if (isAutoRotating) return;
-            
-            isAutoRotating = true;
-            let rotation = { x: 60, y: 0, z: 45 };
-            let timestamp = null;
-            
-            function animate(currentTime) {
-                if (timestamp === null) {
-                    timestamp = currentTime;
-                }
-                
-                const elapsed = currentTime - timestamp;
-                timestamp = currentTime;
-                
-                // Rotar suavemente
-                rotation.z += elapsed * 0.01; // Velocidad de rotación
-                
-                const octagonContainer = document.getElementById('octagon');
-                if (octagonContainer) {
-                    octagonContainer.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`;
-                }
-                
-                animationId = requestAnimationFrame(animate);
-            }
-            
-            animationId = requestAnimationFrame(animate);
-        }
-        
-        function stopAutoRotation() {
-            if (!isAutoRotating) return;
-            
-            cancelAnimationFrame(animationId);
-            isAutoRotating = false;
-        }
-        
-        // Iniciar rotación automática después de la carga inicial y detenerla en interacción
-        document.addEventListener('DOMContentLoaded', function() {
-            // Iniciar rotación automática después de 3 segundos
-            setTimeout(() => {
-                startAutoRotation();
-            }, 3000);
-            
-            // Detener la rotación automática cuando el usuario interactúa con el octágono
-            const octagon = document.getElementById('octagon');
-            if (octagon) {
-                octagon.addEventListener('mousedown', stopAutoRotation);
-                octagon.addEventListener('touchstart', stopAutoRotation);
-            }
-        });
-
-        // Quiz functionality
-        let quizData = [
-            {
-                question: "¿Cómo calificaría el proceso de planificación estratégica de su organización?",
-                options: [
-                    "Tenemos un plan estratégico completo y actualizado regularmente",
-                    "Tenemos un plan estratégico pero no se actualiza regularmente",
-                    "Tenemos algunos objetivos estratégicos pero sin un plan formal",
-                    "Operamos sin un plan estratégico"
-                ],
-                dimension: "Estrategia",
-                scores: [4, 3, 2, 1]
-            },
-            {
-                question: "¿Cómo describiría la cultura de innovación en su organización?",
-                options: [
-                    "La innovación es parte integral de nuestra cultura y procesos diarios",
-                    "Tenemos iniciativas de innovación pero no están totalmente integradas",
-                    "Ocasionalmente implementamos nuevas ideas pero no de forma sistemática",
-                    "Raramente innovamos o implementamos cambios significativos"
-                ],
-                dimension: "Innovación",
-                scores: [4, 3, 2, 1]
-            },
-            {
-                question: "¿Cómo gestionan la experiencia del cliente en su organización?",
-                options: [
-                    "Tenemos un sistema integral para monitorear y mejorar la experiencia del cliente",
-                    "Recogemos feedback del cliente pero no siempre lo implementamos",
-                    "Ocasionalmente evaluamos la satisfacción del cliente",
-                    "No tenemos un proceso formal para gestionar la experiencia del cliente"
-                ],
-                dimension: "Clientes",
-                scores: [4, 3, 2, 1]
-            },
-            {
-                question: "¿Cómo describiría el liderazgo en su organización?",
-                options: [
-                    "Nuestros líderes son efectivos, inspiradores y promueven el desarrollo del equipo",
-                    "El liderazgo es generalmente efectivo pero hay áreas de mejora",
-                    "El liderazgo varía significativamente entre departamentos",
-                    "Tenemos problemas significativos con el liderazgo"
-                ],
-                dimension: "Liderazgo",
-                scores: [4, 3, 2, 1]
-            },
-            {
-                question: "¿Cómo calificaría la eficiencia operativa de su organización?",
-                options: [
-                    "Nuestros procesos están optimizados y mejoramos continuamente",
-                    "Somos generalmente eficientes pero hay cuellos de botella ocasionales",
-                    "Tenemos áreas de ineficiencia que afectan nuestro rendimiento",
-                    "Nuestras operaciones son ineficientes y necesitan una revisión"
-                ],
-                dimension: "Operaciones",
-                scores: [4, 3, 2, 1]
-            }
-        ];
-        
-        let currentQuestion = 0;
-        let userAnswers = [];
-        
-        function startQuiz() {
-            document.querySelector('.quiz-intro').style.display = 'none';
-            displayQuestion();
-        }
-        
-        function displayQuestion() {
-            const questionData = quizData[currentQuestion];
-            
-            const questions = document.getElementById('questions');
-            questions.innerHTML = '';
-            
-            const questionContainer = document.createElement('div');
-            questionContainer.className = 'question-container active';
-            
-            // Crear elemento para la pregunta
-            const questionElement = document.createElement('div');
-            questionElement.className = 'question';
-            questionElement.textContent = questionData.question;
-            questionContainer.appendChild(questionElement);
-            
-            // Crear contenedor de opciones
-            const optionsContainer = document.createElement('div');
-            optionsContainer.className = 'options';
-            
-            // Crear cada opción
-            questionData.options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'option';
-                optionElement.textContent = option;
-                optionElement.onclick = function() { selectOption(this, index); };
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            questionContainer.appendChild(optionsContainer);
-            
-            // Crear navegación
-            const navigation = document.createElement('div');
-            navigation.className = 'quiz-navigation';
-            
-            // Botón anterior (excepto en la primera pregunta)
-            if (currentQuestion > 0) {
-                const prevButton = document.createElement('button');
-                prevButton.className = 'quiz-button';
-                prevButton.textContent = 'Anterior';
-                prevButton.onclick = previousQuestion;
-                navigation.appendChild(prevButton);
-            }
-            
-            // Botón siguiente o finalizar
-            const nextButton = document.createElement('button');
-            nextButton.className = 'quiz-button';
-            nextButton.id = 'next-button';
-            nextButton.disabled = true; // Deshabilitado hasta que se seleccione una opción
-            
-            if (currentQuestion < quizData.length - 1) {
-                nextButton.textContent = 'Siguiente';
-                nextButton.onclick = nextQuestion;
-            } else {
-                nextButton.textContent = 'Ver Resultados';
-                nextButton.onclick = showResults;
-            }
-            
-            navigation.appendChild(nextButton);
-            questionContainer.appendChild(navigation);
-            
-            questions.appendChild(questionContainer);
-            
-            // Si ya hay una respuesta guardada para esta pregunta, seleccionarla
-            if (userAnswers[currentQuestion] !== undefined) {
-                const options = document.querySelectorAll('.option');
-                options[userAnswers[currentQuestion]].classList.add('selected');
-                document.getElementById('next-button').disabled = false;
-            }
-        }
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sage-Wise</title>
+    <title>Sage-Wise | Consultoría Empresarial</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --primary-color: #1a73e8;
             --secondary-color: #4285f4;
-            --light-blue: #e8f0fe;
-            --white: #ffffff;
-            --gray: #f8f9fa;
-            --dark-gray: #202124;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --accent-color: #0d47a1;
+            --light-color: #e8f0fe;
+            --white-color: #ffffff;
+            --dark-text: #202124;
+            --light-text: #5f6368;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--white);
-            color: var(--dark-gray);
+            background-color: var(--white-color);
+            color: var(--dark-text);
             line-height: 1.6;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        
         header {
-            background-color: var(--white);
-            box-shadow: var(--shadow);
-            position: sticky;
+            background-color: var(--white-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
             top: 0;
-            z-index: 100;
-            padding: 15px 0;
+            z-index: 1000;
         }
-
-        .nav-container {
+        
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 5%;
         }
-
+        
         .logo {
             display: flex;
             align-items: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
+            gap: 0.5rem;
         }
-
+        
         .logo img {
-            height: 40px;
-            margin-right: 10px;
+            height: 50px;
         }
-
-        .tabs {
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .nav-tabs {
             display: flex;
-            margin-top: 40px;
-            border-bottom: 1px solid #ddd;
+            list-style: none;
         }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: var(--white);
-            border: none;
-            font-size: 16px;
+        
+        .nav-tabs li {
+            margin-left: 2rem;
+        }
+        
+        .nav-tabs a {
+            text-decoration: none;
+            color: var(--light-text);
             font-weight: 500;
-            color: var(--dark-gray);
+            padding: 0.5rem 0;
             position: relative;
+            transition: color 0.3s;
         }
-
-        .tab.active {
+        
+        .nav-tabs a:hover {
             color: var(--primary-color);
         }
-
-        .tab.active::after {
+        
+        .nav-tabs a.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-tabs a.active::after {
             content: '';
             position: absolute;
-            bottom: -1px;
+            bottom: -5px;
             left: 0;
             width: 100%;
             height: 3px;
             background-color: var(--primary-color);
+            border-radius: 3px;
         }
-
+        
+        .content {
+            margin-top: 100px;
+            min-height: calc(100vh - 180px);
+            padding: 2rem 5%;
+        }
+        
         .tab-content {
             display: none;
-            padding: 30px 0;
         }
-
+        
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
-
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         /* Home Tab Styles */
-        .hero-section {
+        .intro-section {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
-
-        .hero-text {
+        
+        .intro-text {
             flex: 1;
-            padding-right: 40px;
+            min-width: 300px;
         }
-
-        .hero-text h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
+        
+        .intro-text h2 {
             color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
         }
-
-        .hero-text p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: var(--dark-gray);
+        
+        .intro-text p {
+            margin-bottom: 1rem;
+            color: var(--light-text);
+            font-size: 1.1rem;
         }
-
-        .cta-button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .cta-button:hover {
-            background-color: var(--secondary-color);
-        }
-
+        
         .octagon-model {
             flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 500px;
-            position: relative;
-        }
-
-        .octagon-container {
-            width: 400px;
+            min-width: 300px;
             height: 400px;
             position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(60deg) rotateZ(45deg);
-            transition: transform 0.3s ease;
-            cursor: grab;
-            perspective: 800px;
-        }
-
-        .octagon-container:active {
-            cursor: grabbing;
-        }
-
-        .octagon-vertex {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .octagon-vertex:hover {
-            transform: translate(-50%, -50%) scale(1.5);
-            background-color: var(--secondary-color);
-        }
-
-        .octagon-vertex-label {
-            position: absolute;
-            color: var(--primary-color);
-            font-weight: bold;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-            cursor: pointer;
-            transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
-        }
-
-        .octagon-side {
-            position: absolute;
-            background-color: rgba(26, 115, 232, 0.1);
-            border: 2px solid var(--primary-color);
-            transform-origin: center;
-            transform-style: preserve-3d;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-width 0.2s ease;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            overflow: hidden;
         }
         
-        .octagon-side:hover {
-            background-color: rgba(26, 115, 232, 0.3);
-        }
-
-        .octagon-side-label {
-            position: absolute;
-            color: var(--primary-color);
-            font-weight: bold;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-            cursor: pointer;
-            transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease, font-weight 0.2s ease;
-        }
-        
-        .octagon-plane {
-            position: absolute;
-            pointer-events: none;
-            transition: transform 0.3s ease;
-        }
-        
-        .tooltip {
-            position: absolute;
-            background-color: var(--white);
-            border: 1px solid var(--primary-color);
-            border-radius: 5px;
-            padding: 10px 15px;
-            box-shadow: var(--shadow);
-            max-width: 250px;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-            pointer-events: none;
-        }
-        
-        .tooltip h4 {
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            font-size: 16px;
-        }
-        
-        .tooltip p {
-            font-size: 14px;
-            margin: 0;
-        }
-
         .section-title {
-            font-size: 32px;
             color: var(--primary-color);
-            margin-bottom: 20px;
-            text-align: center;
+            margin: 2rem 0 1.5rem;
+            font-size: 1.8rem;
+            position: relative;
         }
-
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+        
         .success-cases {
-            margin: 60px 0;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            justify-content: space-between;
         }
-
-        .case-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
+        
         .case-card {
-            background-color: var(--light-blue);
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s;
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background-color: var(--white-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-
+        
         .case-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
-
+        
         .case-card h3 {
             color: var(--primary-color);
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
-
+        
+        .case-card p {
+            color: var(--light-text);
+            font-size: 0.95rem;
+        }
+        
         .contact-section {
-            background-color: var(--light-blue);
-            padding: 60px 0;
-            text-align: center;
-            margin: 60px 0;
-            border-radius: 8px;
+            background-color: var(--light-color);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
         }
-
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 30px;
+        
+        .contact-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
         }
-
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
         .contact-item {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
+            gap: 1rem;
         }
-
+        
         .contact-item i {
-            font-size: 24px;
+            font-size: 1.5rem;
             color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 30px 0;
+            width: 35px;
             text-align: center;
         }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        
+        .contact-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
         }
-
-        .footer-logo {
-            font-size: 20px;
-            font-weight: 700;
+        
+        .contact-info p {
+            color: var(--light-text);
         }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            color: var(--white);
-            text-decoration: none;
-        }
-
-        .copyright {
-            margin-top: 20px;
-            font-size: 14px;
-        }
-
+        
         /* Quiz Tab Styles */
         .quiz-container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: var(--light-blue);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
+            background-color: var(--white-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
         }
-
+        
         .quiz-intro {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
-
+        
         .quiz-intro h2 {
             color: var(--primary-color);
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
-
-        .question-container {
+        
+        .quiz-question {
+            margin-bottom: 2rem;
             display: none;
-            margin-bottom: 30px;
         }
-
-        .question-container.active {
+        
+        .quiz-question.active {
             display: block;
         }
-
-        .question {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-text);
         }
-
-        .options {
+        
+        .answer-options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 1rem;
         }
-
-        .option {
-            background-color: var(--white);
-            padding: 15px;
-            border-radius: 5px;
+        
+        .answer-option {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
-
-        .option:hover {
-            background-color: #e3f2fd;
+        
+        .answer-option:hover {
+            background-color: var(--light-color);
+            border-color: var(--primary-color);
         }
-
-        .option.selected {
-            background-color: var(--primary-color);
-            color: var(--white);
+        
+        .answer-option.selected {
+            background-color: var(--light-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
-
-        .quiz-navigation {
+        
+        .quiz-nav {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 2rem;
         }
-
+        
         .quiz-button {
             background-color: var(--primary-color);
-            color: var(--white);
+            color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 0.8rem 1.5rem;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             transition: background-color 0.3s;
         }
-
+        
         .quiz-button:hover {
-            background-color: var(--secondary-color);
+            background-color: var(--accent-color);
         }
-
+        
         .quiz-button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-
-        .results-container {
+        
+        .quiz-results {
             display: none;
             text-align: center;
         }
-
-        .results-container h2 {
+        
+        .quiz-results h2 {
             color: var(--primary-color);
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
-
-        .result-chart {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto 30px;
-            height: 300px;
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--shadow);
+        
+        .results-summary {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
-
-        .recommendations {
-            background-color: var(--white);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            text-align: left;
-        }
-
-        .recommendations h3 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
+        
         /* Chat Tab Styles */
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 600px;
-            background-color: var(--light-blue);
-            border-radius: 8px;
+            height: 70vh;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            box-shadow: var(--shadow);
         }
-
+        
         .chat-header {
             background-color: var(--primary-color);
-            color: var(--white);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
+            color: white;
+            padding: 1rem;
+            text-align: center;
         }
-
-        .chat-header h2 {
-            margin-left: 10px;
-        }
-
+        
         .chat-messages {
-            flex: 1;
-            padding: 20px;
+            flex-grow: 1;
+            padding: 1.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 1rem;
         }
-
+        
         .message {
             max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 16px;
-            line-height: 1.4;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
         }
-
-        .user-message {
+        
+        .message-user {
             align-self: flex-end;
             background-color: var(--primary-color);
-            color: var(--white);
-            border-bottom-right-radius: 5px;
+            color: white;
+            border-bottom-right-radius: 0;
         }
-
-        .bot-message {
+        
+        .message-bot {
             align-self: flex-start;
-            background-color: var(--white);
-            color: var(--dark-gray);
-            border-bottom-left-radius: 5px;
+            background-color: var(--light-color);
+            color: var(--dark-text);
+            border-bottom-left-radius: 0;
         }
-
+        
         .chat-input {
             display: flex;
-            padding: 15px;
-            background-color: var(--white);
-            border-top: 1px solid #ddd;
+            padding: 1rem;
+            border-top: 1px solid #eee;
         }
-
+        
         .chat-input input {
-            flex: 1;
-            padding: 12px 15px;
+            flex-grow: 1;
+            padding: 0.8rem;
             border: 1px solid #ddd;
-            border-radius: 25px;
+            border-radius: 5px 0 0 5px;
             outline: none;
-            font-size: 16px;
         }
-
+        
         .chat-input button {
             background-color: var(--primary-color);
-            color: var(--white);
+            color: white;
             border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            margin-left: 10px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0 5px 5px 0;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s;
         }
-
+        
         .chat-input button:hover {
-            background-color: var(--secondary-color);
+            background-color: var(--accent-color);
         }
-
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 5%;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .footer-logo img {
+            height: 40px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .footer-logo h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero-section {
+            .header-container {
                 flex-direction: column;
+                padding: 1rem;
             }
-
-            .hero-text {
-                padding-right: 0;
-                margin-bottom: 40px;
+            
+            .nav-tabs {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-around;
             }
-
-            .octagon-model {
-                height: 400px;
+            
+            .nav-tabs li {
+                margin: 0;
             }
-
-            .contact-info {
-                flex-direction: column;
-                gap: 20px;
+            
+            .content {
+                margin-top: 140px;
+                padding: 1rem;
             }
-
-            .case-cards {
-                grid-template-columns: 1fr;
+            
+            .case-card {
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container nav-container">
+        <div class="header-container">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="Sage-Wise Logo">
-                Sage-Wise
+                <!-- Placeholder for logo image -->
+                <img src="/api/placeholder/50/50" alt="Sage-Wise Logo">
+                <h1>Sage-Wise</h1>
             </div>
+            <ul class="nav-tabs">
+                <li><a href="#home" class="tab-link active" data-tab="home">Inicio</a></li>
+                <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
+                <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
+            </ul>
         </div>
     </header>
-
-    <div class="container">
-        <div class="tabs">
-            <button class="tab active" onclick="openTab(event, 'home')">Inicio</button>
-            <button class="tab" onclick="openTab(event, 'quiz')">Diagnóstico</button>
-            <button class="tab" onclick="openTab(event, 'explicator')">El Explicador</button>
-        </div>
-
-        <!-- Home Tab Content -->
+    
+    <main class="content">
+        <!-- Home Tab -->
         <div id="home" class="tab-content active">
-            <div class="hero-section">
-                <div class="hero-text">
-                    <h1>Bienvenido a Sage-Wise</h1>
-                    <p>Ayudamos a las organizaciones a optimizar sus operaciones a través de nuestro innovador Modelo de Octágono. Nuestro enfoque equilibra ocho dimensiones críticas para garantizar un crecimiento y éxito sostenibles.</p>
-                    <a href="#contact" class="cta-button">Contáctanos</a>
+            <section class="intro-section">
+                <div class="intro-text">
+                    <h2>Bienvenido a Sage-Wise</h2>
+                    <p>Somos una consultora especializada en transformación empresarial que utiliza nuestro exclusivo modelo del octágono para diagnosticar y potenciar su organización.</p>
+                    <p>Nuestro enfoque integra aspectos estratégicos, operativos y culturales para crear soluciones que generan resultados reales y sostenibles en el tiempo.</p>
+                    <p>Con años de experiencia en múltiples sectores industriales, entendemos los desafíos únicos que enfrentan las empresas actuales y ofrecemos soluciones personalizadas que impulsan la competitividad y el crecimiento.</p>
                 </div>
-                <div class="octagon-model">
-                    <div class="octagon-container" id="octagon">
-                        <!-- Octagon will be rendered with JavaScript -->
-                    </div>
-                    <div class="tooltip" id="octagon-tooltip"></div>
+                <div class="octagon-model" id="octagon-container">
+                    <!-- 3D Octagon will be rendered here using Three.js -->
                 </div>
-            </div>
-
-            <div class="success-cases">
-                <h2 class="section-title">Casos de Éxito</h2>
-                <div class="case-cards">
-                    <div class="case-card">
-                        <h3>Global Tech Inc.</h3>
-                        <p>Implementó nuestro Modelo de Octágono para reestructurar sus operaciones, resultando en un aumento del 35% en productividad y una reducción del 28% en costos operativos en 6 meses.</p>
-                    </div>
-                    <div class="case-card">
-                        <h3>HealthCare Solutions</h3>
-                        <p>Aplicó nuestra metodología para optimizar los procesos de atención al paciente, mejorando los puntajes de satisfacción en un 42% y reduciendo la carga administrativa en un 25%.</p>
-                    </div>
-                    <div class="case-card">
-                        <h3>Finance Partners</h3>
-                        <p>Utilizó nuestro Modelo de Octágono para redefinir su experiencia de cliente, logrando un aumento del 53% en retención de clientes y un crecimiento del 31% en ingresos.</p>
-                    </div>
+            </section>
+            
+            <h2 class="section-title">Casos de Éxito</h2>
+            <section class="success-cases">
+                <div class="case-card">
+                    <h3>Empresa Tecnológica</h3>
+                    <p>Implementamos nuestro modelo de diagnóstico en una empresa de software con 200 empleados, identificando brechas en su estructura organizacional. Tras aplicar nuestras recomendaciones, lograron un incremento del 35% en productividad y reducción del 20% en rotación de personal en solo 8 meses.</p>
                 </div>
-            </div>
-
-            <div id="contact" class="contact-section">
-                <h2 class="section-title">Contáctanos</h2>
-                <div class="contact-info">
+                <div class="case-card">
+                    <h3>Manufacturera Industrial</h3>
+                    <p>Una empresa manufacturera enfrentaba problemas de eficiencia operativa. Utilizando el modelo del octágono, diagnosticamos puntos críticos en sus procesos y capacitamos a sus líderes. Como resultado, optimizaron su cadena de producción reduciendo costos en un 18% y mejorando la calidad del producto en un 25%.</p>
+                </div>
+                <div class="case-card">
+                    <h3>Empresa de Servicios Financieros</h3>
+                    <p>Una institución financiera buscaba mejorar su experiencia de cliente. Nuestro diagnóstico reveló oportunidades de mejora en procesos internos y cultura organizacional. Tras implementar nuestro plan estratégico, aumentaron su índice de satisfacción de clientes de 72% a 94% en un año.</p>
+                </div>
+            </section>
+            
+            <section class="contact-section">
+                <h2>Contacto</h2>
+                <div class="contact-grid">
                     <div class="contact-item">
-                        <i>📧</i>
-                        <span>info@sage-wise.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <i>📞</i>
-                        <span>+1 (555) 123-4567</span>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="contact-info">
+                            <h3>Dirección</h3>
+                            <p>Av. Insurgentes Sur 1602, Ciudad de México, México</p>
+                        </div>
                     </div>
                     <div class="contact-item">
-                        <i>📍</i>
-                        <span>Av. Innovación 123, Suite 500, Ciudad Empresarial</span>
+                        <i class="fas fa-phone-alt"></i>
+                        <div class="contact-info">
+                            <h3>Teléfono</h3>
+                            <p>+52 (55) 1234-5678</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quiz Tab Content -->
-        <div id="quiz" class="tab-content">
-            <div class="quiz-container">
-                <div class="quiz-intro">
-                    <h2>Cuestionario de Diagnóstico Organizacional</h2>
-                    <p>Responda las siguientes preguntas para recibir una evaluación personalizada de la alineación de su organización con nuestro Modelo de Octágono y recomendaciones para mejorar.</p>
-                    <button class="quiz-button" onclick="startQuiz()">Iniciar Cuestionario</button>
-                </div>
-
-                <div id="questions">
-                    <!-- Questions will be dynamically added with JavaScript when you provide them -->
-                </div>
-
-                <div class="results-container" id="results">
-                    <h2>Sus Resultados</h2>
-                    <div class="result-chart">
-                        <!-- Chart will be added here -->
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="contact-info">
+                            <h3>Email</h3>
+                            <p>contacto@sage-wise.com</p>
+                        </div>
                     </div>
-                    <div class="recommendations">
-                        <h3>Recomendaciones</h3>
-                        <div id="recommendation-content">
-                            <!-- Recommendations will be added here based on quiz results -->
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="contact-info">
+                            <h3>Horario</h3>
+                            <p>Lunes a Viernes: 9:00 - 18:00</p>
                         </div>
                     </div>
                 </div>
+            </section>
+        </div>
+        
+        <!-- Quiz Tab -->
+        <div id="quiz" class="tab-content">
+            <div class="quiz-container">
+                <div class="quiz-intro">
+                    <h2>Diagnóstico Organizacional</h2>
+                    <p>Complete este cuestionario para recibir una evaluación preliminar de su organización basada en nuestro modelo del octágono. Los resultados le ayudarán a identificar áreas de oportunidad para mejorar el desempeño de su empresa.</p>
+                </div>
+                
+                <!-- Quiz content will be dynamically populated -->
+                <div id="quiz-content">
+                    <div class="quiz-question active" data-question="1">
+                        <p class="question-text">Pregunta 1: ¿Placeholder para la primera pregunta del diagnóstico?</p>
+                        <div class="answer-options">
+                            <div class="answer-option" data-value="a">Opción A: Placeholder para respuesta</div>
+                            <div class="answer-option" data-value="b">Opción B: Placeholder para respuesta</div>
+                            <div class="answer-option" data-value="c">Opción C: Placeholder para respuesta</div>
+                            <div class="answer-option" data-value="d">Opción D: Placeholder para respuesta</div>
+                        </div>
+                    </div>
+                    
+                    <!-- More questions will be added dynamically -->
+                    
+                    <div class="quiz-nav">
+                        <button id="prev-btn" class="quiz-button" disabled>Anterior</button>
+                        <button id="next-btn" class="quiz-button">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div id="quiz-results" class="quiz-results">
+                    <h2>Resultados de su Diagnóstico</h2>
+                    <div class="results-summary">
+                        <p>Basado en sus respuestas, hemos identificado las siguientes áreas de oportunidad en su organización:</p>
+                    </div>
+                    <div id="results-detail">
+                        <!-- Results will be populated here -->
+                    </div>
+                    <button id="restart-btn" class="quiz-button">Realizar Diagnóstico Nuevamente</button>
+                </div>
             </div>
         </div>
-
-        <!-- Explicator Tab Content -->
-        <div id="explicator" class="tab-content">
+        
+        <!-- Chat Tab -->
+        <div id="chat" class="tab-content">
+            <div class="chat-intro">
+                <h2>El Explicador</h2>
+                <p>Nuestro asistente virtual responderá sus consultas sobre metodologías de consultoría, transformación organizacional y nuestro modelo del octágono. El Explicador tiene acceso a nuestra base de conocimientos y puede proporcionar información detallada sobre cómo implementar mejoras en su organización.</p>
+            </div>
+            
             <div class="chat-container">
                 <div class="chat-header">
-                    <img src="/api/placeholder/30/30" alt="Icono del Explicador">
-                    <h2>El Explicador</h2>
+                    <h3>El Explicador - Asistente Virtual</h3>
                 </div>
                 <div class="chat-messages" id="chat-messages">
-                    <div class="message bot-message">
-                        ¡Hola! Soy El Explicador, tu guía para comprender la metodología Sage-Wise. ¿En qué puedo ayudarte hoy?
+                    <div class="message message-bot">
+                        ¡Hola! Soy El Explicador, tu asistente virtual. Puedes preguntarme sobre el modelo del octágono de Sage-Wise, métodos de consultoría o cualquier duda sobre transformación organizacional. ¿En qué puedo ayudarte hoy?
                     </div>
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="message-input" placeholder="Escribe tu pregunta aquí..." onkeypress="handleKeyPress(event)">
-                    <button onclick="sendMessage()">➤</button>
+                    <input type="text" id="user-message" placeholder="Escribe tu pregunta aquí...">
+                    <button id="send-message"><i class="fas fa-paper-plane"></i> Enviar</button>
                 </div>
             </div>
         </div>
-    </div>
-
+    </main>
+    
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    Sage-Wise
-                </div>
-                <div class="footer-links">
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">Términos de Servicio</a>
-                </div>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <!-- Placeholder for logo image -->
+                <img src="/api/placeholder/40/40" alt="Sage-Wise Logo">
+                <h2>Sage-Wise</h2>
             </div>
             <div class="copyright">
-                © 2025 Sage-Wise. Todos los Derechos Reservados.
+                <p>© 2025 Sage-Wise. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
-
+    
     <script>
-        // Tab functionality
-        function openTab(evt, tabName) {
-            const tabcontent = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
-            }
-
-            const tablinks = document.getElementsByClassName("tab");
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-            
-            // Guardar la pestaña activa en localStorage para mantenerla al recargar
-            localStorage.setItem('activeTab', tabName);
-        }
-        
-        // Restaurar la pestaña activa al cargar la página
+        // Tab Navigation
         document.addEventListener('DOMContentLoaded', function() {
-            const activeTab = localStorage.getItem('activeTab');
-            if (activeTab) {
-                document.getElementById(activeTab).classList.add('active');
-                document.querySelector(`.tab[onclick="openTab(event, '${activeTab}')"]`).classList.add('active');
-                
-                // Asegurarse de que solo la pestaña guardada esté activa
-                const tabcontent = document.getElementsByClassName("tab-content");
-                for (let i = 0; i < tabcontent.length; i++) {
-                    if (tabcontent[i].id !== activeTab) {
-                        tabcontent[i].classList.remove("active");
-                    }
-                }
+            const tabLinks = document.querySelectorAll('.tab-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs
+                    tabLinks.forEach(tab => tab.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to selected tab
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 3D Octagon Visualization
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            
+            const container = document.getElementById('octagon-container');
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create octagon
+            const octagonGeometry = new THREE.CylinderGeometry(1, 1, 0.2, 8);
+            const octagonMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x1a73e8,
+                transparent: true,
+                opacity: 0.8,
+                flatShading: true
+            });
+            const octagon = new THREE.Mesh(octagonGeometry, octagonMaterial);
+            scene.add(octagon);
+            
+            // Add vertices labels
+            const vertexLabels = [
+                "Estrategia", "Estructura", "Sistemas", 
+                "Personal", "Habilidades", "Estilos",
+                "Valores", "Objetivos"
+            ];
+            
+            // Helper function to create vertex labels (simplified for now)
+            // In a production environment, we would add actual text labels
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            camera.position.z = 3;
+            
+            // Animation function
+            function animate() {
+                requestAnimationFrame(animate);
+                octagon.rotation.y += 0.005;
+                renderer.render(scene, camera);
             }
             
-            createOctagon();
-
-            // Add event listeners for octagon rotation
-            const octagon = document.getElementById('octagon');
-            let isDragging = false;
-            let previousMousePosition = { x: 0, y: 0 };
-            let rotation = { x: 60, y: 0, z: 45 };
-
-            octagon.addEventListener('mousedown', function(e) {
-                if (!e.target.classList.contains('octagon-vertex') && 
-                    !e.target.classList.contains('octagon-vertex-label') && 
-                    !e.target.classList.contains('octagon-side') && 
-                    !e.target.classList.contains('octagon-side-label')) {
-                    isDragging = true;
-                    previousMousePosition = { x: e.clientX, y: e.clientY };
-                    octagon.style.cursor = 'grabbing';
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+            });
+            
+            animate();
+            
+            // Quiz functionality (placeholder - will be replaced with actual questions)
+            const quizQuestions = [
+                {
+                    text: "¿Su empresa tiene una estrategia claramente definida y comunicada a todos los niveles?",
+                    options: [
+                        { value: "a", text: "Sí, totalmente definida y comunicada efectivamente" },
+                        { value: "b", text: "Parcialmente definida pero no comunicada efectivamente" },
+                        { value: "c", text: "Definida pero no alineada con las operaciones diarias" },
+                        { value: "d", text: "No tenemos una estrategia claramente definida" }
+                    ]
+                },
+                {
+                    text: "¿Cómo calificaría la estructura organizacional de su empresa?",
+                    options: [
+                        { value: "a", text: "Claramente definida y efectiva para nuestros objetivos" },
+                        { value: "b", text: "Definida pero con algunas ineficiencias" },
+                        { value: "c", text: "Demasiado rígida y limita la innovación" },
+                        { value: "d", text: "Confusa o inexistente en algunos departamentos" }
+                    ]
+                },
+                {
+                    text: "¿Sus procesos y sistemas están documentados y optimizados?",
+                    options: [
+                        { value: "a", text: "Completamente documentados y optimizados" },
+                        { value: "b", text: "Documentados pero no optimizados" },
+                        { value: "c", text: "Parcialmente documentados" },
+                        { value: "d", text: "Apenas documentados o inexistentes" }
+                    ]
                 }
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
-                
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-                
-                rotation.z += deltaX * 0.5;
-                rotation.x += deltaY * 0.5;
-                
-                octagon.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`;
-                
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (isDragging) {
-                    octagon.style.cursor = 'grab';
+                // More questions will be added here
+            ];
+            
+            // Initialize quiz with first question
+            let currentQuestion = 0;
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const quizContent = document.getElementById('quiz-content');
+            const quizResults = document.getElementById('quiz-results');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            function loadQuizQuestions() {
+                // Clear existing questions
+                const questionsContainer = document.getElementById('quiz-content');
+                while (questionsContainer.firstChild) {
+                    questionsContainer.removeChild(questionsContainer.firstChild);
                 }
-                isDragging = false;
-            });
-            
-            // Tooltip for hover info
-            const tooltip = document.getElementById('octagon-tooltip');
-            
-            // Hide tooltip when moving away from octagon model
-            document.querySelector('.octagon-model').addEventListener('mouseleave', function() {
-                tooltip.style.opacity = 0;
-                tooltip.style.visibility = 'hidden';
-            });
-            
-            // Animación suave inicial para el octágono
-            setTimeout(() => {
-                const octagonContainer = document.getElementById('octagon');
-                octagonContainer.style.transition = 'transform 2s ease-in-out';
-                octagonContainer.style.transform = 'rotateX(65deg) rotateY(15deg) rotateZ(55deg)';
                 
-                // Volver a la transición normal después de la animación inicial
+                // Load questions dynamically
+                quizQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'quiz-question';
+                    questionDiv.dataset.question = index + 1;
+                    if (index === 0) questionDiv.classList.add('active');
+                    
+                    const questionText = document.createElement('p');
+                    questionText.className = 'question-text';
+                    questionText.textContent = `Pregunta ${index + 1}: ${question.text}`;
+                    questionDiv.appendChild(questionText);
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'answer-options';
+                    
+                    question.options.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'answer-option';
+                        optionDiv.dataset.value = option.value;
+                        optionDiv.textContent = option.text;
+                        
+                        optionDiv.addEventListener('click', function() {
+                            // Remove selected class from all options in this question
+                            optionsDiv.querySelectorAll('.answer-option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            
+                            // Add selected class to clicked option
+                            this.classList.add('selected');
+                            
+                            // Enable next button if an option is selected
+                            document.getElementById('next-btn').disabled = false;
+                        });
+                        
+                        optionsDiv.appendChild(optionDiv);
+                    });
+                    
+                    questionDiv.appendChild(optionsDiv);
+                    questionsContainer.appendChild(questionDiv);
+                });
+                
+                // Add navigation buttons
+                const navDiv = document.createElement('div');
+                navDiv.className = 'quiz-nav';
+                
+                const prevButton = document.createElement('button');
+                prevButton.id = 'prev-btn';
+                prevButton.className = 'quiz-button';
+                prevButton.textContent = 'Anterior';
+                prevButton.disabled = true;
+                
+                const nextButton = document.createElement('button');
+                nextButton.id = 'next-btn';
+                nextButton.className = 'quiz-button';
+                nextButton.textContent = 'Siguiente';
+                nextButton.disabled = true;
+                
+                navDiv.appendChild(prevButton);
+                navDiv.appendChild(nextButton);
+                questionsContainer.appendChild(navDiv);
+                
+                // Initialize event listeners for navigation
+                initQuizNavigation();
+            }
+            
+            function initQuizNavigation() {
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                let currentQuestion = 0;
+                
+                prevBtn.addEventListener('click', function() {
+                    // Hide current question
+                    document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.remove('active');
+                    
+                    // Show previous question
+                    currentQuestion--;
+                    document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.add('active');
+                    
+                    // Update buttons
+                    nextBtn.textContent = 'Siguiente';
+                    if (currentQuestion === 0) {
+                        prevBtn.disabled = true;
+                    }
+                });
+                
+                nextBtn.addEventListener('click', function() {
+                    // Hide current question
+                    document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.remove('active');
+                    
+                    // Move to next question or show results
+                    currentQuestion++;
+                    
+                    if (currentQuestion < quizQuestions.length) {
+                        // Show next question
+                        document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.add('active');
+                        
+                        // Enable/disable buttons as needed
+                        prevBtn.disabled = false;
+                        
+                        // If it's the last question, change next button text
+                        if (currentQuestion === quizQuestions.length - 1) {
+                            nextBtn.textContent = 'Ver Resultados';
+                        }
+                        
+                        // Check if an option is already selected for this question
+                        const selectedOption = document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"] .answer-option.selected`);
+                        nextBtn.disabled = !selectedOption;
+                    } else {
+                        // Show results
+                        document.getElementById('quiz-content').style.display = 'none';
+                        document.getElementById('quiz-results').style.display = 'block';
+                        generateResults();
+                    }
+                });
+                
+                // Add click event to all answer options to enable the next button
+                document.querySelectorAll('.answer-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        // Remove selected class from all options in this question
+                        const questionDiv = this.closest('.quiz-question');
+                        questionDiv.querySelectorAll('.answer-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked option
+                        this.classList.add('selected');
+                        
+                        // Enable next button
+                        nextBtn.disabled = false;
+                    });
+                });
+                
+                // Restart button
+                document.getElementById('restart-btn').addEventListener('click', function() {
+                    document.getElementById('quiz-results').style.display = 'none';
+                    document.getElementById('quiz-content').style.display = 'block';
+                    
+                    // Reset to first question
+                    document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+                    document.querySelector('.quiz-question[data-question="1"]').classList.add('active');
+                    
+                    // Clear selections
+                    document.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Reset navigation
+                    currentQuestion = 0;
+                    prevBtn.disabled = true;
+                    nextBtn.disabled = true;
+                    nextBtn.textContent = 'Siguiente';
+                });
+            }
+            
+            function generateResults() {
+                const resultsContainer = document.getElementById('results-detail');
+                resultsContainer.innerHTML = '';
+                
+                // Collect selected answers
+                const answers = [];
+                document.querySelectorAll('.quiz-question').forEach(question => {
+                    const selected = question.querySelector('.answer-option.selected');
+                    if (selected) {
+                        answers.push(selected.dataset.value);
+                    }
+                });
+                
+                // Generate fake analysis based on answers
+                // In a real implementation, this would be based on actual analysis logic
+                const areas = [
+                    { name: 'Estrategia', score: Math.floor(Math.random() * 100) },
+                    { name: 'Estructura', score: Math.floor(Math.random() * 100) },
+                    { name: 'Sistemas', score: Math.floor(Math.random() * 100) },
+                    { name: 'Personal', score: Math.floor(Math.random() * 100) },
+                    { name: 'Habilidades', score: Math.floor(Math.random() * 100) },
+                    { name: 'Estilos', score: Math.floor(Math.random() * 100) },
+                    { name: 'Valores', score: Math.floor(Math.random() * 100) },
+                    { name: 'Objetivos', score: Math.floor(Math.random() * 100) }
+                ];
+                
+                // Sort areas by score (lowest first)
+                areas.sort((a, b) => a.score - b.score);
+                
+                // Generate recommendations
+                const recommendations = document.createElement('div');
+                
+                const topStrengthsTitle = document.createElement('h3');
+                topStrengthsTitle.textContent = 'Fortalezas Principales';
+                recommendations.appendChild(topStrengthsTitle);
+                
+                const strengthsList = document.createElement('ul');
+                areas.slice(5).forEach(area => {
+                    const item = document.createElement('li');
+                    item.textContent = `${area.name}: ${area.score}% de efectividad`;
+                    strengthsList.appendChild(item);
+                });
+                recommendations.appendChild(strengthsList);
+                
+                const areasToImproveTitle = document.createElement('h3');
+                areasToImproveTitle.textContent = 'Áreas de Oportunidad';
+                recommendations.appendChild(areasToImproveTitle);
+                
+                const improveList = document.createElement('ul');
+                areas.slice(0, 3).forEach(area => {
+                    const item = document.createElement('li');
+                    item.textContent = `${area.name}: ${area.score}% de efectividad`;
+                    improveList.appendChild(item);
+                });
+                recommendations.appendChild(improveList);
+                
+                const recommendationText = document.createElement('p');
+                recommendationText.textContent = 'Basado en su diagnóstico, recomendamos enfocar sus esfuerzos de mejora en las áreas mencionadas arriba. Para una evaluación más detallada y un plan de acción personalizado, contáctenos y agendaremos una sesión de consultoría.';
+                recommendations.appendChild(recommendationText);
+                
+                resultsContainer.appendChild(recommendations);
+            }
+            
+            // Initialize quiz
+            loadQuizQuestions();
+            
+            // Chat functionality
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-message');
+            const sendButton = document.getElementById('send-message');
+            
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message message-${isUser ? 'user' : 'bot'}`;
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function handleUserMessage() {
+                const message = userInput.value.trim();
+                if (message.length === 0) return;
+                
+                // Add user message
+                addMessage(message, true);
+                userInput.value = '';
+                
+                // Simulate bot response (this would be replaced with OpenAI API calls)
                 setTimeout(() => {
-                    octagonContainer.style.transition = 'transform 0.3s ease';
-                }, 2000);
-            }, 500);
+                    // This is a placeholder - in the real implementation, 
+                    // this would send the query to OpenAI API with content from documents
+                    let botResponse = "Esta es una respuesta simulada. En la implementación real, se utilizará la API de OpenAI para generar respuestas basadas en los documentos proporcionados.";
+                    
+                    // Simple keyword matching for demo purposes
+                    if (message.toLowerCase().includes("octágono") || message.toLowerCase().includes("octagon")) {
+                        botResponse = "El modelo del octágono es nuestra metodología propietaria que analiza ocho dimensiones claves de una organización: Estrategia, Estructura, Sistemas, Personal, Habilidades, Estilos, Valores y Objetivos. Estas dimensiones están interconectadas y cualquier cambio en una afecta a las demás.";
+                    } else if (message.toLowerCase().includes("consultoría")) {
+                        botResponse = "Ofrecemos servicios de consultoría en transformación organizacional, mejora de procesos, gestión del cambio, desarrollo de liderazgo y estrategia corporativa. Cada proyecto se adapta a las necesidades específicas de nuestros clientes.";
+                    } else if (message.toLowerCase().includes("contacto") || message.toLowerCase().includes("contratar")) {
+                        botResponse = "Puede contactarnos a través de nuestro correo electrónico contacto@sage-wise.com o llamando al +52 (55) 1234-5678. Estaremos encantados de agendar una reunión inicial sin compromiso para discutir sus necesidades.";
+                    }
+                    
+                    addMessage(botResponse);
+                }, 1000);
+            }
             
-            // Añadir rotación automática con botón
-            octagonContainer.addEventListener('dblclick', toggleAutoRotation);
-            
-            // Añadir indicación de instrucciones
-            const instructions = document.createElement('div');
-            instructions.className = 'octagon-instructions';
-            instructions.innerHTML = 'Arrastra para rotar. <br>Doble clic para rotación automática.';
-            instructions.style.position = 'absolute';
-            instructions.style.bottom = '10px';
-            instructions.style.left = '50%';
-            instructions.style.transform = 'translateX(-50%)';
-            instructions.style.textAlign = 'center';
-            instructions.style.fontSize = '12px';
-            instructions.style.color = 'var(--primary-color)';
-            instructions.style.opacity = '0.8';
-            document.querySelector('.octagon-model').appendChild(instructions);
-            
-            // Auto-ocultar las instrucciones después de un tiempo
-            setTimeout(() => {
-                instructions.style.transition = 'opacity 1s ease';
-                instructions.style.opacity = '0';
-            }, 8000);
+            sendButton.addEventListener('click', handleUserMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUserMessage();
+                }
+            });
         });
-
-        function createOctagon() {
-            const octagonContainer = document.getElementById('octagon');
-            const tooltip = document.getElementById('octagon-tooltip');
-            const radius = 150;
+        
+        // This is where we would implement the OpenAI API integration
+        // For now, this is a placeholder
+        async function queryOpenAI(userQuery, documents) {
+            // In the real implementation, this function would:
+            // 1. Process the documents (Word files)
+            // 2. Send the query along with relevant document content to OpenAI API
+            // 3. Return the response
             
-            // Define vertex positions for a true 3D octagon
-            const vertices = [];
-            const vertexLabels = [
-                "Liderazgo", "Estrategia", "Cultura", "Operaciones", 
-                "Tecnología", "Finanzas", "Clientes", "Innovación"
-            ];
+            // This would use the user's API key and appropriate OpenAI model
             
-            const vertexDescriptions = [
-                "El liderazgo efectivo establece la visión, inspira al equipo y conduce el cambio organizacional. Los líderes deben equilibrar la dirección estratégica con la empatía y la comunicación clara.",
-                "La estrategia define la dirección a largo plazo y cómo alcanzar los objetivos organizacionales. Una estrategia efectiva considera tanto las fortalezas internas como las oportunidades externas.",
-                "La cultura organizacional determina los valores, comportamientos y prácticas compartidas que definen la identidad de la empresa y cómo opera en el día a día.",
-                "Las operaciones optimizan los procesos para entregar productos y servicios de manera eficiente. Los procesos operativos bien diseñados minimizan desperdicios y maximizan valor.",
-                "La tecnología potencia la innovación y mejora la eficiencia operativa. Las soluciones tecnológicas deben alinearse con los objetivos estratégicos y las necesidades de los usuarios.",
-                "Las finanzas aseguran los recursos y optimizan la gestión económica de la organización. Una gestión financiera sólida equilibra la inversión con la sostenibilidad a largo plazo.",
-                "El enfoque en clientes garantiza experiencias excepcionales y relaciones duraderas. Entender y anticipar las necesidades del cliente es fundamental para el éxito sostenible.",
-                "La innovación impulsa el desarrollo continuo de nuevos productos, servicios y procesos. Una cultura de innovación fomenta la experimentación y aprende tanto del éxito como del fracaso."
-            ];
-            
-            // Crear vértices con coordenadas 3D para un octágono regular
-            const heightOffset = 30; // Altura para el efecto 3D
-            
-            for (let i = 0; i < 8; i++) {
-                const angle = (i * Math.PI / 4); // 45 grados de intervalo
-                // Añadimos variación de altura para un efecto 3D más pronunciado
-                const z = Math.sin(i * Math.PI / 2) * heightOffset;
-                const x = radius * Math.cos(angle);
-                const y = radius * Math.sin(angle);
-                
-                vertices.push({ x, y, z });
-                
-                // Crear punto del vértice
-                const vertexDot = document.createElement('div');
-                vertexDot.className = 'octagon-vertex';
-                vertexDot.style.left = `${x + radius}px`;
-                vertexDot.style.top = `${y + radius}px`;
-                // Aplicar transformación 3D con la coordenada Z
-                vertexDot.style.transform = `translate3d(-50%,
+            return "Esta es una respuesta simulada. En la implementación real, se procesarían los documentos y se enviaría la consulta a la API de OpenAI.";
+        }
+    </script>
+</body>
+</html>
