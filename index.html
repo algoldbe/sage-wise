@@ -148,11 +148,31 @@
         .octagon-model {
             flex: 1;
             min-width: 300px;
-            height: 400px;
+            height: 450px;
             position: relative;
             background-color: var(--light-color);
             border-radius: 10px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .octagon-title {
+            text-align: center;
+            padding: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+        
+        .octagon-canvas {
+            flex: 1;
+            cursor: grab;
+        }
+        
+        .octagon-canvas:active {
+            cursor: grabbing;
         }
         
         .section-title {
@@ -174,37 +194,69 @@
         }
         
         .success-cases {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 300px;
             gap: 2rem;
-            flex-wrap: wrap;
             margin-top: 2rem;
-            justify-content: space-between;
         }
         
-        .case-card {
-            flex: 1;
-            min-width: 280px;
-            max-width: 350px;
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .octagon-info {
             background-color: var(--white-color);
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 1.5rem;
+            height: fit-content;
+        }
+        
+        .octagon-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .octagon-info p {
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+        
+        .octagon-info.default {
+            display: block;
+        }
+        
+        .octagon-info.selected {
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.2);
+        }
+        
+        .case-card {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1.2rem;
             transition: transform 0.3s, box-shadow 0.3s;
         }
         
         .case-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
         }
         
         .case-card h3 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
         }
         
         .case-card p {
             color: var(--light-text);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         
         .contact-section {
@@ -484,8 +536,21 @@
                 padding: 1rem;
             }
             
-            .case-card {
-                min-width: 100%;
+            .success-cases {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .octagon-model {
+                height: 400px;
+            }
+            
+            .intro-section {
+                flex-direction: column;
             }
         }
     </style>
@@ -514,24 +579,33 @@
                     <p>Nuestro enfoque integra aspectos estratégicos, operativos y culturales para crear soluciones que generan resultados reales y sostenibles en el tiempo.</p>
                     <p>Con años de experiencia en múltiples sectores industriales, entendemos los desafíos únicos que enfrentan las empresas actuales y ofrecemos soluciones personalizadas que impulsan la competitividad y el crecimiento.</p>
                 </div>
-                <div class="octagon-model" id="octagon-container">
-                    <!-- 3D Octagon will be rendered here using Three.js -->
+                <div class="octagon-model">
+                    <div class="octagon-title">Modelo del Octagrama</div>
+                    <div class="octagon-canvas" id="octagon-container">
+                        <!-- 3D Octagon will be rendered here using Three.js -->
+                    </div>
                 </div>
             </section>
             
             <h2 class="section-title">Casos de Éxito</h2>
             <section class="success-cases">
-                <div class="case-card">
-                    <h3>Empresa Tecnológica</h3>
-                    <p>Implementamos nuestro modelo de diagnóstico en una empresa de software con 200 empleados, identificando brechas en su estructura organizacional. Tras aplicar nuestras recomendaciones, lograron un incremento del 35% en productividad y reducción del 20% en rotación de personal en solo 8 meses.</p>
+                <div class="cases-grid">
+                    <div class="case-card">
+                        <h3>Empresa Tecnológica</h3>
+                        <p>Implementamos nuestro modelo de diagnóstico en una empresa de software con 200 empleados, logrando un incremento del 35% en productividad en 8 meses.</p>
+                    </div>
+                    <div class="case-card">
+                        <h3>Manufacturera Industrial</h3>
+                        <p>Una empresa manufacturera optimizó su cadena de producción reduciendo costos en un 18% y mejorando la calidad del producto en un 25%.</p>
+                    </div>
+                    <div class="case-card">
+                        <h3>Empresa de Servicios Financieros</h3>
+                        <p>Una institución financiera aumentó su índice de satisfacción de clientes de 72% a 94% en un año tras implementar nuestro plan estratégico.</p>
+                    </div>
                 </div>
-                <div class="case-card">
-                    <h3>Manufacturera Industrial</h3>
-                    <p>Una empresa manufacturera enfrentaba problemas de eficiencia operativa. Utilizando el modelo del octágono, diagnosticamos puntos críticos en sus procesos y capacitamos a sus líderes. Como resultado, optimizaron su cadena de producción reduciendo costos en un 18% y mejorando la calidad del producto en un 25%.</p>
-                </div>
-                <div class="case-card">
-                    <h3>Empresa de Servicios Financieros</h3>
-                    <p>Una institución financiera buscaba mejorar su experiencia de cliente. Nuestro diagnóstico reveló oportunidades de mejora en procesos internos y cultura organizacional. Tras implementar nuestro plan estratégico, aumentaron su índice de satisfacción de clientes de 72% a 94% en un año.</p>
+                <div class="octagon-info default" id="octagon-info">
+                    <h3>Información del Modelo</h3>
+                    <p>Haga clic en cualquier lado o vértice de los octágonos para ver información detallada sobre cada componente de nuestro modelo del Octagrama. Cada elemento está diseñado para trabajar de manera integrada con los demás, creando un sistema holístico de análisis organizacional.</p>
                 </div>
             </section>
             
@@ -674,52 +748,238 @@
             const container = document.getElementById('octagon-container');
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setClearColor(0x000000, 0);
             container.appendChild(renderer.domElement);
             
-            // Create octagon
-            const octagonGeometry = new THREE.CylinderGeometry(1, 1, 0.2, 8);
-            const octagonMaterial = new THREE.MeshPhongMaterial({ 
+            // Mouse controls
+            let mouseDown = false;
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetRotationX = 0;
+            let targetRotationY = 0;
+            let currentRotationX = 0;
+            let currentRotationY = 0;
+            
+            // Create octagon group
+            const octagonGroup = new THREE.Group();
+            scene.add(octagonGroup);
+            
+            // Octagon labels for vertices
+            const vertexLabels = [
+                "Vértice 1", "Vértice 2", "Vértice 3", "Vértice 4",
+                "Vértice 5", "Vértice 6", "Vértice 7", "Vértice 8"
+            ];
+            
+            // Side labels
+            const sideLabels = [
+                "Lado 1", "Lado 2", "Lado 3", "Lado 4",
+                "Lado 5", "Lado 6", "Lado 7", "Lado 8"
+            ];
+            
+            // Create two octagons
+            const octagonGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.15, 8);
+            const octagonMaterial1 = new THREE.MeshPhongMaterial({ 
                 color: 0x1a73e8,
                 transparent: true,
                 opacity: 0.8,
                 flatShading: true
             });
-            const octagon = new THREE.Mesh(octagonGeometry, octagonMaterial);
-            scene.add(octagon);
+            const octagonMaterial2 = new THREE.MeshPhongMaterial({ 
+                color: 0x4285f4,
+                transparent: true,
+                opacity: 0.8,
+                flatShading: true
+            });
             
-            // Add vertices labels
-            const vertexLabels = [
-                "Estrategia", "Estructura", "Sistemas", 
-                "Personal", "Habilidades", "Estilos",
-                "Valores", "Objetivos"
-            ];
+            const octagon1 = new THREE.Mesh(octagonGeometry, octagonMaterial1);
+            octagon1.position.y = 0.5;
+            octagonGroup.add(octagon1);
             
-            // Helper function to create vertex labels (simplified for now)
-            // In a production environment, we would add actual text labels
+            const octagon2 = new THREE.Mesh(octagonGeometry, octagonMaterial2);
+            octagon2.position.y = -0.5;
+            octagonGroup.add(octagon2);
+            
+            // Create text sprites for labels
+            function createTextSprite(text, color = '#1a73e8') {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                
+                canvas.width = 256;
+                canvas.height = 64;
+                
+                context.fillStyle = color;
+                context.font = 'Bold 16px Arial';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText(text, canvas.width / 2, canvas.height / 2);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                sprite.scale.set(0.8, 0.2, 1);
+                
+                return sprite;
+            }
+            
+            // Add vertex labels for top octagon
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const x = Math.cos(angle) * 1.6;
+                const z = Math.sin(angle) * 1.6;
+                
+                const label = createTextSprite(vertexLabels[i]);
+                label.position.set(x, 0.8, z);
+                label.userData = { type: 'vertex', index: i, octagon: 1 };
+                octagonGroup.add(label);
+            }
+            
+            // Add vertex labels for bottom octagon
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const x = Math.cos(angle) * 1.6;
+                const z = Math.sin(angle) * 1.6;
+                
+                const label = createTextSprite(vertexLabels[i], '#4285f4');
+                label.position.set(x, -0.8, z);
+                label.userData = { type: 'vertex', index: i, octagon: 2 };
+                octagonGroup.add(label);
+            }
+            
+            // Add side labels for top octagon
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
+                const x = Math.cos(angle) * 1.4;
+                const z = Math.sin(angle) * 1.4;
+                
+                const label = createTextSprite(sideLabels[i]);
+                label.position.set(x, 0.5, z);
+                label.userData = { type: 'side', index: i, octagon: 1 };
+                octagonGroup.add(label);
+            }
+            
+            // Add side labels for bottom octagon
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
+                const x = Math.cos(angle) * 1.4;
+                const z = Math.sin(angle) * 1.4;
+                
+                const label = createTextSprite(sideLabels[i], '#4285f4');
+                label.position.set(x, -0.5, z);
+                label.userData = { type: 'side', index: i, octagon: 2 };
+                octagonGroup.add(label);
+            }
             
             // Add lights
-            const ambientLight = new THREE.AmbientLight(0x404040);
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
             scene.add(ambientLight);
             
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(1, 1, 1);
             scene.add(directionalLight);
             
-            camera.position.z = 3;
+            camera.position.set(0, 0, 4);
+            
+            // Mouse event handlers
+            container.addEventListener('mousedown', onMouseDown, false);
+            container.addEventListener('mousemove', onMouseMove, false);
+            container.addEventListener('mouseup', onMouseUp, false);
+            container.addEventListener('click', onMouseClick, false);
+            
+            function onMouseDown(event) {
+                mouseDown = true;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+            
+            function onMouseMove(event) {
+                if (!mouseDown) return;
+                
+                const deltaX = event.clientX - mouseX;
+                const deltaY = event.clientY - mouseY;
+                
+                targetRotationY += deltaX * 0.01;
+                targetRotationX += deltaY * 0.01;
+                
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+            
+            function onMouseUp(event) {
+                mouseDown = false;
+            }
+            
+            function onMouseClick(event) {
+                const rect = container.getBoundingClientRect();
+                const mouse = new THREE.Vector2();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
+                
+                const intersects = raycaster.intersectObjects(octagonGroup.children, true);
+                
+                if (intersects.length > 0) {
+                    const object = intersects[0].object;
+                    if (object.userData && (object.userData.type === 'vertex' || object.userData.type === 'side')) {
+                        showOctagonInfo(object.userData);
+                    }
+                }
+            }
+            
+            function showOctagonInfo(userData) {
+                const infoPanel = document.getElementById('octagon-info');
+                infoPanel.classList.remove('default');
+                infoPanel.classList.add('selected');
+                
+                let title = '';
+                let description = '';
+                
+                if (userData.type === 'vertex') {
+                    title = `${vertexLabels[userData.index]} - Octágono ${userData.octagon}`;
+                    description = `Este vértice representa un punto de convergencia crítico en nuestro modelo. Los vértices son intersecciones donde múltiples elementos del sistema organizacional se encuentran y requieren especial atención para el análisis integral.`;
+                } else if (userData.type === 'side') {
+                    title = `${sideLabels[userData.index]} - Octágono ${userData.octagon}`;
+                    description = `Este lado conecta elementos clave del modelo organizacional. Los lados representan las relaciones y flujos entre diferentes componentes del sistema, fundamentales para entender la dinámica empresarial.`;
+                }
+                
+                infoPanel.innerHTML = `
+                    <h3>${title}</h3>
+                    <p>${description}</p>
+                    <p style="margin-top: 1rem; font-style: italic; color: var(--light-text);">Haga clic en otros elementos para explorar más componentes del modelo.</p>
+                `;
+            }
             
             // Animation function
             function animate() {
                 requestAnimationFrame(animate);
-                octagon.rotation.y += 0.005;
+                
+                // Smooth rotation
+                currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+                currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+                
+                octagonGroup.rotation.x = currentRotationX;
+                octagonGroup.rotation.y = currentRotationY;
+                
+                // Auto-rotation when not being controlled
+                if (!mouseDown) {
+                    targetRotationY += 0.003;
+                }
+                
                 renderer.render(scene, camera);
             }
             
             // Handle window resize
-            window.addEventListener('resize', function() {
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-                camera.aspect = container.offsetWidth / container.offsetHeight;
+            function onWindowResize() {
+                const width = container.offsetWidth;
+                const height = container.offsetHeight;
+                
+                camera.aspect = width / height;
                 camera.updateProjectionMatrix();
-            });
+                renderer.setSize(width, height);
+            }
+            
+            window.addEventListener('resize', onWindowResize);
             
             animate();
             
