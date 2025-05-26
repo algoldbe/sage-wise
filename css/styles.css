@@ -397,6 +397,9 @@ header {
 .chat-intro {
     margin-bottom: 2rem;
     text-align: center;
+    background-color: var(--light-color);
+    padding: 2rem;
+    border-radius: 10px;
 }
 
 .chat-intro h2 {
