@@ -1,0 +1,510 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "¿Su empresa tiene una estrategia claramente definida y comunicada a todos los niveles?",
+      "category": "Estrategia",
+      "options": [
+        {
+          "value": "a",
+          "text": "Sí, totalmente definida y comunicada efectivamente",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Parcialmente definida pero no comunicada efectivamente",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Definida pero no alineada con las operaciones diarias",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "No tenemos una estrategia claramente definida",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "¿Cómo calificaría la estructura organizacional de su empresa?",
+      "category": "Estructura",
+      "options": [
+        {
+          "value": "a",
+          "text": "Claramente definida y efectiva para nuestros objetivos",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Definida pero con algunas ineficiencias",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Demasiado rígida y limita la innovación",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Confusa o inexistente en algunos departamentos",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "¿Sus procesos y sistemas están documentados y optimizados?",
+      "category": "Sistemas",
+      "options": [
+        {
+          "value": "a",
+          "text": "Completamente documentados y optimizados",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Documentados pero no optimizados",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Parcialmente documentados",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Apenas documentados o inexistentes",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "¿Cómo evalúa la gestión del talento humano en su organización?",
+      "category": "Personal",
+      "options": [
+        {
+          "value": "a",
+          "text": "Excelente gestión con procesos claros de selección y desarrollo",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Buena gestión pero con áreas de mejora",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Gestión básica, procesos informales",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Gestión deficiente, alta rotación de personal",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "¿Las habilidades y competencias del equipo están alineadas con los objetivos del negocio?",
+      "category": "Habilidades",
+      "options": [
+        {
+          "value": "a",
+          "text": "Completamente alineadas, tenemos las competencias necesarias",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Mayormente alineadas con algunas brechas menores",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Parcialmente alineadas, necesitamos desarrollo",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Desalineadas, falta capacitación significativa",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "¿Cómo describiría el estilo de liderazgo predominante en su empresa?",
+      "category": "Estilos",
+      "options": [
+        {
+          "value": "a",
+          "text": "Liderazgo participativo y efectivo",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Liderazgo funcional pero poco inspirador",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Liderazgo inconsistente entre áreas",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Liderazgo débil o autoritario",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "¿Los valores de la empresa son conocidos y vividos por todos los empleados?",
+      "category": "Valores",
+      "options": [
+        {
+          "value": "a",
+          "text": "Sí, están claramente definidos y se viven diariamente",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Los conocen pero no siempre los practican",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Algunos los conocen, aplicación inconsistente",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "No están claramente definidos o comunicados",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "¿Los objetivos de la empresa son específicos, medibles y se monitorean regularmente?",
+      "category": "Objetivos",
+      "options": [
+        {
+          "value": "a",
+          "text": "Sí, objetivos SMART con seguimiento regular",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Objetivos definidos pero seguimiento irregular",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Objetivos generales, poco específicos",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Objetivos vagos o inexistentes",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "text": "¿Cómo calificaría la comunicación interna en su organización?",
+      "category": "Estructura",
+      "options": [
+        {
+          "value": "a",
+          "text": "Excelente, fluida en todos los niveles",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Buena pero con algunas barreras ocasionales",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Regular, información no siempre llega a tiempo",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Deficiente, comunicación fragmentada",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "¿Su empresa adapta rápidamente sus estrategias a los cambios del mercado?",
+      "category": "Estrategia",
+      "options": [
+        {
+          "value": "a",
+          "text": "Sí, somos muy ágiles y adaptables",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Nos adaptamos pero con cierto retraso",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Adaptación lenta, procesos burocráticos",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Muy rígidos, difícil adaptación al cambio",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "text": "¿Qué tan eficientes son los procesos operativos de su empresa?",
+      "category": "Sistemas",
+      "options": [
+        {
+          "value": "a",
+          "text": "Muy eficientes, automatizados y optimizados",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Eficientes en general con mejoras menores necesarias",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Moderadamente eficientes, necesitan optimización",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Ineficientes, muchos cuellos de botella",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "¿El personal cuenta con las herramientas y recursos necesarios para hacer su trabajo?",
+      "category": "Personal",
+      "options": [
+        {
+          "value": "a",
+          "text": "Sí, tienen todo lo necesario y más",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Tienen lo básico necesario",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Tienen algunos recursos pero faltan herramientas clave",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Carecen de recursos básicos para su trabajo",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "text": "¿Cómo evalúa el nivel de innovación en su organización?",
+      "category": "Habilidades",
+      "options": [
+        {
+          "value": "a",
+          "text": "Muy innovadores, constantemente generamos nuevas ideas",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Innovación ocasional, buenos proyectos esporádicos",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Poca innovación, nos enfocamos en mantener lo actual",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Muy poca innovación, resistencia al cambio",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "¿Cómo se toman las decisiones importantes en su empresa?",
+      "category": "Estilos",
+      "options": [
+        {
+          "value": "a",
+          "text": "Proceso colaborativo con participación de stakeholders relevantes",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Proceso estructurado pero con poca participación",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Decisiones centralizadas con consulta limitada",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Decisiones autoritarias sin consulta",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "¿Qué tan comprometidos están los empleados con la misión de la empresa?",
+      "category": "Valores",
+      "options": [
+        {
+          "value": "a",
+          "text": "Muy comprometidos, alta identificación con la misión",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Comprometidos pero podrían estarlo más",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Compromiso variable, algunos más que otros",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Bajo compromiso, ven el trabajo solo como empleo",
+          "score": 1
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "text": "¿Con qué frecuencia se revisan y ajustan los objetivos de la empresa?",
+      "category": "Objetivos",
+      "options": [
+        {
+          "value": "a",
+          "text": "Regularmente, con revisiones trimestrales y ajustes según necesidad",
+          "score": 4
+        },
+        {
+          "value": "b",
+          "text": "Revisiones semestrales o anuales",
+          "score": 3
+        },
+        {
+          "value": "c",
+          "text": "Revisiones ocasionales cuando hay problemas",
+          "score": 2
+        },
+        {
+          "value": "d",
+          "text": "Raramente se revisan una vez establecidos",
+          "score": 1
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "Estrategia": {
+      "name": "Estrategia",
+      "description": "Define la dirección y objetivos a largo plazo de la organización",
+      "recommendations": {
+        "low": "Desarrolle un plan estratégico claro con visión, misión y objetivos específicos. Implemente procesos de comunicación para asegurar que toda la organización comprenda la dirección.",
+        "medium": "Mejore la alineación entre la estrategia y las operaciones diarias. Establezca métricas para monitorear el progreso estratégico.",
+        "high": "Mantenga la agilidad estratégica y continue monitoreando el entorno para anticipar cambios del mercado."
+      }
+    },
+    "Estructura": {
+      "name": "Estructura",
+      "description": "La organización formal, jerarquías y distribución de responsabilidades",
+      "recommendations": {
+        "low": "Rediseñe la estructura organizacional para eliminar redundancias y mejorar la comunicación. Defina claramente roles y responsabilidades.",
+        "medium": "Optimice los canales de comunicación y considere estructuras más ágiles que faciliten la colaboración.",
+        "high": "Continue refinando la estructura para mantener la eficiencia mientras la organización crece."
+      }
+    },
+    "Sistemas": {
+      "name": "Sistemas",
+      "description": "Procesos, procedimientos y tecnologías que apoyan las operaciones",
+      "recommendations": {
+        "low": "Documente y estandarice los procesos clave. Implemente tecnologías que automaticen tareas repetitivas.",
+        "medium": "Optimice los procesos existentes eliminando cuellos de botella y mejorando la eficiencia.",
+        "high": "Continue innovando en procesos y tecnología para mantener ventaja competitiva."
+      }
+    },
+    "Personal": {
+      "name": "Personal",
+      "description": "Los recursos humanos y la gestión del talento",
+      "recommendations": {
+        "low": "Implemente procesos estructurados de reclutamiento, selección y retención de talento. Desarrolle programas de capacitación.",
+        "medium": "Mejore los procesos de desarrollo profesional y cree planes de carrera claros.",
+        "high": "Mantenga programas de desarrollo continuo y estrategias de retención del mejor talento."
+      }
+    },
+    "Habilidades": {
+      "name": "Habilidades",
+      "description": "Competencias y capacidades disponibles en la organización",
+      "recommendations": {
+        "low": "Realice un análisis de brechas de habilidades e implemente programas de capacitación intensivos.",
+        "medium": "Desarrolle planes de capacitación continua y considere contratación estratégica para llenar brechas.",
+        "high": "Mantenga programas de actualización de habilidades y fomente la innovación."
+      }
+    },
+    "Estilos": {
+      "name": "Estilos",
+      "description": "Estilos de liderazgo y toma de decisiones",
+      "recommendations": {
+        "low": "Desarrolle programas de liderazgo y establezca procesos claros de toma de decisiones participativa.",
+        "medium": "Mejore las habilidades de liderazgo existentes y fomente mayor participación en decisiones.",
+        "high": "Continue desarrollando líderes y mantenga un estilo de liderazgo adaptativo."
+      }
+    },
+    "Valores": {
+      "name": "Valores",
+      "description": "Principios y creencias que guían el comportamiento organizacional",
+      "recommendations": {
+        "low": "Defina y comunique claramente los valores organizacionales. Implemente programas para integrarlos en la cultura diaria.",
+        "medium": "Refuerce los valores a través de reconocimientos y asegure su aplicación consistente.",
+        "high": "Continue fortaleciendo la cultura organizacional y use los valores como guía en todas las decisiones."
+      }
+    },
+    "Objetivos": {
+      "name": "Objetivos",
+      "description": "Metas específicas y medibles que la organización busca alcanzar",
+      "recommendations": {
+        "low": "Establezca objetivos SMART (específicos, medibles, alcanzables, relevantes, temporales) y sistemas de seguimiento.",
+        "medium": "Mejore los procesos de monitoreo y ajuste de objetivos. Asegure alineación entre niveles organizacionales.",
+        "high": "Mantenga procesos robustos de gestión por objetivos y continue refinando las métricas."
+      }
+    }
+  }
+}
