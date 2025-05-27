@@ -3,8 +3,6 @@
     --secondary-color: #4285f4;
     --accent-color: #0d47a1;
     --light-color: #e8f0fe;
-    --contact-bg-color: #d2e3fc;
-    --chat-intro-bg: #e8f0fe;
     --white-color: #ffffff;
     --dark-text: #202124;
     --light-text: #5f6368;
@@ -255,11 +253,10 @@ header {
 }
 
 .contact-section {
-    background-color: var(--contact-bg-color);
+    background-color: var(--light-color);
     padding: 2rem;
     border-radius: 10px;
     margin: 3rem 0;
-    border: 2px solid rgba(26, 115, 232, 0.2);
 }
 
 .contact-section h2 {
@@ -400,11 +397,6 @@ header {
 .chat-intro {
     margin-bottom: 2rem;
     text-align: center;
-    background-color: var(--chat-intro-bg);
-    padding: 2rem;
-    border-radius: 10px;
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 2px 10px rgba(26, 115, 232, 0.15);
 }
 
 .chat-intro h2 {
@@ -418,7 +410,7 @@ header {
     height: 70vh;
     max-width: 900px;
     margin: 0 auto;
-    background-color: var(--white-color);
+    background-color: var(--light-color);
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
