@@ -9,7 +9,71 @@ document.addEventListener('DOMContentLoaded', function() {
     initialize3DOctagon();
     initializeChat();
     loadQuizData();
+    initializeGlossarySearch();
 });
+
+// Initialize glossary search functionality
+function initializeGlossarySearch() {
+    const searchInput = document.getElementById('glossary-search');
+    const searchButton = document.querySelector('.search-button');
+    const resultsContainer = document.getElementById('glossary-results');
+    
+    // Sample glossary data (will be replaced with actual data later)
+    const glossaryData = {
+        'estrategia': 'Define la dirección y objetivos a largo plazo de la organización. Incluye la visión, misión, y el plan estratégico general.',
+        'estructura': 'Se refiere a la organización formal, jerarquías, departamentos y cómo se distribuyen las responsabilidades.',
+        'sistemas': 'Procesos, procedimientos y tecnologías que apoyan las operaciones diarias de la empresa.',
+        'personal': 'Los recursos humanos de la organización, incluyendo estructura de roles y responsabilidades.',
+        'habilidades': 'Las competencias, conocimientos y capacidades disponibles en la organización.',
+        'estilos': 'El estilo de liderazgo y la forma en que se toman las decisiones en la empresa.',
+        'valores': 'Los principios y creencias compartidas que guían el comportamiento organizacional.',
+        'objetivos': 'Las metas específicas y medibles que la organización busca alcanzar.'
+    };
+    
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            resultsContainer.innerHTML = '<p><em>El glosario completo se cargará próximamente con definiciones detalladas de todos los términos relevantes para la transformación organizacional.</em></p>';
+            return;
+        }
+        
+        const results = [];
+        
+        // Search for exact matches and partial matches
+        Object.keys(glossaryData).forEach(term => {
+            if (term.includes(searchTerm) || searchTerm.includes(term)) {
+                results.push({
+                    term: term,
+                    definition: glossaryData[term]
+                });
+            }
+        });
+        
+        // Display results
+        if (results.length > 0) {
+            let resultsHTML = '<h4 style="color: var(--primary-color); margin-bottom: 1rem;">Resultados de búsqueda:</h4>';
+            results.forEach(result => {
+                resultsHTML += `
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: var(--light-color); border-radius: 8px;">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem; text-transform: capitalize;">${result.term}</h5>
+                        <p style="color: var(--light-text); line-height: 1.6;">${result.definition}</p>
+                    </div>
+                `;
+            });
+            resultsContainer.innerHTML = resultsHTML;
+        } else {
+            resultsContainer.innerHTML = '<p style="color: var(--light-text); font-style: italic;">No se encontraron resultados para "' + searchTerm + '". El glosario se está expandiendo continuamente.</p>';
+        }
+    }
+    
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+}
 
 // Tab Navigation Functions
 function initializeTabNavigation() {
