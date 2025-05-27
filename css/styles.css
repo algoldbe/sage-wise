@@ -1,3 +1,4 @@
+/* CSS Variables */
 :root {
     --primary-color: #1a73e8;
     --secondary-color: #4285f4;
@@ -8,6 +9,7 @@
     --light-text: #5f6368;
 }
 
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -55,6 +57,7 @@ header {
     font-weight: 600;
 }
 
+/* Navigation Styles */
 .nav-tabs {
     display: flex;
     list-style: none;
@@ -92,13 +95,14 @@ header {
     border-radius: 3px;
 }
 
-/* Main Content Styles */
+/* Main Content Area */
 .content {
     margin-top: 100px;
     min-height: calc(100vh - 180px);
     padding: 2rem 5%;
 }
 
+/* Tab Content */
 .tab-content {
     display: none;
 }
@@ -109,11 +113,17 @@ header {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
-/* Home Tab Styles */
+/* Home Tab - Introduction Section */
 .intro-section {
     display: flex;
     flex-wrap: wrap;
@@ -138,6 +148,7 @@ header {
     font-size: 1.1rem;
 }
 
+/* Octagon Section */
 .octagon-section {
     flex: 1;
     min-width: 300px;
@@ -174,6 +185,7 @@ header {
     cursor: grabbing;
 }
 
+/* Octagon Info Panel */
 .octagon-info-panel {
     background-color: var(--white-color);
     border-radius: 10px;
@@ -197,6 +209,7 @@ header {
     box-shadow: 0 6px 20px rgba(26, 115, 232, 0.2);
 }
 
+/* Section Titles */
 .section-title {
     color: var(--primary-color);
     margin: 4rem 0 1.5rem;
@@ -215,7 +228,7 @@ header {
     border-radius: 3px;
 }
 
-/* Glossary Section Styles */
+/* Glossary Section */
 .glossary-section {
     margin-bottom: 4rem;
 }
@@ -280,7 +293,7 @@ header {
     border-top: 1px solid #eee;
 }
 
-/* Contact Section - Simplified */
+/* Contact Section */
 .contact-section {
     background-color: var(--light-color);
     padding: 2rem;
@@ -552,7 +565,7 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Responsive Styles */
+/* Responsive Design */
 @media (max-width: 768px) {
     .header-container {
         flex-direction: column;
