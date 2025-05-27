@@ -560,6 +560,29 @@ footer {
     font-weight: 600;
 }
 
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-contact .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+}
+
+.footer-contact .contact-item i {
+    font-size: 1rem;
+    color: white;
+    width: 20px;
+}
+
+.footer-contact .contact-item span {
+    font-size: 0.9rem;
+}
+
 .copyright {
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
@@ -612,7 +635,13 @@ footer {
         border-radius: 5px;
     }
     
-    .contact-grid {
-        grid-template-columns: 1fr;
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .footer-contact {
+        align-items: center;
     }
 }
