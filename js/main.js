@@ -177,6 +177,116 @@ function initialize3DOctagon() {
     octagon2.userData = { type: 'octagon', id: 2, material: octagonMaterial2, originalColor: colors.octagon2.normal };
     octagonGroup.add(octagon2);
     
+    // Create smaller geometries for individual sides and vertices with hover colors
+    const vertexGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+    const sideGeometry = new THREE.BoxGeometry(0.3, 0.05, 0.05);
+    
+    // Vertex and side meshes with hover materials
+    const vertexMeshes = [];
+    const sideMeshes = [];
+    
+    // Create vertex hover elements for top octagon
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const x = Math.cos(angle) * 1.2;
+        const z = Math.sin(angle) * 1.2;
+        
+        const vertexMaterial = new THREE.MeshPhongMaterial({ 
+            color: colors.vertex.normal,
+            transparent: true,
+            opacity: 0.7
+        });
+        const vertexMesh = new THREE.Mesh(vertexGeometry, vertexMaterial);
+        vertexMesh.position.set(x, 0.5, z);
+        vertexMesh.userData = { 
+            type: 'vertex-mesh', 
+            index: i, 
+            octagon: 1, 
+            material: vertexMaterial,
+            originalColor: colors.vertex.normal,
+            hoverColor: colors.vertex.hover
+        };
+        octagonGroup.add(vertexMesh);
+        vertexMeshes.push(vertexMesh);
+    }
+    
+    // Create vertex hover elements for bottom octagon
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const x = Math.cos(angle) * 1.2;
+        const z = Math.sin(angle) * 1.2;
+        
+        const vertexMaterial = new THREE.MeshPhongMaterial({ 
+            color: colors.vertex.normal,
+            transparent: true,
+            opacity: 0.7
+        });
+        const vertexMesh = new THREE.Mesh(vertexGeometry, vertexMaterial);
+        vertexMesh.position.set(x, -0.5, z);
+        vertexMesh.userData = { 
+            type: 'vertex-mesh', 
+            index: i, 
+            octagon: 2, 
+            material: vertexMaterial,
+            originalColor: colors.vertex.normal,
+            hoverColor: colors.vertex.hover
+        };
+        octagonGroup.add(vertexMesh);
+        vertexMeshes.push(vertexMesh);
+    }
+    
+    // Create side hover elements for top octagon
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
+        const x = Math.cos(angle) * 1.2;
+        const z = Math.sin(angle) * 1.2;
+        
+        const sideMaterial = new THREE.MeshPhongMaterial({ 
+            color: colors.side.normal,
+            transparent: true,
+            opacity: 0.7
+        });
+        const sideMesh = new THREE.Mesh(sideGeometry, sideMaterial);
+        sideMesh.position.set(x, 0.5, z);
+        sideMesh.rotation.y = angle;
+        sideMesh.userData = { 
+            type: 'side-mesh', 
+            index: i, 
+            octagon: 1, 
+            material: sideMaterial,
+            originalColor: colors.side.normal,
+            hoverColor: colors.side.hover
+        };
+        octagonGroup.add(sideMesh);
+        sideMeshes.push(sideMesh);
+    }
+    
+    // Create side hover elements for bottom octagon
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
+        const x = Math.cos(angle) * 1.2;
+        const z = Math.sin(angle) * 1.2;
+        
+        const sideMaterial = new THREE.MeshPhongMaterial({ 
+            color: colors.side.normal,
+            transparent: true,
+            opacity: 0.7
+        });
+        const sideMesh = new THREE.Mesh(sideGeometry, sideMaterial);
+        sideMesh.position.set(x, -0.5, z);
+        sideMesh.rotation.y = angle;
+        sideMesh.userData = { 
+            type: 'side-mesh', 
+            index: i, 
+            octagon: 2, 
+            material: sideMaterial,
+            originalColor: colors.side.normal,
+            hoverColor: colors.side.hover
+        };
+        octagonGroup.add(sideMesh);
+        sideMeshes.push(sideMesh);
+    }
+    
     // Enhanced text sprite creation with hover support
     function createTextSprite(text, color = '#1a73e8', isHovered = false) {
         const canvas = document.createElement('canvas');
@@ -303,8 +413,10 @@ function initialize3DOctagon() {
         interactiveObjects.push(label);
     }
     
-    // Add octagon meshes to interactive objects
+    // Add octagon meshes and vertex/side meshes to interactive objects
     interactiveObjects.push(octagon1, octagon2);
+    vertexMeshes.forEach(mesh => interactiveObjects.push(mesh));
+    sideMeshes.forEach(mesh => interactiveObjects.push(mesh));
     
     // Add lights
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
@@ -396,7 +508,11 @@ function initialize3DOctagon() {
             const index = interactiveObjects.indexOf(object);
             if (index !== -1) {
                 interactiveObjects[index] = newSprite;
+                hoveredObject = newSprite; // Update hoveredObject reference
             }
+        } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
+            // Change vertex/side mesh color on hover
+            userData.material.color.setHex(userData.hoverColor);
         } else if (userData.type === 'octagon') {
             // Change octagon color on hover
             if (userData.id === 1) {
@@ -429,6 +545,9 @@ function initialize3DOctagon() {
             if (index !== -1) {
                 interactiveObjects[index] = newSprite;
             }
+        } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
+            // Reset vertex/side mesh color
+            userData.material.color.setHex(userData.originalColor);
         } else if (userData.type === 'octagon') {
             // Reset octagon color
             userData.material.color.setHex(userData.originalColor);
