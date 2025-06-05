@@ -741,4 +741,183 @@ function generateQuizResults() {
     
     // Initialize categories
     categories.forEach(cat => {
-        categoryScores[cat] = { total: 0, count: 0, percentage
+        categoryScores[cat] = { total: 0, count: 0, percentage: 0 };
+    });
+    
+    // Calculate scores
+    userAnswers.forEach(answer => {
+        if (answer && categoryScores[answer.category]) {
+            categoryScores[answer.category].total += answer.score;
+            categoryScores[answer.category].count += 1;
+        }
+    });
+    
+    // Calculate percentages
+    Object.keys(categoryScores).forEach(category => {
+        const data = categoryScores[category];
+        if (data.count > 0) {
+            data.percentage = Math.round((data.total / (data.count * 4)) * 100);
+        }
+    });
+    
+    // Sort categories by score
+    const sortedCategories = Object.entries(categoryScores)
+        .filter(([category, data]) => data.count > 0)
+        .sort(([,a], [,b]) => a.percentage - b.percentage);
+    
+    // Create results display
+    const resultsDiv = document.createElement('div');
+    
+    // Strengths
+    const strengthsTitle = document.createElement('h3');
+    strengthsTitle.textContent = 'Fortalezas Principales';
+    strengthsTitle.style.color = 'var(--primary-color)';
+    strengthsTitle.style.marginBottom = '1rem';
+    resultsDiv.appendChild(strengthsTitle);
+    
+    const strengthsList = document.createElement('div');
+    strengthsList.style.marginBottom = '2rem';
+    
+    sortedCategories.slice(-3).reverse().forEach(([category, data]) => {
+        const item = document.createElement('div');
+        item.style.padding = '0.5rem';
+        item.style.backgroundColor = 'var(--light-color)';
+        item.style.borderRadius = '5px';
+        item.style.marginBottom = '0.5rem';
+        item.innerHTML = `<strong>${category}</strong>: ${data.percentage}% de efectividad`;
+        strengthsList.appendChild(item);
+    });
+    resultsDiv.appendChild(strengthsList);
+    
+    // Areas to improve
+    const improvementTitle = document.createElement('h3');
+    improvementTitle.textContent = 'Áreas de Oportunidad';
+    improvementTitle.style.color = 'var(--primary-color)';
+    improvementTitle.style.marginBottom = '1rem';
+    resultsDiv.appendChild(improvementTitle);
+    
+    const improvementList = document.createElement('div');
+    improvementList.style.marginBottom = '2rem';
+    
+    sortedCategories.slice(0, 3).forEach(([category, data]) => {
+        const item = document.createElement('div');
+        item.style.padding = '0.5rem';
+        item.style.backgroundColor = '#fff3cd';
+        item.style.borderRadius = '5px';
+        item.style.marginBottom = '0.5rem';
+        item.innerHTML = `<strong>${category}</strong>: ${data.percentage}% de efectividad`;
+        improvementList.appendChild(item);
+    });
+    resultsDiv.appendChild(improvementList);
+    
+    // Recommendations
+    const recommendationText = document.createElement('p');
+    recommendationText.style.fontStyle = 'italic';
+    recommendationText.style.textAlign = 'center';
+    recommendationText.style.marginTop = '2rem';
+    recommendationText.textContent = 'Basado en su diagnóstico, recomendamos enfocar sus esfuerzos de mejora en las áreas mencionadas arriba. Para una evaluación más detallada y un plan de acción personalizado, contáctenos para una sesión de consultoría.';
+    resultsDiv.appendChild(recommendationText);
+    
+    resultsContainer.appendChild(resultsDiv);
+}
+
+// Chat Functions
+function initializeChat() {
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-message');
+    const sendButton = document.getElementById('send-message');
+    
+    function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message message-${isUser ? 'user' : 'bot'}`;
+        messageDiv.textContent = text;
+        chatMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function handleUserMessage() {
+        const message = userInput.value.trim();
+        if (message.length === 0) return;
+        
+        // Add user message
+        addMessage(message, true);
+        userInput.value = '';
+        
+        // Show typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message message-bot';
+        typingDiv.textContent = 'El Explicador está escribiendo...';
+        typingDiv.id = 'typing-indicator';
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Simulate bot response
+        setTimeout(() => {
+            // Remove typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            
+            let botResponse = getBotResponse(message);
+            addMessage(botResponse);
+        }, 1500);
+    }
+    
+    function getBotResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Knowledge base responses
+        if (lowerMessage.includes('octágono') || lowerMessage.includes('octagon') || lowerMessage.includes('modelo')) {
+            return "El modelo del octágono de Sage-Wise analiza ocho dimensiones fundamentales de una organización: Estrategia, Estructura, Sistemas, Personal, Habilidades, Estilos, Valores y Objetivos. Estas dimensiones están interconectadas y cualquier cambio en una afecta a las demás. ¿Te gustaría que profundice en alguna dimensión específica?";
+        }
+        
+        if (lowerMessage.includes('estrategia')) {
+            return "La estrategia define la dirección y objetivos a largo plazo de su organización. Incluye la visión, misión y el plan estratégico general. Una estrategia bien definida debe ser comunicada claramente a todos los niveles y estar alineada con las operaciones diarias.";
+        }
+        
+        if (lowerMessage.includes('estructura')) {
+            return "La estructura organizacional se refiere a cómo se organiza formalmente la empresa: jerarquías, departamentos y distribución de responsabilidades. Una estructura efectiva facilita la comunicación, la toma de decisiones y la ejecución de la estrategia.";
+        }
+        
+        if (lowerMessage.includes('sistemas')) {
+            return "Los sistemas incluyen procesos, procedimientos y tecnologías que apoyan las operaciones diarias. Sistemas bien diseñados y documentados mejoran la eficiencia, reducen errores y facilitan el escalamiento del negocio.";
+        }
+        
+        if (lowerMessage.includes('consultoría') || lowerMessage.includes('servicios')) {
+            return "Ofrecemos servicios de consultoría en transformación organizacional, mejora de procesos, gestión del cambio, desarrollo de liderazgo y estrategia corporativa. Cada proyecto se adapta a las necesidades específicas de nuestros clientes usando nuestro modelo del octágono.";
+        }
+        
+        if (lowerMessage.includes('contacto') || lowerMessage.includes('contratar') || lowerMessage.includes('precio')) {
+            return "Puede contactarnos a través de nuestro correo electrónico contacto@sage-wise.com o llamando al +52 (55) 1234-5678. Ofrecemos una consulta inicial gratuita para evaluar sus necesidades y diseñar una propuesta personalizada.";
+        }
+        
+        if (lowerMessage.includes('diagnóstico') || lowerMessage.includes('evaluación')) {
+            return "Nuestro diagnóstico organizacional utiliza el modelo del octágono para evaluar las ocho dimensiones clave de su empresa. Puede comenzar con nuestro diagnóstico en línea en la pestaña 'Diagnóstico' o solicitar una evaluación completa presencial.";
+        }
+        
+        if (lowerMessage.includes('transformación') || lowerMessage.includes('cambio')) {
+            return "La transformación organizacional exitosa requiere un enfoque integral que considere todas las dimensiones del negocio. Nuestro método asegura que los cambios sean sostenibles y generen valor real para su organización.";
+        }
+        
+        // Default response
+        return "Gracias por su pregunta. Como El Explicador de Sage-Wise, puedo ayudarle con información sobre nuestro modelo del octágono, metodologías de consultoría, transformación organizacional y nuestros servicios. ¿Podría ser más específico sobre qué aspecto le interesa conocer?";
+    }
+    
+    sendButton.addEventListener('click', handleUserMessage);
+    userInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleUserMessage();
+        }
+    });
+}
+
+// Placeholder for future OpenAI integration
+async function queryOpenAI(userQuery, documents) {
+    // This function will be implemented when integrating with OpenAI API
+    // It will process documents from the documents folder and provide intelligent responses
+    console.log('OpenAI integration placeholder');
+    return "Esta funcionalidad se implementará con la integración de OpenAI API.";
+}
