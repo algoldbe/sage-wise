@@ -324,6 +324,7 @@ function initialize3DOctagon() {
     
     // Store all interactive objects for hover detection
     const interactiveObjects = [];
+    const textSprites = []; // Keep track of text sprites separately
     
     // Add vertex labels for top octagon
     for (let i = 0; i < 8; i++) {
@@ -341,10 +342,12 @@ function initialize3DOctagon() {
             originalColor: colors.vertex.normal,
             hoverColor: colors.vertex.hover,
             originalPosition: { x, y: 0.8, z },
-            text: vertexLabels[i]
+            text: vertexLabels[i],
+            spriteId: `vertex-1-${i}` // Unique identifier
         };
         octagonGroup.add(label);
         interactiveObjects.push(label);
+        textSprites.push(label);
     }
     
     // Add vertex labels for bottom octagon
@@ -363,10 +366,12 @@ function initialize3DOctagon() {
             originalColor: colors.vertex.normal,
             hoverColor: colors.vertex.hover,
             originalPosition: { x, y: -0.8, z },
-            text: vertexLabels[i]
+            text: vertexLabels[i],
+            spriteId: `vertex-2-${i}` // Unique identifier
         };
         octagonGroup.add(label);
         interactiveObjects.push(label);
+        textSprites.push(label);
     }
     
     // Add side labels for top octagon
@@ -385,10 +390,12 @@ function initialize3DOctagon() {
             originalColor: colors.side.normal,
             hoverColor: colors.side.hover,
             originalPosition: { x, y: 0.5, z },
-            text: sideLabels[i]
+            text: sideLabels[i],
+            spriteId: `side-1-${i}` // Unique identifier
         };
         octagonGroup.add(label);
         interactiveObjects.push(label);
+        textSprites.push(label);
     }
     
     // Add side labels for bottom octagon
@@ -407,10 +414,12 @@ function initialize3DOctagon() {
             originalColor: colors.side.normal,
             hoverColor: colors.side.hover,
             originalPosition: { x, y: -0.5, z },
-            text: sideLabels[i]
+            text: sideLabels[i],
+            spriteId: `side-2-${i}` // Unique identifier
         };
         octagonGroup.add(label);
         interactiveObjects.push(label);
+        textSprites.push(label);
     }
     
     // Add octagon meshes and vertex/side meshes to interactive objects
@@ -503,24 +512,33 @@ function initialize3DOctagon() {
         const userData = object.userData;
         
         if (userData.type === 'vertex' || userData.type === 'side') {
-            // Create new sprite with hover effect
-            const newSprite = createTextSprite(userData.text, userData.hoverColor, true);
-            newSprite.position.copy(object.position);
-            // Copy all userData to preserve original properties
-            newSprite.userData = {
-                ...userData,
-                isHovered: true
-            };
-            
-            // Replace old sprite
-            octagonGroup.remove(object);
-            octagonGroup.add(newSprite);
-            
-            // Update reference in interactiveObjects array
-            const index = interactiveObjects.indexOf(object);
-            if (index !== -1) {
-                interactiveObjects[index] = newSprite;
-                hoveredObject = newSprite; // Update hoveredObject reference
+            // Find and remove the existing sprite from textSprites array
+            const spriteIndex = textSprites.findIndex(sprite => sprite.userData.spriteId === userData.spriteId);
+            if (spriteIndex !== -1) {
+                const oldSprite = textSprites[spriteIndex];
+                octagonGroup.remove(oldSprite);
+                
+                // Create new sprite with hover effect
+                const newSprite = createTextSprite(userData.text, userData.hoverColor, true);
+                newSprite.position.set(
+                    userData.originalPosition.x,
+                    userData.originalPosition.y,
+                    userData.originalPosition.z
+                );
+                newSprite.userData = {
+                    ...userData,
+                    isHovered: true
+                };
+                
+                octagonGroup.add(newSprite);
+                
+                // Update both arrays
+                textSprites[spriteIndex] = newSprite;
+                const interactiveIndex = interactiveObjects.indexOf(object);
+                if (interactiveIndex !== -1) {
+                    interactiveObjects[interactiveIndex] = newSprite;
+                }
+                hoveredObject = newSprite;
             }
         } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
             // Change vertex/side mesh color on hover
@@ -541,27 +559,32 @@ function initialize3DOctagon() {
         const userData = object.userData;
         
         if (userData.type === 'vertex' || userData.type === 'side') {
-            // Create new sprite with normal state
-            const newSprite = createTextSprite(userData.text, userData.originalColor, false);
-            newSprite.position.set(
-                userData.originalPosition.x,
-                userData.originalPosition.y,
-                userData.originalPosition.z
-            );
-            // Copy all userData except isHovered
-            newSprite.userData = {
-                ...userData,
-                isHovered: false
-            };
-            
-            // Replace hovered sprite
-            octagonGroup.remove(object);
-            octagonGroup.add(newSprite);
-            
-            // Update reference in interactiveObjects array
-            const index = interactiveObjects.indexOf(object);
-            if (index !== -1) {
-                interactiveObjects[index] = newSprite;
+            // Find and remove the existing sprite from textSprites array
+            const spriteIndex = textSprites.findIndex(sprite => sprite.userData.spriteId === userData.spriteId);
+            if (spriteIndex !== -1) {
+                const oldSprite = textSprites[spriteIndex];
+                octagonGroup.remove(oldSprite);
+                
+                // Create new sprite with normal state
+                const newSprite = createTextSprite(userData.text, userData.originalColor, false);
+                newSprite.position.set(
+                    userData.originalPosition.x,
+                    userData.originalPosition.y,
+                    userData.originalPosition.z
+                );
+                newSprite.userData = {
+                    ...userData,
+                    isHovered: false
+                };
+                
+                octagonGroup.add(newSprite);
+                
+                // Update both arrays
+                textSprites[spriteIndex] = newSprite;
+                const interactiveIndex = interactiveObjects.indexOf(object);
+                if (interactiveIndex !== -1) {
+                    interactiveObjects[interactiveIndex] = newSprite;
+                }
             }
         } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
             // Reset vertex/side mesh color
