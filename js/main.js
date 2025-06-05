@@ -298,8 +298,8 @@ function initialize3DOctagon() {
         // Clear canvas with transparent background
         context.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Set font size based on hover state
-        const fontSize = isHovered ? 28 : 22;
+        // Set font size based on hover state - MUCH LARGER
+        const fontSize = isHovered ? 40 : 32;
         context.fillStyle = color;
         context.font = `Bold ${fontSize}px Arial`;
         context.textAlign = 'center';
@@ -315,9 +315,9 @@ function initialize3DOctagon() {
         });
         const sprite = new THREE.Sprite(spriteMaterial);
         
-        // Adjust scale based on hover state
-        const scale = isHovered ? 1.3 : 1.0;
-        sprite.scale.set(1.0 * scale, 0.25 * scale, 1);
+        // Adjust scale based on hover state - LARGER SCALE
+        const scale = isHovered ? 1.5 : 1.2;
+        sprite.scale.set(1.2 * scale, 0.3 * scale, 1);
         
         return sprite;
     }
@@ -472,9 +472,13 @@ function initialize3DOctagon() {
         
         const intersects = raycaster.intersectObjects(interactiveObjects, true);
         
-        // Reset previous hover state
-        if (hoveredObject && hoveredObject !== (intersects.length > 0 ? intersects[0].object : null)) {
-            resetObjectHover(hoveredObject);
+        // Reset previous hover state if hovering different object or no object
+        if (hoveredObject) {
+            const currentObject = intersects.length > 0 ? intersects[0].object : null;
+            if (currentObject !== hoveredObject) {
+                resetObjectHover(hoveredObject);
+                hoveredObject = null;
+            }
         }
         
         // Apply hover to new object
@@ -486,7 +490,11 @@ function initialize3DOctagon() {
                 container.style.cursor = 'pointer';
             }
         } else {
-            hoveredObject = null;
+            // No object hovered, make sure we reset everything
+            if (hoveredObject) {
+                resetObjectHover(hoveredObject);
+                hoveredObject = null;
+            }
             container.style.cursor = 'grab';
         }
     }
@@ -498,7 +506,11 @@ function initialize3DOctagon() {
             // Create new sprite with hover effect
             const newSprite = createTextSprite(userData.text, userData.hoverColor, true);
             newSprite.position.copy(object.position);
-            newSprite.userData = userData;
+            // Copy all userData to preserve original properties
+            newSprite.userData = {
+                ...userData,
+                isHovered: true
+            };
             
             // Replace old sprite
             octagonGroup.remove(object);
@@ -513,6 +525,7 @@ function initialize3DOctagon() {
         } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
             // Change vertex/side mesh color on hover
             userData.material.color.setHex(userData.hoverColor);
+            userData.isHovered = true;
         } else if (userData.type === 'octagon') {
             // Change octagon color on hover
             if (userData.id === 1) {
@@ -520,6 +533,7 @@ function initialize3DOctagon() {
             } else {
                 userData.material.color.setHex(colors.octagon2.hover);
             }
+            userData.isHovered = true;
         }
     }
     
@@ -534,7 +548,11 @@ function initialize3DOctagon() {
                 userData.originalPosition.y,
                 userData.originalPosition.z
             );
-            newSprite.userData = userData;
+            // Copy all userData except isHovered
+            newSprite.userData = {
+                ...userData,
+                isHovered: false
+            };
             
             // Replace hovered sprite
             octagonGroup.remove(object);
@@ -548,9 +566,11 @@ function initialize3DOctagon() {
         } else if (userData.type === 'vertex-mesh' || userData.type === 'side-mesh') {
             // Reset vertex/side mesh color
             userData.material.color.setHex(userData.originalColor);
+            userData.isHovered = false;
         } else if (userData.type === 'octagon') {
             // Reset octagon color
             userData.material.color.setHex(userData.originalColor);
+            userData.isHovered = false;
         }
     }
     
