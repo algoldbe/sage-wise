@@ -97,6 +97,7 @@ function initializeTabNavigation() {
 }
 
 // 3D Octagon Visualization Functions
+// Enhanced 3D Octagon Visualization Functions with Hover Effects
 function initialize3DOctagon() {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -115,6 +116,7 @@ function initialize3DOctagon() {
     let targetRotationY = 0;
     let currentRotationX = 0;
     let currentRotationY = 0;
+    let hoveredObject = null;
     
     // Create octagon group
     const octagonGroup = new THREE.Group();
@@ -131,16 +133,36 @@ function initialize3DOctagon() {
         "Conexión 5", "Conexión 6", "Conexión 7", "Conexión 8"
     ];
     
+    // Color schemes
+    const colors = {
+        octagon1: {
+            normal: 0x1a73e8,
+            hover: 0x0d47a1
+        },
+        octagon2: {
+            normal: 0x4285f4,
+            hover: 0x1565c0
+        },
+        vertex: {
+            normal: '#1a73e8',
+            hover: '#ffffff'
+        },
+        side: {
+            normal: '#4285f4',
+            hover: '#ffffff'
+        }
+    };
+    
     // Create octagon geometries and materials
     const octagonGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.15, 8);
     const octagonMaterial1 = new THREE.MeshPhongMaterial({ 
-        color: 0x1a73e8,
+        color: colors.octagon1.normal,
         transparent: true,
         opacity: 0.8,
         flatShading: true
     });
     const octagonMaterial2 = new THREE.MeshPhongMaterial({ 
-        color: 0x4285f4,
+        color: colors.octagon2.normal,
         transparent: true,
         opacity: 0.8,
         flatShading: true
@@ -148,33 +170,54 @@ function initialize3DOctagon() {
     
     const octagon1 = new THREE.Mesh(octagonGeometry, octagonMaterial1);
     octagon1.position.y = 0.5;
+    octagon1.userData = { type: 'octagon', id: 1, material: octagonMaterial1, originalColor: colors.octagon1.normal };
     octagonGroup.add(octagon1);
     
     const octagon2 = new THREE.Mesh(octagonGeometry, octagonMaterial2);
     octagon2.position.y = -0.5;
+    octagon2.userData = { type: 'octagon', id: 2, material: octagonMaterial2, originalColor: colors.octagon2.normal };
     octagonGroup.add(octagon2);
     
-    // Create text sprites
-    function createTextSprite(text, color = '#1a73e8') {
+    // Enhanced text sprite creation with hover support
+    function createTextSprite(text, color = '#1a73e8', isHovered = false) {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         
-        canvas.width = 256;
-        canvas.height = 64;
+        canvas.width = 512;
+        canvas.height = 128;
         
+        // Clear canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Set font size based on hover state
+        const fontSize = isHovered ? 28 : 20;
         context.fillStyle = color;
-        context.font = 'Bold 16px Arial';
+        context.font = `Bold ${fontSize}px Arial`;
         context.textAlign = 'center';
         context.textBaseline = 'middle';
+        
+        // Add background for better readability when hovered
+        if (isHovered) {
+            context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = color;
+        }
+        
         context.fillText(text, canvas.width / 2, canvas.height / 2);
         
         const texture = new THREE.CanvasTexture(canvas);
         const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
         const sprite = new THREE.Sprite(spriteMaterial);
-        sprite.scale.set(0.8, 0.2, 1);
+        
+        // Adjust scale based on hover state
+        const scale = isHovered ? 1.2 : 1.0;
+        sprite.scale.set(1.0 * scale, 0.25 * scale, 1);
         
         return sprite;
     }
+    
+    // Store all interactive objects for hover detection
+    const interactiveObjects = [];
     
     // Add vertex labels for top octagon
     for (let i = 0; i < 8; i++) {
@@ -182,10 +225,20 @@ function initialize3DOctagon() {
         const x = Math.cos(angle) * 1.6;
         const z = Math.sin(angle) * 1.6;
         
-        const label = createTextSprite(vertexLabels[i]);
+        const label = createTextSprite(vertexLabels[i], colors.vertex.normal);
         label.position.set(x, 0.8, z);
-        label.userData = { type: 'vertex', index: i, octagon: 1, name: vertexLabels[i] };
+        label.userData = { 
+            type: 'vertex', 
+            index: i, 
+            octagon: 1, 
+            name: vertexLabels[i],
+            originalColor: colors.vertex.normal,
+            hoverColor: colors.vertex.hover,
+            originalPosition: { x, y: 0.8, z },
+            text: vertexLabels[i]
+        };
         octagonGroup.add(label);
+        interactiveObjects.push(label);
     }
     
     // Add vertex labels for bottom octagon
@@ -194,10 +247,20 @@ function initialize3DOctagon() {
         const x = Math.cos(angle) * 1.6;
         const z = Math.sin(angle) * 1.6;
         
-        const label = createTextSprite(vertexLabels[i], '#4285f4');
+        const label = createTextSprite(vertexLabels[i], colors.vertex.normal);
         label.position.set(x, -0.8, z);
-        label.userData = { type: 'vertex', index: i, octagon: 2, name: vertexLabels[i] };
+        label.userData = { 
+            type: 'vertex', 
+            index: i, 
+            octagon: 2, 
+            name: vertexLabels[i],
+            originalColor: colors.vertex.normal,
+            hoverColor: colors.vertex.hover,
+            originalPosition: { x, y: -0.8, z },
+            text: vertexLabels[i]
+        };
         octagonGroup.add(label);
+        interactiveObjects.push(label);
     }
     
     // Add side labels for top octagon
@@ -206,10 +269,20 @@ function initialize3DOctagon() {
         const x = Math.cos(angle) * 1.4;
         const z = Math.sin(angle) * 1.4;
         
-        const label = createTextSprite(sideLabels[i]);
+        const label = createTextSprite(sideLabels[i], colors.side.normal);
         label.position.set(x, 0.5, z);
-        label.userData = { type: 'side', index: i, octagon: 1, name: sideLabels[i] };
+        label.userData = { 
+            type: 'side', 
+            index: i, 
+            octagon: 1, 
+            name: sideLabels[i],
+            originalColor: colors.side.normal,
+            hoverColor: colors.side.hover,
+            originalPosition: { x, y: 0.5, z },
+            text: sideLabels[i]
+        };
         octagonGroup.add(label);
+        interactiveObjects.push(label);
     }
     
     // Add side labels for bottom octagon
@@ -218,11 +291,24 @@ function initialize3DOctagon() {
         const x = Math.cos(angle) * 1.4;
         const z = Math.sin(angle) * 1.4;
         
-        const label = createTextSprite(sideLabels[i], '#4285f4');
+        const label = createTextSprite(sideLabels[i], colors.side.normal);
         label.position.set(x, -0.5, z);
-        label.userData = { type: 'side', index: i, octagon: 2, name: sideLabels[i] };
+        label.userData = { 
+            type: 'side', 
+            index: i, 
+            octagon: 2, 
+            name: sideLabels[i],
+            originalColor: colors.side.normal,
+            hoverColor: colors.side.hover,
+            originalPosition: { x, y: -0.5, z },
+            text: sideLabels[i]
+        };
         octagonGroup.add(label);
+        interactiveObjects.push(label);
     }
+    
+    // Add octagon meshes to interactive objects
+    interactiveObjects.push(octagon1, octagon2);
     
     // Add lights
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
@@ -247,20 +333,110 @@ function initialize3DOctagon() {
     }
     
     function onMouseMove(event) {
-        if (!mouseDown) return;
+        // Handle dragging
+        if (mouseDown) {
+            const deltaX = event.clientX - mouseX;
+            const deltaY = event.clientY - mouseY;
+            
+            targetRotationY += deltaX * 0.01;
+            targetRotationX += deltaY * 0.01;
+            
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }
         
-        const deltaX = event.clientX - mouseX;
-        const deltaY = event.clientY - mouseY;
-        
-        targetRotationY += deltaX * 0.01;
-        targetRotationX += deltaY * 0.01;
-        
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        // Handle hover effects
+        handleHover(event);
     }
     
     function onMouseUp(event) {
         mouseDown = false;
+    }
+    
+    function handleHover(event) {
+        const rect = container.getBoundingClientRect();
+        const mouse = new THREE.Vector2();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, camera);
+        
+        const intersects = raycaster.intersectObjects(interactiveObjects, true);
+        
+        // Reset previous hover state
+        if (hoveredObject && hoveredObject !== (intersects.length > 0 ? intersects[0].object : null)) {
+            resetObjectHover(hoveredObject);
+        }
+        
+        // Apply hover to new object
+        if (intersects.length > 0) {
+            const object = intersects[0].object;
+            if (object !== hoveredObject) {
+                applyObjectHover(object);
+                hoveredObject = object;
+                container.style.cursor = 'pointer';
+            }
+        } else {
+            hoveredObject = null;
+            container.style.cursor = 'grab';
+        }
+    }
+    
+    function applyObjectHover(object) {
+        const userData = object.userData;
+        
+        if (userData.type === 'vertex' || userData.type === 'side') {
+            // Create new sprite with hover effect
+            const newSprite = createTextSprite(userData.text, userData.hoverColor, true);
+            newSprite.position.copy(object.position);
+            newSprite.userData = userData;
+            
+            // Replace old sprite
+            octagonGroup.remove(object);
+            octagonGroup.add(newSprite);
+            
+            // Update reference in interactiveObjects array
+            const index = interactiveObjects.indexOf(object);
+            if (index !== -1) {
+                interactiveObjects[index] = newSprite;
+            }
+        } else if (userData.type === 'octagon') {
+            // Change octagon color on hover
+            if (userData.id === 1) {
+                userData.material.color.setHex(colors.octagon1.hover);
+            } else {
+                userData.material.color.setHex(colors.octagon2.hover);
+            }
+        }
+    }
+    
+    function resetObjectHover(object) {
+        const userData = object.userData;
+        
+        if (userData.type === 'vertex' || userData.type === 'side') {
+            // Create new sprite with normal state
+            const newSprite = createTextSprite(userData.text, userData.originalColor, false);
+            newSprite.position.set(
+                userData.originalPosition.x,
+                userData.originalPosition.y,
+                userData.originalPosition.z
+            );
+            newSprite.userData = userData;
+            
+            // Replace hovered sprite
+            octagonGroup.remove(object);
+            octagonGroup.add(newSprite);
+            
+            // Update reference in interactiveObjects array
+            const index = interactiveObjects.indexOf(object);
+            if (index !== -1) {
+                interactiveObjects[index] = newSprite;
+            }
+        } else if (userData.type === 'octagon') {
+            // Reset octagon color
+            userData.material.color.setHex(userData.originalColor);
+        }
     }
     
     function onMouseClick(event) {
@@ -272,7 +448,7 @@ function initialize3DOctagon() {
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(mouse, camera);
         
-        const intersects = raycaster.intersectObjects(octagonGroup.children, true);
+        const intersects = raycaster.intersectObjects(interactiveObjects, true);
         
         if (intersects.length > 0) {
             const object = intersects[0].object;
@@ -364,19 +540,6 @@ function initialize3DOctagon() {
     
     window.addEventListener('resize', onWindowResize);
     animate();
-}
-
-// Quiz Functions
-async function loadQuizData() {
-    try {
-        const response = await fetch('data/quiz-questions.json');
-        quizData = await response.json();
-        initializeQuiz();
-    } catch (error) {
-        console.error('Error loading quiz data:', error);
-        // Fallback to hardcoded questions if JSON fails to load
-        loadFallbackQuizData();
-    }
 }
 
 function loadFallbackQuizData() {
