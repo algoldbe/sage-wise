@@ -139,5 +139,37 @@
     </footer>
     
     <script src="js/main.js"></script>
+
+
+    <!-- Botón flotante de chat -->
+<style>
+  .chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #4a90a4;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    font-size: 28px;
+    color: white;
+    z-index: 9999;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .chat-button:hover {
+    transform: scale(1.1);
+    background-color: #3a7a94;
+  }
+</style>
+
+<button class="chat-button" onclick="window.open('https://n8n.ottmc.com/webhook/133e5134-07db-45f7-84fe-6c28aeb78e33/chat', 'Chat Sage-Wise', 'width=400,height=600,scrollbars=no,resizable=yes')">
+  💬
+</button>
+
+    
 </body>
 </html>
