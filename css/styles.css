@@ -158,55 +158,87 @@ header {
 }
 
 .octagon-model {
-    height: 450px;
+    height: 500px;
     position: relative;
-    background-color: var(--light-color);
-    border-radius: 10px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    border-radius: 15px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(26, 115, 232, 0.2);
 }
 
 .octagon-title {
     text-align: center;
-    padding: 1rem;
-    color: var(--primary-color);
+    padding: 1rem 1.5rem;
+    color: var(--white-color);
     font-weight: 600;
-    font-size: 1.2rem;
-    background-color: rgba(26, 115, 232, 0.1);
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .octagon-canvas {
     flex: 1;
     cursor: grab;
+    position: relative;
 }
 
 .octagon-canvas:active {
     cursor: grabbing;
 }
 
+.octagon-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--light-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.octagon-hint i {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
 /* Octagon Info Panel */
 .octagon-info-panel {
-    background-color: var(--white-color);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
+    background: linear-gradient(to bottom, var(--white-color), #f8fafc);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 2rem;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
 }
 
 .octagon-info-panel h3 {
     color: var(--primary-color);
     margin-bottom: 1rem;
     font-size: 1.3rem;
+    font-weight: 600;
 }
 
 .octagon-info-panel p {
     color: var(--light-text);
-    line-height: 1.6;
+    line-height: 1.7;
+    font-size: 1rem;
 }
 
 .octagon-info-panel.selected {
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 6px 20px rgba(26, 115, 232, 0.2);
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15);
+    background: linear-gradient(to bottom, var(--white-color), var(--light-color));
 }
 
 /* Section Titles */
@@ -656,7 +688,7 @@ footer {
     }
     
     .octagon-model {
-        height: 400px;
+        height: 450px;
     }
     
     .glossary-search {
