@@ -20,14 +20,36 @@ function initializeGlossarySearch() {
     
     // Sample glossary data (will be replaced with actual data later)
     const glossaryData = {
-        'estrategia': 'Define la dirección y objetivos a largo plazo de la organización. Incluye la visión, misión, y el plan estratégico general.',
-        'estructura': 'Se refiere a la organización formal, jerarquías, departamentos y cómo se distribuyen las responsabilidades.',
-        'sistemas': 'Procesos, procedimientos y tecnologías que apoyan las operaciones diarias de la empresa.',
-        'personal': 'Los recursos humanos de la organización, incluyendo estructura de roles y responsabilidades.',
-        'habilidades': 'Las competencias, conocimientos y capacidades disponibles en la organización.',
-        'estilos': 'El estilo de liderazgo y la forma en que se toman las decisiones en la empresa.',
-        'valores': 'Los principios y creencias compartidas que guían el comportamiento organizacional.',
-        'objetivos': 'Las metas específicas y medibles que la organización busca alcanzar.'
+        // Vértices del Octagrama de Valor
+        'personalización': 'La individualización de la necesidad, es decir, que un segmento de clientes pueda ordenar un producto o servicio que se ajuste perfectamente a sus preferencias.',
+        'satisfacción': 'La experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio que se le han suministrado.',
+        'exclusividad': 'El resultado de una tecnología o knowhow, con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación.',
+        'prestigio': 'La buena reputación que se logra por la confianza y credibilidad en la marca. Factor de diferenciación que se alcanza cumpliendo cabal y sostenidamente una promesa de valor.',
+        'rendimiento': 'Haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar palancas financieras y operativas que balancean riesgo y rentabilidad.',
+        'talento': 'Contar con un capital humano capaz y comprometido con el aprendizaje continuo. El valor que agrega puede ser inmenso si se traduce en inteligencia colectiva.',
+        'logística': 'Una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
+        'informática': 'Pone a disposición del cliente información veraz y oportuna, y proporciona a la organización los datos necesarios para monitorear el desempeño y tomar decisiones.',
+        // Lados del Octagrama de Valor
+        'experiencia del cliente': 'El vínculo entre personalización y satisfacción. El cliente goza del bien suministrado y ve cumplidas sus expectativas.',
+        'portafolio de negocios': 'Emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. Construir sectores bien posicionados en mercados atractivos.',
+        'desarrollo de prototipo': 'El vínculo entre exclusividad y prestigio. Un prototipo comercialmente viable a partir de actividades creativas y de investigación.',
+        'propuesta de valor': 'Una negociación ganar-ganar que alinea la promesa y la entrega de valor especificando requisitos de calidad y costo.',
+        'asignación de recursos': 'El vínculo entre rendimiento y talento mediante presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
+        'captura de valor': 'Depende del valor agregado al cliente, el turnover y las palancas aplicadas, equilibrando riesgo y rentabilidad.',
+        'abastecimiento de insumos': 'El vínculo entre logística e informática: los procesos de abastecimiento y la retroalimentación de clientes para optimizar la cadena de suministro.',
+        'organización competente': 'Sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge al conectar información con conocimiento.',
+        // Vértices del Octagrama Cerebral
+        'cso': 'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'coo': 'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'cto': 'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+        'cmo': 'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+        'cpo': 'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'cio': 'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+        'cho': 'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'cfo': 'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.',
+        // Modelo general
+        'octagrama de valor': 'Modelo que explica las interacciones entre los procesos empresariales que generan valor. Sus vértices representan los resultados deseados y sus lados los procesos elementales y conectores sinérgicos.',
+        'octagrama cerebral': 'Modelo que representa a los miembros de la organización que toman decisiones. Sus vértices son los roles ejecutivos (C-suite) y sus lados los mercados en los que intervienen.'
     };
     
     function performSearch() {
@@ -126,15 +148,24 @@ function initialize3DOctagon() {
     const octagonGroup = new THREE.Group();
     scene.add(octagonGroup);
 
-    // Labels data
-    const vertexLabels = [
-        "Estrategia", "Estructura", "Sistemas", "Personal",
-        "Habilidades", "Estilos", "Valores", "Objetivos"
+    // Labels data - Octagrama de Valor (top octagon)
+    const vertexLabelsValor = [
+        "Personalización", "Satisfacción", "Exclusividad", "Prestigio",
+        "Rendimiento", "Talento", "Logística", "Informática"
+    ];
+    const sideLabelsValor = [
+        "Experiencia del Cliente", "Portafolio de Negocios", "Desarrollo de Prototipo", "Propuesta de Valor",
+        "Asignación de Recursos", "Captura de Valor", "Abastecimiento de Insumos", "Org. Competente"
     ];
 
-    const sideLabels = [
-        "Estrategia-Estructura", "Estructura-Sistemas", "Sistemas-Personal", "Personal-Habilidades",
-        "Habilidades-Estilos", "Estilos-Valores", "Valores-Objetivos", "Objetivos-Estrategia"
+    // Labels data - Octagrama Cerebral (bottom octagon)
+    const vertexLabelsCerebral = [
+        "CSO / Vendedor", "COO / Operador", "CTO / Tecnólogo", "CMO / Mercadólogo",
+        "CPO / Comprador", "CIO / Informático", "CHO / Entrenador", "CFO / Planificador"
+    ];
+    const sideLabelsCerebral = [
+        "Mcdos. de Clientes", "Mcdos. Fabriles", "Mcdos. Tecnológicos", "Mcdos. de Medios",
+        "Mcdos. de Proveedores", "Mcdos. de TIC's", "Mcdos. Laborales", "Mcdos. Financieros"
     ];
 
     // Color schemes
@@ -266,7 +297,7 @@ function initialize3DOctagon() {
         const angle = (i / 8) * Math.PI * 2;
         const x = Math.cos(angle) * 1.2;
         const z = Math.sin(angle) * 1.2;
-        createVertexPoint(new THREE.Vector3(x, 0.5, z), i, 1, vertexLabels[i]);
+        createVertexPoint(new THREE.Vector3(x, 0.5, z), i, 1, vertexLabelsValor[i]);
     }
 
     // Create vertex points for bottom octagon (dark blue spheres)
@@ -274,7 +305,7 @@ function initialize3DOctagon() {
         const angle = (i / 8) * Math.PI * 2;
         const x = Math.cos(angle) * 1.2;
         const z = Math.sin(angle) * 1.2;
-        createVertexPoint(new THREE.Vector3(x, -0.5, z), i, 2, vertexLabels[i]);
+        createVertexPoint(new THREE.Vector3(x, -0.5, z), i, 2, vertexLabelsCerebral[i]);
     }
 
     // Create side bars for top octagon (cyan/teal bars between vertices)
@@ -283,7 +314,7 @@ function initialize3DOctagon() {
         const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
         const x = Math.cos(angle) * 1.35;  // Slightly outside the octagon
         const z = Math.sin(angle) * 1.35;
-        createSideBar(new THREE.Vector3(x, 0.5, z), angle, i, 1, sideLabels[i]);
+        createSideBar(new THREE.Vector3(x, 0.5, z), angle, i, 1, sideLabelsValor[i]);
     }
 
     // Create side bars for bottom octagon (cyan/teal bars)
@@ -291,7 +322,7 @@ function initialize3DOctagon() {
         const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
         const x = Math.cos(angle) * 1.35;  // Slightly outside the octagon
         const z = Math.sin(angle) * 1.35;
-        createSideBar(new THREE.Vector3(x, -0.5, z), angle, i, 2, sideLabels[i]);
+        createSideBar(new THREE.Vector3(x, -0.5, z), angle, i, 2, sideLabelsCerebral[i]);
     }
 
     // Create title label for octagrams (3D text that moves with the model)
@@ -603,13 +634,14 @@ function initialize3DOctagon() {
 
         let title = '';
         let description = '';
+        const octagonName = userData.octagon === 1 ? 'Octagrama de Valor' : 'Octagrama Cerebral';
 
         if (userData.type === 'vertex') {
-            title = `${userData.label} - Octágono ${userData.octagon}`;
-            description = getVertexDescription(userData.label);
+            title = `${userData.label} - ${octagonName}`;
+            description = getVertexDescription(userData.index, userData.octagon);
         } else if (userData.type === 'side') {
-            title = `${userData.label} - Octágono ${userData.octagon}`;
-            description = getSideDescription(userData.index);
+            title = `${userData.label} - ${octagonName}`;
+            description = getSideDescription(userData.index, userData.octagon);
         }
 
         infoPanel.innerHTML = `
@@ -619,31 +651,53 @@ function initialize3DOctagon() {
         `;
     }
 
-    function getVertexDescription(vertexName) {
-        const descriptions = {
-            'Estrategia': 'Define la dirección y objetivos a largo plazo de la organización. Incluye la visión, misión, y el plan estratégico general.',
-            'Estructura': 'Se refiere a la organización formal, jerarquías, departamentos y cómo se distribuyen las responsabilidades.',
-            'Sistemas': 'Procesos, procedimientos y tecnologías que apoyan las operaciones diarias de la empresa.',
-            'Personal': 'Los recursos humanos de la organización, incluyendo estructura de roles y responsabilidades.',
-            'Habilidades': 'Las competencias, conocimientos y capacidades disponibles en la organización.',
-            'Estilos': 'El estilo de liderazgo y la forma en que se toman las decisiones en la empresa.',
-            'Valores': 'Los principios y creencias compartidas que guían el comportamiento organizacional.',
-            'Objetivos': 'Las metas específicas y medibles que la organización busca alcanzar.'
-        };
-        return descriptions[vertexName] || 'Descripción no disponible.';
+    function getVertexDescription(index, octagon) {
+        const descriptionsValor = [
+            'La personalización es la individualización de la necesidad, es decir, que un segmento de clientes pueda ordenar un producto o servicio que se ajuste perfectamente a sus preferencias. Los sectores de negocios, por tanto, serán distintos según el segmento.',
+            'La satisfacción la experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio que se le han suministrado. Al cumplirse sus expectativas, el cliente deleitado a menudo estará dispuesto a pagar un sobreprecio por el usufructo del valor.',
+            'La exclusividad es el resultado de una tecnología o knowhow, con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación con los que puede lograrse una diferenciación ventajosa de la oferta de los competidores.',
+            'El prestigio es la buena reputación que se logra por la confianza y credibilidad en la marca. Es también un factor de diferenciación y se alcanza en la medida que se cumple cabal y sostenidamente una promesa de valor.',
+            'El rendimiento de la inversión es haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar aquéllas palancas financieras y operativas que balancean perfectamente riesgo y rentabilidad. Con esto, se captura el mayor valor posible.',
+            'El talento es contar con un capital humano capaz y comprometido con el aprendizaje continuo. El recurso humano es prestado y el valor que agrega al combinarse con otros recursos puede ser inmenso si se traduce en inteligencia colectiva por medio del aprendizaje continuo.',
+            'Una logística efectiva se basa en una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
+            'Una informática efectiva pone a la disposición del cliente información veraz y oportuna para ubicar sus pedidos, y proporciona a la organización los datos necesarios para monitorear el desempeño del negocio y tomar decisiones.'
+        ];
+        const descriptionsCerebral = [
+            'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+            'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+            'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+            'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+            'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+            'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+            'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+            'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.'
+        ];
+        const descriptions = octagon === 1 ? descriptionsValor : descriptionsCerebral;
+        return descriptions[index] || 'Descripción no disponible.';
     }
 
-    function getSideDescription(index) {
-        const descriptions = [
-            'La conexión entre estrategia y estructura asegura que la organización esté alineada con sus objetivos.',
-            'La relación entre estructura y sistemas facilita la implementación efectiva de procesos.',
-            'Los sistemas y el personal deben trabajar en armonía para maximizar la productividad.',
-            'El personal y las habilidades representan el capital humano de la organización.',
-            'Las habilidades y los estilos de liderazgo determinan la efectividad operacional.',
-            'Los estilos y valores definen la cultura organizacional.',
-            'Los valores y objetivos proporcionan dirección y propósito.',
-            'Los objetivos se conectan con la estrategia para cerrar el ciclo del modelo.'
+    function getSideDescription(index, octagon) {
+        const descriptionsValor = [
+            'El vínculo entre personalización y satisfacción es la experiencia del cliente, quien goza del bien suministrado y ve cumplidas sus expectativas. Las necesidades pueden segmentarse y distinguirse unas de otras según su ingencia y se saturan cuando están satisfechas.',
+            'Un sector de negocio emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. El portafolio de negocios está constituido por estos sectores. Se trata de construir un portafolio en el que un buen número de sectores de negocio estén bien posicionados en mercados atractivos.',
+            'El vínculo entre exclusividad y prestigio es el desarrollo de un prototipo que pruebe ser comercialmente viable. Los satisfactores diferenciados son fuentes de valor: bienes tangibles o intangibles que resultan de actividades creativas y de investigación.',
+            'Una negociación ganar-ganar alinea la promesa y la entrega de valor por medio de una cotización en la que se especifican los requisitos de calidad y costo que han de cumplirse.',
+            'El vínculo entre rendimiento y talento es la asignación de recursos por medio de presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
+            'El cliente ya ha experimentado el valor prometido y sus expectativas han sido satisfechas. La captura del mayor valor posible para el inversionista depende no solo del valor agregado al cliente y el turnover, sino también de las palancas que se apliquen, equilibrando riesgo y rentabilidad.',
+            'El vínculo entre logística e informática son los procesos de abastecimiento de los insumos que requiere la empresa para cumplir con su misión. Este vínculo capta, asimismo, la retroalimentación de los clientes para optimizar la cadena de suministro de valor.',
+            'Una organización competente es aquélla que tiene sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge cuando se conecta la información con el conocimiento.'
         ];
+        const descriptionsCerebral = [
+            'El CSO interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas.',
+            'El COO es el encargado de que las cosas sucedan en la organización. Ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos.',
+            'El CTO interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos.',
+            'El CMO interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas.',
+            'El CPO interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios.',
+            'El CIO interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones.',
+            'El CHO interviene en los mercados laborales para seleccionar y contratar a la mejor gente para la empresa. Es responsable de establecer los medios para aprovechar el talento del personal.',
+            'El CFO interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa.'
+        ];
+        const descriptions = octagon === 1 ? descriptionsValor : descriptionsCerebral;
         return descriptions[index] || 'Descripción de conexión no disponible.';
     }
 
