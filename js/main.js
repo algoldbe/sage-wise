@@ -3,6 +3,76 @@ let currentQuestion = 0;
 let quizData = null;
 let userAnswers = [];
 
+// Octagrama label data (global for cross-navigation)
+const vertexLabelsValor = [
+    "Personalización", "Satisfacción", "Exclusividad", "Prestigio",
+    "Rendimiento", "Talento", "Logística", "Informática"
+];
+const sideLabelsValor = [
+    "Experiencia del Cliente", "Portafolio de Negocios", "Desarrollo de Prototipo", "Propuesta de Valor",
+    "Asignación de Recursos", "Captura de Valor", "Abastecimiento de Insumos", "Org. Competente"
+];
+const vertexLabelsCerebral = [
+    "CSO / Vendedor", "COO / Operador", "CTO / Tecnólogo", "CMO / Mercadólogo",
+    "CPO / Comprador", "CIO / Informático", "CHO / Entrenador", "CFO / Planificador"
+];
+const sideLabelsCerebral = [
+    "Mcdos. de Clientes", "Mcdos. Fabriles", "Mcdos. Tecnológicos", "Mcdos. de Medios",
+    "Mcdos. de Proveedores", "Mcdos. de TIC's", "Mcdos. Laborales", "Mcdos. Financieros"
+];
+
+// MBTI type profiles for modal
+const mbtiInfo = {
+    'ENFJ': {
+        nombre: 'El Protagonista',
+        descripcion: 'Líderes carismáticos e inspiradores que guían mediante el ejemplo. Son empáticos, organizados y orientados a las personas, con una habilidad natural para comunicar y motivar equipos hacia una visión compartida.',
+        fortalezas: 'Liderazgo empático · Comunicación efectiva · Orientación a metas · Construcción de relaciones',
+        desafios: 'Puede ser demasiado altruista · Dificultad para tomar decisiones impopulares'
+    },
+    'ESTJ': {
+        nombre: 'El Ejecutivo',
+        descripcion: 'Organizadores eficientes y directivos naturales. Valoran el orden, la tradición y la eficiencia. Son decisivos, confiables y excelentes para implementar procesos y sistemas que funcionen.',
+        fortalezas: 'Organización · Liderazgo directivo · Cumplimiento · Eficiencia operativa',
+        desafios: 'Puede ser inflexible · Dificultad para considerar perspectivas no convencionales'
+    },
+    'INTP': {
+        nombre: 'El Lógico',
+        descripcion: 'Pensadores analíticos con una sed insaciable de conocimiento. Brillan en el análisis de sistemas complejos y la generación de ideas innovadoras. Prefieren la lógica y la objetividad sobre las emociones.',
+        fortalezas: 'Análisis profundo · Pensamiento original · Resolución de problemas complejos · Objetividad',
+        desafios: 'Puede parecer distante · Dificultad para comunicar ideas a audiencias no técnicas'
+    },
+    'INFP': {
+        nombre: 'El Mediador',
+        descripcion: 'Idealistas creativos guiados por sus valores. Son empáticos, adaptables y apasionados por causas que les importan. Tienen una visión única y profunda de las personas y situaciones.',
+        fortalezas: 'Creatividad · Empatía · Adaptabilidad · Valores sólidos · Visión humanista',
+        desafios: 'Puede ser demasiado idealista · Dificultad con el pensamiento práctico a corto plazo'
+    },
+    'ESTP': {
+        nombre: 'El Emprendedor',
+        descripcion: 'Pragmáticos y orientados a la acción inmediata. Son observadores agudos, hábiles negociadores y brillan en situaciones de crisis. Prefieren la acción sobre la teoría.',
+        fortalezas: 'Acción rápida · Negociación · Adaptabilidad · Pensamiento práctico · Energía',
+        desafios: 'Puede ser impulsivo · Dificultad para planificación a largo plazo'
+    },
+    'ISTJ': {
+        nombre: 'El Logístico',
+        descripcion: 'Prácticos y metódicos, son el pilar de la confiabilidad organizacional. Tienen un fuerte sentido del deber, son detallistas y excelentes para mantener sistemas y procesos funcionando correctamente.',
+        fortalezas: 'Confiabilidad · Atención al detalle · Metodología · Compromiso · Análisis',
+        desafios: 'Puede resistir el cambio · Dificultad con situaciones ambiguas'
+    },
+    'ENFP': {
+        nombre: 'El Activista',
+        descripcion: 'Espíritus libres creativos y sociables. Ven el potencial en cada persona y situación. Son entusiastas, imaginativos y conectan ideas y personas de formas únicas e inesperadas.',
+        fortalezas: 'Creatividad · Entusiasmo · Conexión interpersonal · Visión optimista · Comunicación',
+        desafios: 'Puede dispersarse · Dificultad para mantener foco en detalles rutinarios'
+    },
+    'ISTP': {
+        nombre: 'El Virtuoso',
+        descripcion: 'Artesanos ingeniosos que aprenden haciendo. Son observadores calmos, excelentes en resolver problemas prácticos y en el análisis de cómo funcionan los sistemas desde adentro.',
+        fortalezas: 'Resolución práctica · Análisis técnico · Independencia · Adaptabilidad · Lógica',
+        desafios: 'Puede ser reservado · Dificultad para comprometerse con estructuras rígidas'
+    }
+};
+
 // Document ready initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabNavigation();
@@ -137,9 +207,9 @@ function initialize3DOctagon() {
     let mouseDown = false;
     let mouseX = 0;
     let mouseY = 0;
-    let targetRotationX = 0;
+    let targetRotationX = 0.28;
     let targetRotationY = 0;
-    let currentRotationX = 0;
+    let currentRotationX = 0.28;
     let currentRotationY = 0;
     let hoveredPoint = null;
     let currentLabel = null;
@@ -148,32 +218,14 @@ function initialize3DOctagon() {
     const octagonGroup = new THREE.Group();
     scene.add(octagonGroup);
 
-    // Labels data - Octagrama de Valor (top octagon)
-    const vertexLabelsValor = [
-        "Personalización", "Satisfacción", "Exclusividad", "Prestigio",
-        "Rendimiento", "Talento", "Logística", "Informática"
-    ];
-    const sideLabelsValor = [
-        "Experiencia del Cliente", "Portafolio de Negocios", "Desarrollo de Prototipo", "Propuesta de Valor",
-        "Asignación de Recursos", "Captura de Valor", "Abastecimiento de Insumos", "Org. Competente"
-    ];
-
-    // Labels data - Octagrama Cerebral (bottom octagon)
-    const vertexLabelsCerebral = [
-        "CSO / Vendedor", "COO / Operador", "CTO / Tecnólogo", "CMO / Mercadólogo",
-        "CPO / Comprador", "CIO / Informático", "CHO / Entrenador", "CFO / Planificador"
-    ];
-    const sideLabelsCerebral = [
-        "Mcdos. de Clientes", "Mcdos. Fabriles", "Mcdos. Tecnológicos", "Mcdos. de Medios",
-        "Mcdos. de Proveedores", "Mcdos. de TIC's", "Mcdos. Laborales", "Mcdos. Financieros"
-    ];
-
     // Color schemes
+    // octagon1 = top = Octagrama de Valor → ROJO
+    // octagon2 = bottom = Octagrama Cerebral → AZUL
     const colors = {
-        octagon1: { normal: 0x1a73e8, hover: 0x0d47a1 },
-        octagon2: { normal: 0x4285f4, hover: 0x1565c0 },
-        vertex: { normal: 0x757575, hover: 0xffc107, glow: 0x9e9e9e, emissive: 0x616161 },  // Gray
-        side: { normal: 0x757575, hover: 0xff9800, glow: 0x9e9e9e, emissive: 0x616161 }     // Same gray
+        octagon1: { normal: 0xc0392b, hover: 0x96281b },
+        octagon2: { normal: 0x2563eb, hover: 0x1d4ed8 },
+        vertex: { normal: 0x757575, hover: 0xffc107, glow: 0x9e9e9e, emissive: 0x616161 },
+        side: { normal: 0x757575, hover: 0xff9800, glow: 0x9e9e9e, emissive: 0x616161 }
     };
 
     // Create octagon geometries
@@ -292,35 +344,39 @@ function initialize3DOctagon() {
         return group;
     }
 
-    // Create vertex points for top octagon (dark blue spheres)
+    // Vértices: counter-clockwise desde vértice NO (noroeste)
+    // Ángulo base 225° (5π/4) = NW, decrementando para ir CCW en pantalla
+    const V_START = 5 * Math.PI / 4;
+    const S_START = 9 * Math.PI / 8;
+
+    // Vértices del Octagrama de Valor (arriba, y=0.5)
     for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
+        const angle = V_START - (i / 8) * Math.PI * 2;
         const x = Math.cos(angle) * 1.2;
         const z = Math.sin(angle) * 1.2;
         createVertexPoint(new THREE.Vector3(x, 0.5, z), i, 1, vertexLabelsValor[i]);
     }
 
-    // Create vertex points for bottom octagon (dark blue spheres)
+    // Vértices del Octagrama Cerebral (abajo, y=-0.5)
     for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
+        const angle = V_START - (i / 8) * Math.PI * 2;
         const x = Math.cos(angle) * 1.2;
         const z = Math.sin(angle) * 1.2;
         createVertexPoint(new THREE.Vector3(x, -0.5, z), i, 2, vertexLabelsCerebral[i]);
     }
 
-    // Create side bars for top octagon (cyan/teal bars between vertices)
-    // Position them slightly outside the octagon edge, parallel to each side
+    // Lados del Octagrama de Valor (midpoint entre vértices consecutivos)
     for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
-        const x = Math.cos(angle) * 1.35;  // Slightly outside the octagon
+        const angle = S_START - (i / 8) * Math.PI * 2;
+        const x = Math.cos(angle) * 1.35;
         const z = Math.sin(angle) * 1.35;
         createSideBar(new THREE.Vector3(x, 0.5, z), angle, i, 1, sideLabelsValor[i]);
     }
 
-    // Create side bars for bottom octagon (cyan/teal bars)
+    // Lados del Octagrama Cerebral
     for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2 + (Math.PI / 8);
-        const x = Math.cos(angle) * 1.35;  // Slightly outside the octagon
+        const angle = S_START - (i / 8) * Math.PI * 2;
+        const x = Math.cos(angle) * 1.35;
         const z = Math.sin(angle) * 1.35;
         createSideBar(new THREE.Vector3(x, -0.5, z), angle, i, 2, sideLabelsCerebral[i]);
     }
@@ -628,77 +684,90 @@ function initialize3DOctagon() {
         }
     }
 
+    // Datos de descripciones completas con palabras sensibles (HTML)
+    const vertexDescValor = [
+        'La <strong>Personalización</strong> es la individualización de la necesidad: un segmento de clientes puede ordenar un producto o servicio que se ajuste perfectamente a sus preferencias. Los sectores de negocios serán distintos según el segmento.',
+        'La <strong>Satisfacción</strong> la experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio suministrado. Al cumplirse sus expectativas, estará dispuesto a pagar un sobreprecio por el usufructo del valor.',
+        'La <strong>Exclusividad</strong> es el resultado de una tecnología o knowhow con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación, logrando una diferenciación ventajosa frente a los competidores.',
+        'El <strong>Prestigio</strong> es la buena reputación que se logra por la confianza y credibilidad en la marca. Es un factor de diferenciación que se alcanza en la medida que se cumple cabal y sostenidamente una promesa de valor.',
+        'El <strong>Rendimiento</strong> de la inversión es haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar palancas financieras y operativas que balancean perfectamente riesgo y rentabilidad.',
+        'El <strong>Talento</strong> es contar con un capital humano capaz y comprometido con el aprendizaje continuo. El valor que agrega puede ser inmenso si se traduce en inteligencia colectiva por medio del aprendizaje continuo.',
+        'Una <strong>Logística</strong> efectiva se basa en una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
+        'Una <strong>Informática</strong> efectiva pone a disposición del cliente información veraz y oportuna para ubicar sus pedidos, y proporciona a la organización los datos necesarios para monitorear el desempeño y tomar decisiones.'
+    ];
+    const sideDescValor = [
+        'El vínculo entre <strong>Personalización</strong> y <strong>Satisfacción</strong> es la <em>Experiencia del Cliente</em>: quien goza del bien suministrado ve cumplidas sus expectativas. Las necesidades pueden segmentarse según su urgencia.',
+        'Un sector de negocio emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. El <em>Portafolio de Negocios</em> está constituido por sectores bien posicionados en mercados atractivos.',
+        'El vínculo entre <strong>Exclusividad</strong> y <strong>Prestigio</strong> es el <em>Desarrollo de Prototipo</em>: bienes tangibles o intangibles que resultan de actividades creativas y de investigación con viabilidad comercial.',
+        'Una negociación ganar-ganar alinea la promesa y la entrega de valor por medio de una <em>Propuesta de Valor</em> en la que se especifican los requisitos de calidad y costo que han de cumplirse.',
+        'El vínculo entre <strong>Rendimiento</strong> y <strong>Talento</strong> es la <em>Asignación de Recursos</em> por medio de presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
+        'La <em>Captura de Valor</em> para el inversionista depende del valor agregado al cliente, el turnover y las palancas que se apliquen, equilibrando riesgo y rentabilidad.',
+        'El vínculo entre <strong>Logística</strong> e <strong>Informática</strong> son los procesos de <em>Abastecimiento de Insumos</em>. Este vínculo capta la retroalimentación de clientes para optimizar la cadena de suministro.',
+        'Una <em>Organización Competente</em> tiene sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge cuando se conecta información con conocimiento.'
+    ];
+    const vertexDescCerebral = [
+        'CSO / Vendedor — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ENFJ\',0); return false;">ENFJ</a>. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'COO / Operador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ESTJ\',1); return false;">ESTJ</a>. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'CTO / Tecnólogo — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'INTP\',2); return false;">INTP</a>. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+        'CMO / Mercadólogo — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'INFP\',3); return false;">INFP</a>. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+        'CPO / Comprador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ESTP\',4); return false;">ESTP</a>. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'CIO / Informático — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ISTJ\',5); return false;">ISTJ</a>. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+        'CHO / Entrenador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ENFP\',6); return false;">ENFP</a>. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'CFO / Planificador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ISTP\',7); return false;">ISTP</a>. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.'
+    ];
+    const sideDescCerebral = [
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CSO\',0); return false;">CSO</a> interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'COO\',1); return false;">COO</a> es el encargado de que las cosas sucedan en la organización. Ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CTO\',2); return false;">CTO</a> interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CMO\',3); return false;">CMO</a> interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CPO\',4); return false;">CPO</a> interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CIO\',5); return false;">CIO</a> interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CHO\',6); return false;">CHO</a> interviene en los mercados laborales para seleccionar y contratar a la mejor gente. Es responsable de establecer los medios para aprovechar el talento del personal.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CFO\',7); return false;">CFO</a> interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa.'
+    ];
+
     function showOctagonInfo(userData) {
         const infoPanel = document.getElementById('octagon-info');
         infoPanel.classList.add('selected');
 
-        let title = '';
-        let description = '';
         const octagonName = userData.octagon === 1 ? 'Octagrama de Valor' : 'Octagrama Cerebral';
+        const octColor = userData.octagon === 1 ? '#c0392b' : '#2563eb';
+        const otherOctagon = userData.octagon === 1 ? 2 : 1;
+        const otherOctagonName = otherOctagon === 1 ? 'Octagrama de Valor' : 'Octagrama Cerebral';
+        const otherColor = otherOctagon === 1 ? '#c0392b' : '#2563eb';
+
+        let contentHTML = '';
+        let otherLabel = '';
 
         if (userData.type === 'vertex') {
-            title = `${userData.label} - ${octagonName}`;
-            description = getVertexDescription(userData.index, userData.octagon);
-        } else if (userData.type === 'side') {
-            title = `${userData.label} - ${octagonName}`;
-            description = getSideDescription(userData.index, userData.octagon);
+            contentHTML = userData.octagon === 1
+                ? vertexDescValor[userData.index]
+                : vertexDescCerebral[userData.index];
+            otherLabel = otherOctagon === 1
+                ? `Vértice ${userData.index + 1} — ${vertexLabelsValor[userData.index]}`
+                : `Vértice ${userData.index + 1} — ${vertexLabelsCerebral[userData.index]}`;
+        } else {
+            contentHTML = userData.octagon === 1
+                ? sideDescValor[userData.index]
+                : sideDescCerebral[userData.index];
+            otherLabel = otherOctagon === 1
+                ? `Lado ${userData.index + 1} — ${sideLabelsValor[userData.index]}`
+                : `Lado ${userData.index + 1} — ${sideLabelsCerebral[userData.index]}`;
         }
 
         infoPanel.innerHTML = `
-            <h3>${title}</h3>
-            <p>${description}</p>
-            <p style="margin-top: 1rem; font-style: italic; color: var(--light-text);">Pase el cursor sobre los puntos para ver más información.</p>
+            <h3 style="margin-bottom:0.5rem;">${userData.label}</h3>
+            <div style="font-size:0.75rem; color:${octColor}; font-weight:700; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">${octagonName} · ${userData.type === 'vertex' ? 'Vértice' : 'Lado'} ${userData.index + 1}</div>
+            <p style="line-height:1.75; color:var(--dark-text); font-size:0.93rem;">${contentHTML}</p>
+            <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid rgba(0,0,0,0.1);">
+                <div style="font-size:0.72rem; color:var(--light-text); margin-bottom:0.4rem;">VER EN OTRO OCTAGRAMA</div>
+                <button onclick="navigateToElement(${userData.index}, ${otherOctagon}, '${userData.type}')"
+                    style="background:none; border:1.5px solid ${otherColor}; color:${otherColor}; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600; width:100%; text-align:left; transition:background 0.2s;"
+                    onmouseover="this.style.background='${otherColor}20'" onmouseout="this.style.background='none'">
+                    → ${otherLabel}
+                </button>
+            </div>
         `;
-    }
-
-    function getVertexDescription(index, octagon) {
-        const descriptionsValor = [
-            'La personalización es la individualización de la necesidad, es decir, que un segmento de clientes pueda ordenar un producto o servicio que se ajuste perfectamente a sus preferencias. Los sectores de negocios, por tanto, serán distintos según el segmento.',
-            'La satisfacción la experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio que se le han suministrado. Al cumplirse sus expectativas, el cliente deleitado a menudo estará dispuesto a pagar un sobreprecio por el usufructo del valor.',
-            'La exclusividad es el resultado de una tecnología o knowhow, con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación con los que puede lograrse una diferenciación ventajosa de la oferta de los competidores.',
-            'El prestigio es la buena reputación que se logra por la confianza y credibilidad en la marca. Es también un factor de diferenciación y se alcanza en la medida que se cumple cabal y sostenidamente una promesa de valor.',
-            'El rendimiento de la inversión es haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar aquéllas palancas financieras y operativas que balancean perfectamente riesgo y rentabilidad. Con esto, se captura el mayor valor posible.',
-            'El talento es contar con un capital humano capaz y comprometido con el aprendizaje continuo. El recurso humano es prestado y el valor que agrega al combinarse con otros recursos puede ser inmenso si se traduce en inteligencia colectiva por medio del aprendizaje continuo.',
-            'Una logística efectiva se basa en una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
-            'Una informática efectiva pone a la disposición del cliente información veraz y oportuna para ubicar sus pedidos, y proporciona a la organización los datos necesarios para monitorear el desempeño del negocio y tomar decisiones.'
-        ];
-        const descriptionsCerebral = [
-            'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
-            'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
-            'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
-            'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
-            'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
-            'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
-            'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
-            'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.'
-        ];
-        const descriptions = octagon === 1 ? descriptionsValor : descriptionsCerebral;
-        return descriptions[index] || 'Descripción no disponible.';
-    }
-
-    function getSideDescription(index, octagon) {
-        const descriptionsValor = [
-            'El vínculo entre personalización y satisfacción es la experiencia del cliente, quien goza del bien suministrado y ve cumplidas sus expectativas. Las necesidades pueden segmentarse y distinguirse unas de otras según su ingencia y se saturan cuando están satisfechas.',
-            'Un sector de negocio emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. El portafolio de negocios está constituido por estos sectores. Se trata de construir un portafolio en el que un buen número de sectores de negocio estén bien posicionados en mercados atractivos.',
-            'El vínculo entre exclusividad y prestigio es el desarrollo de un prototipo que pruebe ser comercialmente viable. Los satisfactores diferenciados son fuentes de valor: bienes tangibles o intangibles que resultan de actividades creativas y de investigación.',
-            'Una negociación ganar-ganar alinea la promesa y la entrega de valor por medio de una cotización en la que se especifican los requisitos de calidad y costo que han de cumplirse.',
-            'El vínculo entre rendimiento y talento es la asignación de recursos por medio de presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
-            'El cliente ya ha experimentado el valor prometido y sus expectativas han sido satisfechas. La captura del mayor valor posible para el inversionista depende no solo del valor agregado al cliente y el turnover, sino también de las palancas que se apliquen, equilibrando riesgo y rentabilidad.',
-            'El vínculo entre logística e informática son los procesos de abastecimiento de los insumos que requiere la empresa para cumplir con su misión. Este vínculo capta, asimismo, la retroalimentación de los clientes para optimizar la cadena de suministro de valor.',
-            'Una organización competente es aquélla que tiene sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge cuando se conecta la información con el conocimiento.'
-        ];
-        const descriptionsCerebral = [
-            'El CSO interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas.',
-            'El COO es el encargado de que las cosas sucedan en la organización. Ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos.',
-            'El CTO interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos.',
-            'El CMO interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas.',
-            'El CPO interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios.',
-            'El CIO interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones.',
-            'El CHO interviene en los mercados laborales para seleccionar y contratar a la mejor gente para la empresa. Es responsable de establecer los medios para aprovechar el talento del personal.',
-            'El CFO interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa.'
-        ];
-        const descriptions = octagon === 1 ? descriptionsValor : descriptionsCerebral;
-        return descriptions[index] || 'Descripción de conexión no disponible.';
     }
 
     // Pulse animation for points
@@ -708,6 +777,8 @@ function initialize3DOctagon() {
     function animate() {
         requestAnimationFrame(animate);
 
+        pulseTime += 0.02;
+
         // Subtle pulse animation for non-hovered points
         interactivePoints.forEach(point => {
             if (!point.userData.isHovered) {
@@ -716,17 +787,12 @@ function initialize3DOctagon() {
             }
         });
 
-        // Smooth rotation
+        // Smooth rotation (solo responde al usuario, sin auto-rotación)
         currentRotationX += (targetRotationX - currentRotationX) * 0.05;
         currentRotationY += (targetRotationY - currentRotationY) * 0.05;
 
         octagonGroup.rotation.x = currentRotationX;
         octagonGroup.rotation.y = currentRotationY;
-
-        // Auto-rotation when not being controlled
-        if (!mouseDown && !hoveredPoint) {
-            targetRotationY += 0.002;
-        }
 
         renderer.render(scene, camera);
     }
@@ -745,6 +811,178 @@ function initialize3DOctagon() {
     window.addEventListener('resize', onWindowResize);
     animate();
 }
+
+// ─── Navegación cruzada y modales ────────────────────────────────────────────
+
+// Navega al elemento correspondiente en el otro octagrama
+function navigateToElement(index, octagon, type) {
+    const labelsV = octagon === 1 ? vertexLabelsValor : vertexLabelsCerebral;
+    const labelsS = octagon === 1 ? sideLabelsValor : sideLabelsCerebral;
+    const label = type === 'vertex' ? labelsV[index] : labelsS[index];
+    showOctagonInfoGlobal({ index, octagon, type, label });
+}
+
+// Versión global de showOctagonInfo (llamada desde navegación cruzada)
+function showOctagonInfoGlobal(userData) {
+    // Re-uses the inner function by dispatching a synthetic click event equivalent
+    // We rebuild the HTML directly here since showOctagonInfo is closure-scoped
+    const infoPanel = document.getElementById('octagon-info');
+    infoPanel.classList.add('selected');
+
+    const octagonName = userData.octagon === 1 ? 'Octagrama de Valor' : 'Octagrama Cerebral';
+    const octColor = userData.octagon === 1 ? '#c0392b' : '#2563eb';
+    const otherOctagon = userData.octagon === 1 ? 2 : 1;
+    const otherColor = otherOctagon === 1 ? '#c0392b' : '#2563eb';
+
+    const vertexDescValor = [
+        'La <strong>Personalización</strong> es la individualización de la necesidad: un segmento de clientes puede ordenar un producto o servicio que se ajuste perfectamente a sus preferencias.',
+        'La <strong>Satisfacción</strong> la experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio suministrado.',
+        'La <strong>Exclusividad</strong> es el resultado de una tecnología o knowhow con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación.',
+        'El <strong>Prestigio</strong> es la buena reputación que se logra por la confianza y credibilidad en la marca.',
+        'El <strong>Rendimiento</strong> de la inversión es haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar palancas financieras y operativas.',
+        'El <strong>Talento</strong> es contar con un capital humano capaz y comprometido con el aprendizaje continuo.',
+        'Una <strong>Logística</strong> efectiva garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
+        'Una <strong>Informática</strong> efectiva pone a disposición información veraz y oportuna para monitorear el desempeño y tomar decisiones.'
+    ];
+    const sideDescValor = [
+        'El vínculo entre <strong>Personalización</strong> y <strong>Satisfacción</strong> es la <em>Experiencia del Cliente</em>.',
+        'El <em>Portafolio de Negocios</em> está constituido por sectores bien posicionados en mercados atractivos.',
+        'El <em>Desarrollo de Prototipo</em> prueba viabilidad comercial a partir de actividades creativas y de investigación.',
+        'La <em>Propuesta de Valor</em> alinea promesa y entrega especificando requisitos de calidad y costo.',
+        'La <em>Asignación de Recursos</em> se hace por medio de presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
+        'La <em>Captura de Valor</em> depende del valor agregado al cliente, el turnover y las palancas que se apliquen.',
+        'El <em>Abastecimiento de Insumos</em> vincula logística e informática captando retroalimentación de clientes.',
+        'Una <em>Organización Competente</em> conecta sistemas de información efectivos con gente bien capacitada.'
+    ];
+    const vertexDescCerebral = [
+        'CSO / Vendedor — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ENFJ\',0); return false;">ENFJ</a>. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'COO / Operador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ESTJ\',1); return false;">ESTJ</a>. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'CTO / Tecnólogo — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'INTP\',2); return false;">INTP</a>. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+        'CMO / Mercadólogo — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'INFP\',3); return false;">INFP</a>. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+        'CPO / Comprador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ESTP\',4); return false;">ESTP</a>. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+        'CIO / Informático — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ISTJ\',5); return false;">ISTJ</a>. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+        'CHO / Entrenador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ENFP\',6); return false;">ENFP</a>. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+        'CFO / Planificador — <a href="#" class="sensitive-word" onclick="showMBTIInfo(\'ISTP\',7); return false;">ISTP</a>. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.'
+    ];
+    const sideDescCerebral = [
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CSO\',0); return false;">CSO</a> interviene en los mercados de clientes identificando necesidades y negociando condiciones.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'COO\',1); return false;">COO</a> es el encargado de que las cosas sucedan. Atiende los mercados fabriles para activos fijos.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CTO\',2); return false;">CTO</a> interviene en los mercados tecnológicos identificando tecnologías de vanguardia.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CMO\',3); return false;">CMO</a> interviene en los mercados de medios publicitarios para promover productos y marcas.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CPO\',4); return false;">CPO</a> interviene en los mercados de proveedores. Es responsable de la estructura de costos primarios.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CIO\',5); return false;">CIO</a> interviene en los mercados de TIC\'s para adquirir sistemas informáticos para la toma de decisiones.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CHO\',6); return false;">CHO</a> interviene en los mercados laborales para seleccionar y aprovechar el talento del personal.',
+        'El <a href="#" class="sensitive-word" onclick="showRoleInfo(\'CFO\',7); return false;">CFO</a> interviene en los mercados financieros para obtener el dinero que requiere la empresa.'
+    ];
+
+    let contentHTML = '';
+    let otherLabel = '';
+    if (userData.type === 'vertex') {
+        contentHTML = userData.octagon === 1 ? vertexDescValor[userData.index] : vertexDescCerebral[userData.index];
+        const otherLabels = otherOctagon === 1 ? vertexLabelsValor : vertexLabelsCerebral;
+        otherLabel = `Vértice ${userData.index + 1} — ${otherLabels[userData.index]}`;
+    } else {
+        contentHTML = userData.octagon === 1 ? sideDescValor[userData.index] : sideDescCerebral[userData.index];
+        const otherLabels = otherOctagon === 1 ? sideLabelsValor : sideLabelsCerebral;
+        otherLabel = `Lado ${userData.index + 1} — ${otherLabels[userData.index]}`;
+    }
+
+    infoPanel.innerHTML = `
+        <h3 style="margin-bottom:0.5rem;">${userData.label}</h3>
+        <div style="font-size:0.75rem; color:${octColor}; font-weight:700; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.06em;">${octagonName} · ${userData.type === 'vertex' ? 'Vértice' : 'Lado'} ${userData.index + 1}</div>
+        <p style="line-height:1.75; color:var(--dark-text); font-size:0.93rem;">${contentHTML}</p>
+        <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid rgba(0,0,0,0.1);">
+            <div style="font-size:0.72rem; color:var(--light-text); margin-bottom:0.4rem;">VER EN OTRO OCTAGRAMA</div>
+            <button onclick="navigateToElement(${userData.index}, ${otherOctagon}, '${userData.type}')"
+                style="background:none; border:1.5px solid ${otherColor}; color:${otherColor}; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600; width:100%; text-align:left;"
+                onmouseover="this.style.background='${otherColor}20'" onmouseout="this.style.background='none'">
+                → ${otherLabel}
+            </button>
+        </div>
+    `;
+}
+
+// Muestra modal con perfil MBTI
+function showMBTIInfo(code, vertexIndex) {
+    const info = mbtiInfo[code];
+    if (!info) return;
+    const sideLabel = sideLabelsValor[vertexIndex] || '';
+    document.getElementById('oct-modal-title').textContent = `${code} — ${info.nombre}`;
+    document.getElementById('oct-modal-body').innerHTML = `
+        <p style="margin-bottom:1rem; line-height:1.7;">${info.descripcion}</p>
+        <div style="background:#f8f9fa; border-radius:8px; padding:0.85rem 1rem; margin-bottom:0.75rem;">
+            <div style="font-size:0.72rem; font-weight:700; color:#5f6368; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.35rem;">Fortalezas</div>
+            <p style="font-size:0.9rem; color:#202124;">${info.fortalezas}</p>
+        </div>
+        <div style="background:#fff3f3; border-radius:8px; padding:0.85rem 1rem;">
+            <div style="font-size:0.72rem; font-weight:700; color:#5f6368; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.35rem;">Áreas de desarrollo</div>
+            <p style="font-size:0.9rem; color:#202124;">${info.desafios}</p>
+        </div>
+    `;
+    document.getElementById('oct-modal-footer').innerHTML = `
+        <button onclick="closeOctModal(); navigateToElement(${vertexIndex}, 1, 'vertex');"
+            style="background:none; border:1.5px solid #c0392b; color:#c0392b; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600; margin-right:0.5rem;">
+            → Vértice ${vertexIndex + 1} del Octagrama de Valor
+        </button>
+        <button onclick="closeOctModal(); navigateToElement(${vertexIndex}, 2, 'side');"
+            style="background:none; border:1.5px solid #2563eb; color:#2563eb; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600;">
+            → Lado ${vertexIndex + 1} OC: ${sideLabelsCerebral[vertexIndex]}
+        </button>
+    `;
+    document.getElementById('oct-modal').style.display = 'flex';
+}
+
+// Muestra modal con info del rol C-suite
+function showRoleInfo(role, sideIndex) {
+    const roleNames = {
+        'CSO': 'Chief Sales Officer — Director de Ventas',
+        'COO': 'Chief Operating Officer — Director de Operaciones',
+        'CTO': 'Chief Technology Officer — Director de Tecnología',
+        'CMO': 'Chief Marketing Officer — Director de Mercadotecnia',
+        'CPO': 'Chief Procurement Officer — Director de Compras',
+        'CIO': 'Chief Information Officer — Director de Informática',
+        'CHO': 'Chief Human Officer — Director de Capital Humano',
+        'CFO': 'Chief Financial Officer — Director Financiero'
+    };
+    const vertex = vertexLabelsCerebral[sideIndex] || '';
+    document.getElementById('oct-modal-title').textContent = `${role} — ${roleNames[role] || role}`;
+    document.getElementById('oct-modal-body').innerHTML = `
+        <p style="line-height:1.7; margin-bottom:1rem;">${sideDescCerebralPlain[sideIndex]}</p>
+        <div style="background:#f0f4ff; border-radius:8px; padding:0.85rem 1rem;">
+            <div style="font-size:0.72rem; font-weight:700; color:#5f6368; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.35rem;">Vértice asociado</div>
+            <p style="font-size:0.9rem; color:#202124;">${vertex}</p>
+        </div>
+    `;
+    document.getElementById('oct-modal-footer').innerHTML = `
+        <button onclick="closeOctModal(); navigateToElement(${sideIndex}, 1, 'side');"
+            style="background:none; border:1.5px solid #c0392b; color:#c0392b; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600; margin-right:0.5rem;">
+            → Lado ${sideIndex + 1} del Octagrama de Valor
+        </button>
+        <button onclick="closeOctModal(); navigateToElement(${sideIndex}, 2, 'vertex');"
+            style="background:none; border:1.5px solid #2563eb; color:#2563eb; border-radius:6px; padding:0.4rem 0.9rem; cursor:pointer; font-size:0.82rem; font-weight:600;">
+            → Vértice ${sideIndex + 1} OC: ${vertexLabelsCerebral[sideIndex]}
+        </button>
+    `;
+    document.getElementById('oct-modal').style.display = 'flex';
+}
+
+function closeOctModal() {
+    document.getElementById('oct-modal').style.display = 'none';
+}
+
+// Helper: texto plano de sideDescCerebral (para modal de rol)
+const sideDescCerebralPlain = [
+    'El CSO interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas.',
+    'El COO es el encargado de que las cosas sucedan en la organización. Ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos.',
+    'El CTO interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos.',
+    'El CMO interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas.',
+    'El CPO interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios.',
+    'El CIO interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones.',
+    'El CHO interviene en los mercados laborales para seleccionar y contratar a la mejor gente. Es responsable de establecer los medios para aprovechar el talento del personal.',
+    'El CFO interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa.'
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Quiz Functions
 async function loadQuizData() {

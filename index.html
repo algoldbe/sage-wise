@@ -19,6 +19,7 @@
                 <li><a href="#home" class="tab-link active" data-tab="home">Inicio</a></li>
                 <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
                 <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
+                <li><a href="#glossary" class="tab-link" data-tab="glossary">Glosario</a></li>
             </ul>
         </div>
     </header>
@@ -60,20 +61,24 @@
                 </div>
             </section>
             
-            <h2 class="section-title">Glosario</h2>
+            <h2 class="section-title">Inventario de Recursos</h2>
             <section class="glossary-section">
                 <div class="glossary-container">
-                    <div class="glossary-search">
-                        <input type="text" id="glossary-search" placeholder="Buscar término..." class="search-input">
-                        <button class="search-button"><i class="fas fa-search"></i></button>
-                    </div>
-                    <div class="glossary-content">
-                        <h3>Términos Clave del Modelo Octágono</h3>
-                        <p>Aquí encontrará las definiciones de los conceptos más importantes utilizados en nuestra metodología de consultoría empresarial. Este glosario le ayudará a comprender mejor los términos técnicos y conceptos fundamentales del modelo del octágono de Sage-Wise.</p>
-                        <div id="glossary-results" class="glossary-results">
-                            <p><em>El glosario completo se cargará próximamente con definiciones detalladas de todos los términos relevantes para la transformación organizacional.</em></p>
+                    <!-- Rentímetro -->
+                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#fff8f0,#fff3e0); border-radius:12px; border-left:4px solid #e67e22; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+                            <i class="fas fa-chart-line" style="color:#e67e22; font-size:1.2rem;"></i>
+                            <h3 style="color:#c0392b; margin:0;">Rentímetro</h3>
+                            <span style="font-size:0.72rem; background:#e67e22; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">DE LO ANALÓGICO A LO DIGITAL</span>
                         </div>
+                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Herramienta de diagnóstico que permite evaluar el grado de digitalización de los procesos de negocio de la empresa y su impacto en la rentabilidad.</p>
+                        <a href="http://serch.me/demos/sage-wise/rentimetro/rentimetro.html" target="_blank" rel="noopener"
+                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#e67e22; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
+                            onmouseover="this.style.background='#d35400'" onmouseout="this.style.background='#e67e22'">
+                            <i class="fas fa-external-link-alt"></i> Abrir Rentímetro
+                        </a>
                     </div>
+                    <!-- Más recursos se agregarán aquí -->
                 </div>
             </section>
         </div>
@@ -119,6 +124,27 @@
                 </iframe>
             </div>
         </div>
+
+        <!-- Glosario Tab -->
+        <div id="glossary" class="tab-content">
+            <div class="quiz-container" style="max-width:860px;">
+                <div class="quiz-intro">
+                    <h2>Glosario</h2>
+                    <p>Definiciones de los términos clave del Octagrama de Valor y el Octagrama Cerebral. Busque cualquier vértice, lado o rol del modelo para ver su descripción completa.</p>
+                </div>
+                <div class="glossary-container" style="margin-top:1.5rem;">
+                    <div class="glossary-search">
+                        <input type="text" id="glossary-search" placeholder="Buscar término... (ej: Personalización, CTO, Talento)" class="search-input">
+                        <button class="search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="glossary-content">
+                        <div id="glossary-results" class="glossary-results">
+                            <p><em>Escriba un término para ver su definición en el modelo octagramal.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     
     <footer>
@@ -143,6 +169,44 @@
     </footer>
     
     <script src="js/main.js"></script>
+
+    <!-- Modal de Octagrama (MBTI / Roles) -->
+    <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
+        <div style="background:#fff; border-radius:14px; width:90%; max-width:540px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 12px 40px rgba(0,0,0,0.25); overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1a237e,#2563eb); color:#fff; padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between;">
+                <h3 id="oct-modal-title" style="font-size:1.05rem; font-weight:700; margin:0;"></h3>
+                <button onclick="closeOctModal()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1; padding:0 0.2rem;" title="Cerrar">×</button>
+            </div>
+            <div id="oct-modal-body" style="flex:1; overflow-y:auto; padding:1.25rem;"></div>
+            <div id="oct-modal-footer" style="padding:0.85rem 1.25rem; border-top:1px solid #e8eaed; background:#f8f9fa; display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
+        </div>
+    </div>
+    <style>
+        .sensitive-word {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 1px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .sensitive-word:hover {
+            color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+    </style>
+    <script>
+        // Close modal on backdrop click
+        document.getElementById('oct-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeOctModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('oct-modal').style.display === 'flex') {
+                closeOctModal();
+            }
+        });
+    </script>
 
 
     <!-- Modal Visor de PDF -->
