@@ -76,96 +76,13 @@ const mbtiInfo = {
 // Document ready initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabNavigation();
-    initialize3DOctagon();
+    try { initialize3DOctagon(); } catch(e) { console.error('3D Octagon error:', e); }
     initializeChat();
-    loadQuizData();
-    initializeGlossarySearch();
+    try { loadQuizData(); } catch(e) { console.error('Quiz error:', e); }
+    // Glossary search is now inline in index.html
 });
 
-// Initialize glossary search functionality
-function initializeGlossarySearch() {
-    const searchInput = document.getElementById('glossary-search');
-    const searchButton = document.querySelector('.search-button');
-    const resultsContainer = document.getElementById('glossary-results');
-    
-    // Sample glossary data (will be replaced with actual data later)
-    const glossaryData = {
-        // Vértices del Octagrama de Valor
-        'personalización': 'La individualización de la necesidad, es decir, que un segmento de clientes pueda ordenar un producto o servicio que se ajuste perfectamente a sus preferencias.',
-        'satisfacción': 'La experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio que se le han suministrado.',
-        'exclusividad': 'El resultado de una tecnología o knowhow, con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación.',
-        'prestigio': 'La buena reputación que se logra por la confianza y credibilidad en la marca. Factor de diferenciación que se alcanza cumpliendo cabal y sostenidamente una promesa de valor.',
-        'rendimiento': 'Haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar palancas financieras y operativas que balancean riesgo y rentabilidad.',
-        'talento': 'Contar con un capital humano capaz y comprometido con el aprendizaje continuo. El valor que agrega puede ser inmenso si se traduce en inteligencia colectiva.',
-        'logística': 'Una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
-        'informática': 'Pone a disposición del cliente información veraz y oportuna, y proporciona a la organización los datos necesarios para monitorear el desempeño y tomar decisiones.',
-        // Lados del Octagrama de Valor
-        'experiencia del cliente': 'El vínculo entre personalización y satisfacción. El cliente goza del bien suministrado y ve cumplidas sus expectativas.',
-        'portafolio de negocios': 'Emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. Construir sectores bien posicionados en mercados atractivos.',
-        'desarrollo de prototipo': 'El vínculo entre exclusividad y prestigio. Un prototipo comercialmente viable a partir de actividades creativas y de investigación.',
-        'propuesta de valor': 'Una negociación ganar-ganar que alinea la promesa y la entrega de valor especificando requisitos de calidad y costo.',
-        'asignación de recursos': 'El vínculo entre rendimiento y talento mediante presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
-        'captura de valor': 'Depende del valor agregado al cliente, el turnover y las palancas aplicadas, equilibrando riesgo y rentabilidad.',
-        'abastecimiento de insumos': 'El vínculo entre logística e informática: los procesos de abastecimiento y la retroalimentación de clientes para optimizar la cadena de suministro.',
-        'organización competente': 'Sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge al conectar información con conocimiento.',
-        // Vértices del Octagrama Cerebral
-        'cso': 'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
-        'coo': 'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
-        'cto': 'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
-        'cmo': 'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
-        'cpo': 'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
-        'cio': 'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
-        'cho': 'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
-        'cfo': 'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.',
-        // Modelo general
-        'octagrama de valor': 'Modelo que explica las interacciones entre los procesos empresariales que generan valor. Sus vértices representan los resultados deseados y sus lados los procesos elementales y conectores sinérgicos.',
-        'octagrama cerebral': 'Modelo que representa a los miembros de la organización que toman decisiones. Sus vértices son los roles ejecutivos (C-suite) y sus lados los mercados en los que intervienen.'
-    };
-    
-    function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        
-        if (searchTerm === '') {
-            resultsContainer.innerHTML = '<p><em>El glosario completo se cargará próximamente con definiciones detalladas de todos los términos relevantes para la transformación organizacional.</em></p>';
-            return;
-        }
-        
-        const results = [];
-        
-        // Search for exact matches and partial matches
-        Object.keys(glossaryData).forEach(term => {
-            if (term.includes(searchTerm) || searchTerm.includes(term)) {
-                results.push({
-                    term: term,
-                    definition: glossaryData[term]
-                });
-            }
-        });
-        
-        // Display results
-        if (results.length > 0) {
-            let resultsHTML = '<h4 style="color: var(--primary-color); margin-bottom: 1rem;">Resultados de búsqueda:</h4>';
-            results.forEach(result => {
-                resultsHTML += `
-                    <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: var(--light-color); border-radius: 8px;">
-                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem; text-transform: capitalize;">${result.term}</h5>
-                        <p style="color: var(--light-text); line-height: 1.6;">${result.definition}</p>
-                    </div>
-                `;
-            });
-            resultsContainer.innerHTML = resultsHTML;
-        } else {
-            resultsContainer.innerHTML = '<p style="color: var(--light-text); font-style: italic;">No se encontraron resultados para "' + searchTerm + '". El glosario se está expandiendo continuamente.</p>';
-        }
-    }
-    
-    searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
-}
+// Glossary search moved to inline script in index.html
 
 // Tab Navigation Functions
 function initializeTabNavigation() {

@@ -73,6 +73,7 @@
                         </div>
                         <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Herramienta de diagnóstico que permite evaluar el grado de digitalización de los procesos de negocio de la empresa y su impacto en la rentabilidad.</p>
                         <a href="http://serch.me/demos/sage-wise/rentimetro/rentimetro.html" target="_blank" rel="noopener"
+                            onclick="openRentimetro(); return false;"
                             style="display:inline-flex; align-items:center; gap:0.4rem; background:#e67e22; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
                             onmouseover="this.style.background='#d35400'" onmouseout="this.style.background='#e67e22'">
                             <i class="fas fa-external-link-alt"></i> Abrir Rentímetro
@@ -133,9 +134,12 @@
                     <p>Definiciones de los términos clave del Octagrama de Valor y el Octagrama Cerebral. Busque cualquier vértice, lado o rol del modelo para ver su descripción completa.</p>
                 </div>
                 <div class="glossary-container" style="margin-top:1.5rem;">
-                    <div class="glossary-search">
-                        <input type="text" id="glossary-search" placeholder="Buscar término... (ej: Personalización, CTO, Talento)" class="search-input">
-                        <button class="search-button"><i class="fas fa-search"></i></button>
+                    <div class="glossary-search-wrapper">
+                        <div class="glossary-search">
+                            <input type="text" id="glossary-search" placeholder="Buscar término... (ej: Personalización, CTO, Talento)" class="search-input" autocomplete="off">
+                            <button class="search-button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div id="glossary-suggestions" class="glossary-suggestions"></div>
                     </div>
                     <div class="glossary-content">
                         <div id="glossary-results" class="glossary-results">
@@ -145,6 +149,158 @@
                 </div>
             </div>
         </div>
+
+        <script>
+        (function() {
+            var inp = document.getElementById('glossary-search');
+            var sug = document.getElementById('glossary-suggestions');
+            var res = document.getElementById('glossary-results');
+            var wrap = inp.closest('.glossary-search-wrapper');
+            if (!inp || !sug || !wrap) return;
+
+            var data = {
+                'personalización': 'La individualización de la necesidad, es decir, que un segmento de clientes pueda ordenar un producto o servicio que se ajuste perfectamente a sus preferencias.',
+                'satisfacción': 'La experimenta un cliente deleitado que ha maximizado su provecho con el goce del producto o servicio que se le han suministrado.',
+                'exclusividad': 'El resultado de una tecnología o knowhow, con los que se han desarrollado productos o procesos innovadores y servicios de difícil imitación.',
+                'prestigio': 'La buena reputación que se logra por la confianza y credibilidad en la marca. Factor de diferenciación que se alcanza cumpliendo cabal y sostenidamente una promesa de valor.',
+                'rendimiento': 'Haber alcanzado una tasa de uso muy alta de los recursos empleados, al aplicar palancas financieras y operativas que balancean riesgo y rentabilidad.',
+                'talento': 'Contar con un capital humano capaz y comprometido con el aprendizaje continuo. El valor que agrega puede ser inmenso si se traduce en inteligencia colectiva.',
+                'logística': 'Una cadena de suministro que garantiza el abasto de los satisfactores y entrega el valor en el menor tiempo y en las mejores condiciones.',
+                'informática': 'Pone a disposición del cliente información veraz y oportuna, y proporciona a la organización los datos necesarios para monitorear el desempeño y tomar decisiones.',
+                'experiencia del cliente': 'El vínculo entre personalización y satisfacción. El cliente goza del bien suministrado y ve cumplidas sus expectativas.',
+                'portafolio de negocios': 'Emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. Construir sectores bien posicionados en mercados atractivos.',
+                'desarrollo de prototipo': 'El vínculo entre exclusividad y prestigio. Un prototipo comercialmente viable a partir de actividades creativas y de investigación.',
+                'propuesta de valor': 'Una negociación ganar-ganar que alinea la promesa y la entrega de valor especificando requisitos de calidad y costo.',
+                'asignación de recursos': 'El vínculo entre rendimiento y talento mediante presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.',
+                'captura de valor': 'Depende del valor agregado al cliente, el turnover y las palancas aplicadas, equilibrando riesgo y rentabilidad.',
+                'abastecimiento de insumos': 'El vínculo entre logística e informática: los procesos de abastecimiento y la retroalimentación de clientes para optimizar la cadena de suministro.',
+                'organización competente': 'Sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge al conectar información con conocimiento.',
+                'cso': 'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+                'coo': 'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+                'cto': 'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+                'cmo': 'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+                'cpo': 'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+                'cio': 'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+                'cho': 'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+                'cfo': 'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.',
+                'octagrama de valor': 'Modelo que explica las interacciones entre los procesos empresariales que generan valor. Sus vértices representan los resultados deseados y sus lados los procesos elementales y conectores sinérgicos.',
+                'octagrama cerebral': 'Modelo que representa a los miembros de la organización que toman decisiones. Sus vértices son los roles ejecutivos (C-suite) y sus lados los mercados en los que intervienen.',
+                'modelo octagramal': 'Marco conceptual desarrollado por Sage-Wise que integra dos octágonos: el de Valor (procesos) y el Cerebral (roles de decisión) para explicar la dinámica organizacional.',
+                'estrategia': 'Plan de acción diseñado para alcanzar objetivos organizacionales a largo plazo. Incluye la definición de metas, asignación de recursos y ventajas competitivas.',
+                'estructura organizacional': 'Diseño jerárquico y funcional de una empresa que define roles, responsabilidades y flujos de comunicación entre sus miembros.',
+                'procesos': 'Conjunto de actividades interrelacionadas que transforman insumos en resultados de valor para el cliente y la organización.',
+                'sistemas': 'Conjuntos integrados de recursos, procedimientos y tecnologías que soportan las operaciones y la toma de decisiones en la empresa.',
+                'rentabilidad': 'Capacidad de una empresa para generar ganancias a partir de sus recursos. Se mide mediante indicadores financieros como ROI, margen de utilidad y punto de equilibrio.',
+                'digitalización': 'Transformación de procesos analógicos a digitales, mejorando la eficiencia, trazabilidad y capacidad de análisis de la información empresarial.',
+                'transformación organizacional': 'Proceso de cambio integral en la cultura, estructura y operaciones de una empresa para adaptarse a nuevos mercados y tecnologías.',
+                'consultoría': 'Servicio profesional que asesora a organizaciones en la identificación de oportunidades de mejora y la implementación de soluciones estratégicas.',
+                'modelo de negocio': 'Descripción de cómo una empresa crea, entrega y captura valor. Incluye propuesta de valor, segmentos de clientes, canales, ingresos y costos.',
+                'inteligencia colectiva': 'Capacidad emergente de un grupo organizado para resolver problemas y tomar decisiones que superan las capacidades individuales de sus miembros.',
+                'capital humano': 'Conjunto de habilidades, conocimientos, experiencia y capacidad de innovación que poseen las personas dentro de una organización.',
+                'cadena de suministro': 'Red de organizaciones, personas, actividades y recursos involucrados en la creación y entrega de un producto o servicio al consumidor final.',
+                'valor agregado': 'Incremento de utilidad o bienestar que un producto o servicio proporciona al cliente, más allá de su costo de producción.',
+                'sinergia': 'Efecto combinado de dos o más elementos que produce un resultado superior a la suma de sus efectos individuales. Clave en la interacción entre los lados del Octagrama.',
+                'rentímetro': 'Herramienta de diagnóstico de Sage-Wise que evalúa el grado de digitalización de los procesos de negocio y su impacto en la rentabilidad.',
+                'diagnóstico organizacional': 'Evaluación sistemática de la situación actual de una empresa en áreas clave como estrategia, estructura, procesos, sistemas y talento.',
+                'innovación': 'Aplicación de ideas nuevas que generan valor para la organización y sus clientes, ya sea en productos, procesos, modelos de negocio o experiencia.',
+                'competitividad': 'Capacidad de una empresa para ofrecer productos o servicios superiores en calidad, costo o diferenciación respecto a sus competidores.',
+                'knowhow': 'Conocimiento práctico, técnicas y experiencia acumulada en una organización que constituyen una ventaja competitiva difícil de replicar.',
+                'segmentación': 'Proceso de dividir un mercado heterogéneo en grupos homogéneos de clientes con necesidades y características similares.',
+                'marca': 'Identidad percibida de una empresa o producto en la mente del consumidor. Incluye elementos tangibles (logotipo, nombre) e intangibles (reputación, promesa de valor).',
+                'promesa de valor': 'Compiso que una empresa hace a sus clientes sobre el beneficio que recibirán al adquirir su producto o servicio.',
+                'toma de decisiones': 'Proceso de selección entre alternativas para alcanzar objetivos organizacionales. En el Octagrama Cerebral, cada vértice representa un rol con un ámbito de decisión específico.',
+                'negociación': 'Proceso de comunicación entre partes con intereses comunes o divergentes, buscando un acuerdo mutuamente beneficioso. Habilidad clave del CPO.',
+                'comunicación': 'Transmisión efectiva de información, ideas y emociones. Competencia fundamental del CSO/Vendedor para influir y construir relaciones con clientes.',
+                'investigación': 'Proceso sistemático de búsqueda y análisis de información para generar conocimiento nuevo. Actividad central del CTO y el CMO.',
+                'afiliación': 'Interés vital relacionado con la construcción de vínculos y pertenencia. Modo de ser del COO y el CHO en el Octagrama Cerebral.',
+                'influencia': 'Capacidad de afectar las decisiones y acciones de otros. Interés vital del CSO y el CPO en el Octagrama Cerebral.',
+                'análisis': 'Proceso de descomposición de un problema o sistema en sus partes constitutivas para comprender su funcionamiento. Interés vital del CIO y el CFO.',
+                'enfj': 'ENFJ — El Protagonista. Líderes carismáticos e inspiradores que guían mediante el ejemplo. Son empáticos, organizados y orientados a las personas.',
+                'estj': 'ESTJ — El Ejecutivo. Organizadores eficientes y directivos naturales. Valoran el orden, la tradición y la eficiencia.',
+                'intp': 'INTP — El Lógico. Pensadores analíticos con una sed insaciable de conocimiento. Brillan en el análisis de sistemas complejos.',
+                'infp': 'INFP — El Mediador. Idealistas creativos guiados por sus valores. Son empáticos, adaptables y apasionados.',
+                'estp': 'ESTP — El Emprendedor. Pragmáticos y orientados a la acción inmediata. Son observadores agudos, hábiles negociadores.',
+                'istj': 'ISTJ — El Logístico. Prácticos y metódicos, son el pilar de la confiabilidad organizacional. Tienen un fuerte sentido del deber.',
+                'enfp': 'ENFP — El Activista. Espíritus libres creativos y sociables. Ven el potencial en cada persona y situación.',
+                'istp': 'ISTP — El Virtuoso. Artesanos ingeniosos que aprenden haciendo. Son observadores calmos, excelentes en resolver problemas prácticos.'
+            };
+
+            var keys = Object.keys(data);
+            var hlIdx = -1;
+
+            function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+            function lower(t) { return t.toLowerCase(); }
+
+            function stripAccents(t) {
+                var r = t;
+                var from = 'áéíóúñüàèìòùâêîôûäëïöů';
+                var to   = 'aeiounuaeiouaeiouaeiou';
+                for (var i = 0; i < from.length; i++) r = r.split(from[i]).join(to[i]);
+                return lower(r);
+            }
+
+            function show(q) {
+                sug.innerHTML = '';
+                hlIdx = -1;
+                if (q === '') { hide(); return; }
+                var nq = stripAccents(q);
+                var m = [];
+                for (var i = 0; i < keys.length; i++) {
+                    if (stripAccents(keys[i]).indexOf(nq) !== -1) m.push(keys[i]);
+                }
+                m.sort(function(a, b) {
+                    var aS = stripAccents(a).indexOf(nq) === 0 ? 0 : 1;
+                    var bS = stripAccents(b).indexOf(nq) === 0 ? 0 : 1;
+                    if (aS !== bS) return aS - bS;
+                    return a < b ? -1 : 1;
+                });
+                if (m.length === 0) { hide(); return; }
+                for (var j = 0; j < m.length; j++) {
+                    (function(term) {
+                        var el = document.createElement('div');
+                        el.className = 'glossary-suggestion-item';
+                        var nt = stripAccents(term);
+                        var idx = nt.indexOf(nq);
+                        if (idx === 0) {
+                            el.innerHTML = '<span class="typed">' + esc(term.substring(0, q.length)) + '</span><span class="ghost">' + esc(term.substring(q.length)) + '</span>';
+                        } else {
+                            el.innerHTML = esc(term.substring(0, idx)) + '<span class="typed">' + esc(term.substring(idx, idx + q.length)) + '</span>' + esc(term.substring(idx + q.length));
+                        }
+                        el.onclick = function() { pick(term); };
+                        sug.appendChild(el);
+                    })(m[j]);
+                }
+                sug.classList.add('active');
+            }
+
+            function hide() {
+                sug.classList.remove('active');
+                hlIdx = -1;
+            }
+
+            function pick(term) {
+                inp.value = term;
+                hide();
+                var def = data[term];
+                if (def) {
+                    res.innerHTML = '<div style="margin-bottom:1.5rem; padding:1rem; background-color:var(--light-color); border-radius:8px;"><h5 style="color:var(--primary-color); margin-bottom:0.5rem; text-transform:capitalize;">' + esc(term) + '</h5><p style="color:var(--light-text); line-height:1.6;">' + esc(def) + '</p></div>';
+                }
+            }
+
+            inp.addEventListener('input', function() { show(this.value.trim()); });
+
+            inp.addEventListener('keydown', function(e) {
+                var items = sug.querySelectorAll('.glossary-suggestion-item');
+                if (e.key === 'ArrowDown' && items.length) { e.preventDefault(); hlIdx = Math.min(hlIdx + 1, items.length - 1); for (var i = 0; i < items.length; i++) items[i].classList.toggle('highlighted', i === hlIdx); }
+                else if (e.key === 'ArrowUp' && items.length) { e.preventDefault(); hlIdx = Math.max(hlIdx - 1, 0); for (var i = 0; i < items.length; i++) items[i].classList.toggle('highlighted', i === hlIdx); }
+                else if (e.key === 'Enter' && hlIdx >= 0 && items[hlIdx]) { e.preventDefault(); items[hlIdx].click(); }
+                else if (e.key === 'Escape') { hide(); }
+            });
+
+            document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hide(); });
+        })();
+        </script>
     </main>
     
     <footer>
@@ -208,6 +364,32 @@
         });
     </script>
 
+
+    <!-- Modal Rentímetro -->
+    <div id="rentimetro-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; overflow:hidden;">
+        <div style="background:#fff; border-radius:12px; width:92%; max-width:1100px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div style="background:#e67e22; color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+                <span style="font-weight:600; font-size:1.1rem;"><i class="fas fa-chart-line" style="margin-right:0.5rem;"></i>Rentímetro</span>
+                <button onclick="closeRentimetro()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; padding:0 0.3rem;" title="Cerrar"><i class="fas fa-times"></i></button>
+            </div>
+            <iframe id="rentimetro-iframe" src="" style="flex:1; border:none; width:100%; height:100%; overflow:hidden;" scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <script>
+    window.openRentimetro = function() {
+        var iframe = document.getElementById('rentimetro-iframe');
+        if (!iframe.src || iframe.src === window.location.href) {
+            iframe.src = 'http://serch.me/demos/sage-wise/rentimetro/rentimetro.html';
+        }
+        document.getElementById('rentimetro-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+    window.closeRentimetro = function() {
+        document.getElementById('rentimetro-modal').style.display = 'none';
+        document.body.style.overflow = '';
+    };
+    </script>
 
     <!-- Modal Visor de PDF -->
     <div id="pdf-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center;">
