@@ -1,510 +1,149 @@
 {
-  "questions": [
+  "instrucciones": "Gradúe su respuesta del 1 (completamente en desacuerdo) al 5 (completamente de acuerdo).",
+  "ejes": [
     {
-      "id": 1,
-      "text": "¿Su empresa tiene una estrategia claramente definida y comunicada a todos los niveles?",
-      "category": "Estrategia",
-      "options": [
+      "id": "economico",
+      "nombre": "Eje Económico",
+      "color": "#c0392b",
+      "icon": "fas fa-chart-line",
+      "descripcion": "Evalúa la capacidad de la empresa para generar, medir y optimizar el valor económico a través de sus procesos, analítica y toma de decisiones.",
+      "secciones": [
         {
-          "value": "a",
-          "text": "Sí, totalmente definida y comunicada efectivamente",
-          "score": 4
+          "id": "flujo_valor",
+          "nombre": "Rastreo del Flujo de Valor",
+          "descripcion": "Para rastrear el flujo de valor, se requiere un mapa que segregue las ambiciones y metas de la compañía en elementos organizacionales tangibles, tales como sectores de negocio, segmentos de mercado, grupos de clientes, líneas de producto y procesos clave.",
+          "preguntas": [
+            { "id": 1, "texto": "Los procesos de mi empresa generan suficiente valor para mis clientes. Son eficientes y responden de manera diferenciada a sus necesidades." },
+            { "id": 2, "texto": "Medimos la renovación de nuestro portafolio de negocios en relación causal con la sustentabilidad de la empresa." },
+            { "id": 3, "texto": "Sabemos cuánto nos cuestan los procesos clave de la empresa." },
+            { "id": 4, "texto": "Conocemos la utilidad que nos deja cada producto y cada cliente." },
+            { "id": 5, "texto": "Tenemos una rentabilidad adecuada a nuestra inversión." }
+          ]
         },
         {
-          "value": "b",
-          "text": "Parcialmente definida pero no comunicada efectivamente",
-          "score": 3
+          "id": "analitica",
+          "nombre": "Analítica Competitiva",
+          "descripcion": "Las empresas post-pandemia entienden que los datos continuamente avalan las decisiones y la propuesta de valor de maneras inesperadas pero prometedoras. Para aprovechar al máximo los datos, las compañías deben crear enfoques de gobernanza con base en información clasificada de nivel estratégico y operativo.",
+          "preguntas": [
+            { "id": 6, "texto": "Nuestra empresa es competitiva en su sector / mercado." },
+            { "id": 7, "texto": "Estamos identificando y aprovechando las oportunidades que ofrece el mercado." },
+            { "id": 8, "texto": "Tenemos una mentalidad analítica en la organización." },
+            { "id": 9, "texto": "En la empresa contamos con los indicadores adecuados." },
+            { "id": 10, "texto": "Contamos con metodologías y software para el análisis de datos de la industria y el mercado." },
+            { "id": 11, "texto": "En la empresa tenemos el hábito del pensamiento estratégico." }
+          ]
         },
         {
-          "value": "c",
-          "text": "Definida pero no alineada con las operaciones diarias",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "No tenemos una estrategia claramente definida",
-          "score": 1
+          "id": "decisiones",
+          "nombre": "Análisis de Decisiones",
+          "descripcion": "Hay que asegurar la calidad y rapidez en la toma de decisiones y para esto los dilemas se deben asignar a los ejecutivos, equipos, individuos y algoritmos correctos. El equipo directivo necesita enfocar su tiempo y energía en las decisiones medulares del negocio.",
+          "preguntas": [
+            { "id": 12, "texto": "Tomamos decisiones juiciosas de forma ágil." },
+            { "id": 13, "texto": "Contamos con tablero de indicadores de sistemas y procesos que facilita la toma de decisiones." },
+            { "id": 14, "texto": "Contamos con mecanismos de evaluación del sistema y análisis del desempeño de nuestros procesos." },
+            { "id": 15, "texto": "Somos conscientes de la manera como tomamos las decisiones." },
+            { "id": 16, "texto": "El personal con mando sale de la zona de confort, afronta la incertidumbre y el cambio; desafiando sus resultados, prácticas y modelos mentales." }
+          ]
         }
       ]
     },
     {
-      "id": 2,
-      "text": "¿Cómo calificaría la estructura organizacional de su empresa?",
-      "category": "Estructura",
-      "options": [
+      "id": "social",
+      "nombre": "Eje Social",
+      "color": "#16a34a",
+      "icon": "fas fa-users",
+      "descripcion": "Evalúa la cohesión organizacional, el propósito compartido y la capacidad de la empresa para operar como un sistema interdependiente y adaptable.",
+      "secciones": [
         {
-          "value": "a",
-          "text": "Claramente definida y efectiva para nuestros objetivos",
-          "score": 4
+          "id": "propositos",
+          "nombre": "Administración por Propósitos",
+          "descripcion": "Es necesario fortalecer la identidad de la empresa, su razón de existir. Las compañías deben tener una identidad, pues la gente tiene una gran necesidad de pertenencia: quieren ser parte de algo más grande que ellos mismos.",
+          "preguntas": [
+            { "id": 17, "texto": "El personal conoce y se entusiasma con la misión de la empresa." },
+            { "id": 18, "texto": "Entregamos un valor auténtico a nuestros clientes o usuarios finales, en congruencia con nuestro propósito." },
+            { "id": 19, "texto": "Nuestra gestión considera la contribución alineada a nuestro propósito y nutre interacciones y flujos de valor con clientes y consumidores." },
+            { "id": 20, "texto": "Contamos con indicadores para identificar las afectaciones del cambio acelerado que vivimos." },
+            { "id": 21, "texto": "Las personas trabajan en puestos y funciones alineados con sus talentos." }
+          ]
         },
         {
-          "value": "b",
-          "text": "Definida pero con algunas ineficiencias",
-          "score": 3
+          "id": "sistemica",
+          "nombre": "Visión Sistémica",
+          "descripcion": "El nuevo modelo reconoce que el valor es creado a través de redes interconectadas donde los socios comparten datos, códigos y habilidades. Necesitamos considerar a nuestros socios y grupos de interés como extensiones de nosotros mismos.",
+          "preguntas": [
+            { "id": 22, "texto": "Nuestra empresa es un sistema abierto en el cual confluyen con fluidez procesos interactuantes e interdependientes que se adecuan a las necesidades del entorno." },
+            { "id": 23, "texto": "Las interacciones entre los procesos, y entre éstos y las partes interesadas están claramente definidas." },
+            { "id": 24, "texto": "Los equipos de proceso están conscientes de que sus decisiones resultan en sinergias para lograr capacidades y evolucionar." },
+            { "id": 25, "texto": "En la empresa estamos acostumbrados a pensar en sistemas." },
+            { "id": 26, "texto": "Tenemos muy claras las capacidades estratégicas de la empresa, los procesos y la combinación de recursos que las soportan." }
+          ]
         },
         {
-          "value": "c",
-          "text": "Demasiado rígida y limita la innovación",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Confusa o inexistente en algunos departamentos",
-          "score": 1
+          "id": "complejidad",
+          "nombre": "Simplificación de la Complejidad",
+          "descripcion": "Comprender los principios sistémicos nos permite apreciar todos los fenómenos de la vida en forma de sistemas y entender su evolución. La teoría de sistemas resulta fundamental para guiar a las organizaciones a enfrentar la complejidad y lo caótico del entorno.",
+          "preguntas": [
+            { "id": 27, "texto": "Respecto a nuestra estructura organizacional, podemos decir que es plana y favorece la conectividad sobre la jerarquía." },
+            { "id": 28, "texto": "Hemos usado herramientas de dinámica de sistemas para entender cómo se afectan las partes y resolver situaciones problemáticas." },
+            { "id": 29, "texto": "Nuestros procesos clave están diseñados y sincronizados para entregar el valor específico que deseamos entregar." },
+            { "id": 30, "texto": "Los procesos que alimentan a los procesos clave se planifican adecuadamente para entregar sus insumos en el momento preciso." },
+            { "id": 31, "texto": "Reconocemos los recursos de cada proceso como fundamento de las capacidades operativas y consideramos clave su gestión." }
+          ]
         }
       ]
     },
     {
-      "id": 3,
-      "text": "¿Sus procesos y sistemas están documentados y optimizados?",
-      "category": "Sistemas",
-      "options": [
+      "id": "psicologico",
+      "nombre": "Eje Psicológico",
+      "color": "#2563eb",
+      "icon": "fas fa-brain",
+      "descripcion": "Evalúa la cultura organizacional, el aprendizaje continuo y el desarrollo del talento humano como motores de evolución y adaptación.",
+      "secciones": [
         {
-          "value": "a",
-          "text": "Completamente documentados y optimizados",
-          "score": 4
+          "id": "cultura",
+          "nombre": "Fortalecimiento de la Cultura",
+          "descripcion": "La cultura organizacional entraña los porqués del trabajo de las personas, sus creencias y valores en una amalgama que le da un propósito genuino y atractivo a la empresa. Empieza con ciertas creencias que luego influyen en la forma en que piensan y actúan los individuos.",
+          "preguntas": [
+            { "id": 32, "texto": "Tenemos definidos valores como creencias de éxito compartidas y elementos centrales de nuestra identidad organizacional." },
+            { "id": 33, "texto": "Tenemos definidas las competencias organizacionales en congruencia con la estrategia, estilo de gestión y cultura deseada." },
+            { "id": 34, "texto": "El sistema de planeación, la evaluación del desempeño y las estructuras de trabajo están alineados para eliminar comportamientos disfuncionales o incongruentes." },
+            { "id": 35, "texto": "Tenemos definidas las reglas de coordinación entre los procesos y los roles del personal con mando para garantizar el despliegue de la cultura deseada." },
+            { "id": 36, "texto": "Nuestra organización avanza a la par con la tecnología." },
+            { "id": 37, "texto": "Promovemos el pensamiento crítico y es parte de nuestra cultura." }
+          ]
         },
         {
-          "value": "b",
-          "text": "Documentados pero no optimizados",
-          "score": 3
+          "id": "aprendizaje",
+          "nombre": "Aprendizaje Organizacional",
+          "descripcion": "Las compañías deben promover una mentalidad de crecimiento, curiosidad y apertura a la experimentación y el fracaso. Estas empresas promueven el hábito del aprendizaje continuo que alienta a la gente a adaptarse y reinventarse según las necesidades cambiantes.",
+          "preguntas": [
+            { "id": 38, "texto": "Nuestra organización tiene definido cuál es el conocimiento relevante que soporta las capacidades estratégicas." },
+            { "id": 39, "texto": "Generamos continuamente nuevo conocimiento, lo documentamos y convertimos en roles de talento del personal." },
+            { "id": 40, "texto": "Los equipos de proceso administran el conocimiento que fundamenta su operación, su desempeño y sus tecnologías para la innovación." },
+            { "id": 41, "texto": "Promovemos la generación, publicación y reúso de lecciones aprendidas para evitar la recurrencia de fallas y acelerar el aprendizaje organizacional." },
+            { "id": 42, "texto": "Visualizamos a la organización como un sistema vivo que aprende con base en la calidad de las interacciones entre equipos." },
+            { "id": 43, "texto": "En nuestra empresa promovemos el método experimental: hipótesis, prueba, aprendizaje y repetición." }
+          ]
         },
         {
-          "value": "c",
-          "text": "Parcialmente documentados",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Apenas documentados o inexistentes",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "text": "¿Cómo evalúa la gestión del talento humano en su organización?",
-      "category": "Personal",
-      "options": [
-        {
-          "value": "a",
-          "text": "Excelente gestión con procesos claros de selección y desarrollo",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Buena gestión pero con áreas de mejora",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Gestión básica, procesos informales",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Gestión deficiente, alta rotación de personal",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "text": "¿Las habilidades y competencias del equipo están alineadas con los objetivos del negocio?",
-      "category": "Habilidades",
-      "options": [
-        {
-          "value": "a",
-          "text": "Completamente alineadas, tenemos las competencias necesarias",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Mayormente alineadas con algunas brechas menores",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Parcialmente alineadas, necesitamos desarrollo",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Desalineadas, falta capacitación significativa",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "text": "¿Cómo describiría el estilo de liderazgo predominante en su empresa?",
-      "category": "Estilos",
-      "options": [
-        {
-          "value": "a",
-          "text": "Liderazgo participativo y efectivo",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Liderazgo funcional pero poco inspirador",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Liderazgo inconsistente entre áreas",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Liderazgo débil o autoritario",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "text": "¿Los valores de la empresa son conocidos y vividos por todos los empleados?",
-      "category": "Valores",
-      "options": [
-        {
-          "value": "a",
-          "text": "Sí, están claramente definidos y se viven diariamente",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Los conocen pero no siempre los practican",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Algunos los conocen, aplicación inconsistente",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "No están claramente definidos o comunicados",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "text": "¿Los objetivos de la empresa son específicos, medibles y se monitorean regularmente?",
-      "category": "Objetivos",
-      "options": [
-        {
-          "value": "a",
-          "text": "Sí, objetivos SMART con seguimiento regular",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Objetivos definidos pero seguimiento irregular",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Objetivos generales, poco específicos",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Objetivos vagos o inexistentes",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "text": "¿Cómo calificaría la comunicación interna en su organización?",
-      "category": "Estructura",
-      "options": [
-        {
-          "value": "a",
-          "text": "Excelente, fluida en todos los niveles",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Buena pero con algunas barreras ocasionales",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Regular, información no siempre llega a tiempo",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Deficiente, comunicación fragmentada",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "text": "¿Su empresa adapta rápidamente sus estrategias a los cambios del mercado?",
-      "category": "Estrategia",
-      "options": [
-        {
-          "value": "a",
-          "text": "Sí, somos muy ágiles y adaptables",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Nos adaptamos pero con cierto retraso",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Adaptación lenta, procesos burocráticos",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Muy rígidos, difícil adaptación al cambio",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "text": "¿Qué tan eficientes son los procesos operativos de su empresa?",
-      "category": "Sistemas",
-      "options": [
-        {
-          "value": "a",
-          "text": "Muy eficientes, automatizados y optimizados",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Eficientes en general con mejoras menores necesarias",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Moderadamente eficientes, necesitan optimización",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Ineficientes, muchos cuellos de botella",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "text": "¿El personal cuenta con las herramientas y recursos necesarios para hacer su trabajo?",
-      "category": "Personal",
-      "options": [
-        {
-          "value": "a",
-          "text": "Sí, tienen todo lo necesario y más",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Tienen lo básico necesario",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Tienen algunos recursos pero faltan herramientas clave",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Carecen de recursos básicos para su trabajo",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 13,
-      "text": "¿Cómo evalúa el nivel de innovación en su organización?",
-      "category": "Habilidades",
-      "options": [
-        {
-          "value": "a",
-          "text": "Muy innovadores, constantemente generamos nuevas ideas",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Innovación ocasional, buenos proyectos esporádicos",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Poca innovación, nos enfocamos en mantener lo actual",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Muy poca innovación, resistencia al cambio",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 14,
-      "text": "¿Cómo se toman las decisiones importantes en su empresa?",
-      "category": "Estilos",
-      "options": [
-        {
-          "value": "a",
-          "text": "Proceso colaborativo con participación de stakeholders relevantes",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Proceso estructurado pero con poca participación",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Decisiones centralizadas con consulta limitada",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Decisiones autoritarias sin consulta",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 15,
-      "text": "¿Qué tan comprometidos están los empleados con la misión de la empresa?",
-      "category": "Valores",
-      "options": [
-        {
-          "value": "a",
-          "text": "Muy comprometidos, alta identificación con la misión",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Comprometidos pero podrían estarlo más",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Compromiso variable, algunos más que otros",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Bajo compromiso, ven el trabajo solo como empleo",
-          "score": 1
-        }
-      ]
-    },
-    {
-      "id": 16,
-      "text": "¿Con qué frecuencia se revisan y ajustan los objetivos de la empresa?",
-      "category": "Objetivos",
-      "options": [
-        {
-          "value": "a",
-          "text": "Regularmente, con revisiones trimestrales y ajustes según necesidad",
-          "score": 4
-        },
-        {
-          "value": "b",
-          "text": "Revisiones semestrales o anuales",
-          "score": 3
-        },
-        {
-          "value": "c",
-          "text": "Revisiones ocasionales cuando hay problemas",
-          "score": 2
-        },
-        {
-          "value": "d",
-          "text": "Raramente se revisan una vez establecidos",
-          "score": 1
+          "id": "coaching",
+          "nombre": "Coaching",
+          "descripcion": "Hoy en día, los jefes son verdaderos coaches y facilitadores con tramos de control más amplios. Los coaches dedican tiempo de calidad a la gente y son expertos en delegar, asignándoles a sus colaboradores proyectos retadores.",
+          "preguntas": [
+            { "id": 44, "texto": "Tratamos al talento de nuestra organización como el recurso más escaso." },
+            { "id": 45, "texto": "Nuestra organización trata a las personas como proyectos en desarrollo que deben resolver retos para crecer." },
+            { "id": 46, "texto": "En nuestra organización ejercitamos y promovemos el pensamiento independiente." },
+            { "id": 47, "texto": "Hay conciencia de que la motivación intrínseca (más allá de lo material o externo) es clave para retener al personal." },
+            { "id": 48, "texto": "En general, confiamos en la inteligencia colectiva como motor de resultados." }
+          ]
         }
       ]
     }
   ],
-  "categories": {
-    "Estrategia": {
-      "name": "Estrategia",
-      "description": "Define la dirección y objetivos a largo plazo de la organización",
-      "recommendations": {
-        "low": "Desarrolle un plan estratégico claro con visión, misión y objetivos específicos. Implemente procesos de comunicación para asegurar que toda la organización comprenda la dirección.",
-        "medium": "Mejore la alineación entre la estrategia y las operaciones diarias. Establezca métricas para monitorear el progreso estratégico.",
-        "high": "Mantenga la agilidad estratégica y continue monitoreando el entorno para anticipar cambios del mercado."
-      }
-    },
-    "Estructura": {
-      "name": "Estructura",
-      "description": "La organización formal, jerarquías y distribución de responsabilidades",
-      "recommendations": {
-        "low": "Rediseñe la estructura organizacional para eliminar redundancias y mejorar la comunicación. Defina claramente roles y responsabilidades.",
-        "medium": "Optimice los canales de comunicación y considere estructuras más ágiles que faciliten la colaboración.",
-        "high": "Continue refinando la estructura para mantener la eficiencia mientras la organización crece."
-      }
-    },
-    "Sistemas": {
-      "name": "Sistemas",
-      "description": "Procesos, procedimientos y tecnologías que apoyan las operaciones",
-      "recommendations": {
-        "low": "Documente y estandarice los procesos clave. Implemente tecnologías que automaticen tareas repetitivas.",
-        "medium": "Optimice los procesos existentes eliminando cuellos de botella y mejorando la eficiencia.",
-        "high": "Continue innovando en procesos y tecnología para mantener ventaja competitiva."
-      }
-    },
-    "Personal": {
-      "name": "Personal",
-      "description": "Los recursos humanos y la gestión del talento",
-      "recommendations": {
-        "low": "Implemente procesos estructurados de reclutamiento, selección y retención de talento. Desarrolle programas de capacitación.",
-        "medium": "Mejore los procesos de desarrollo profesional y cree planes de carrera claros.",
-        "high": "Mantenga programas de desarrollo continuo y estrategias de retención del mejor talento."
-      }
-    },
-    "Habilidades": {
-      "name": "Habilidades",
-      "description": "Competencias y capacidades disponibles en la organización",
-      "recommendations": {
-        "low": "Realice un análisis de brechas de habilidades e implemente programas de capacitación intensivos.",
-        "medium": "Desarrolle planes de capacitación continua y considere contratación estratégica para llenar brechas.",
-        "high": "Mantenga programas de actualización de habilidades y fomente la innovación."
-      }
-    },
-    "Estilos": {
-      "name": "Estilos",
-      "description": "Estilos de liderazgo y toma de decisiones",
-      "recommendations": {
-        "low": "Desarrolle programas de liderazgo y establezca procesos claros de toma de decisiones participativa.",
-        "medium": "Mejore las habilidades de liderazgo existentes y fomente mayor participación en decisiones.",
-        "high": "Continue desarrollando líderes y mantenga un estilo de liderazgo adaptativo."
-      }
-    },
-    "Valores": {
-      "name": "Valores",
-      "description": "Principios y creencias que guían el comportamiento organizacional",
-      "recommendations": {
-        "low": "Defina y comunique claramente los valores organizacionales. Implemente programas para integrarlos en la cultura diaria.",
-        "medium": "Refuerce los valores a través de reconocimientos y asegure su aplicación consistente.",
-        "high": "Continue fortaleciendo la cultura organizacional y use los valores como guía en todas las decisiones."
-      }
-    },
-    "Objetivos": {
-      "name": "Objetivos",
-      "description": "Metas específicas y medibles que la organización busca alcanzar",
-      "recommendations": {
-        "low": "Establezca objetivos SMART (específicos, medibles, alcanzables, relevantes, temporales) y sistemas de seguimiento.",
-        "medium": "Mejore los procesos de monitoreo y ajuste de objetivos. Asegure alineación entre niveles organizacionales.",
-        "high": "Mantenga procesos robustos de gestión por objetivos y continue refinando las métricas."
-      }
-    }
-  }
+  "niveles": [
+    { "min": 1.0, "max": 2.4, "label": "Área Crítica",   "color": "#ef4444", "recomendacion": "Se requieren acciones inmediatas y prioritarias en esta dimensión. Considere un plan de intervención con metas claras y plazos definidos." },
+    { "min": 2.5, "max": 3.4, "label": "En Desarrollo",  "color": "#f59e0b", "recomendacion": "Hay bases, pero se necesitan mejoras estructuradas para alcanzar madurez. Identifique las secciones más débiles y trabaje en ellas de forma sistemática." },
+    { "min": 3.5, "max": 4.4, "label": "Maduro",         "color": "#22c55e", "recomendacion": "La organización muestra solidez en esta dimensión. Continúe fortaleciendo y comparta buenas prácticas con otras áreas." },
+    { "min": 4.5, "max": 5.0, "label": "Excelente",      "color": "#3b82f6", "recomendacion": "Alto nivel de madurez. Convierta estas fortalezas en ventajas competitivas sostenibles y en referente para el sector." }
+  ]
 }

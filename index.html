@@ -91,20 +91,19 @@
                     <h2>Diagnóstico Organizacional</h2>
                     <p>Complete este cuestionario para recibir una evaluación preliminar de su organización basada en nuestro modelo del octágono. Los resultados le ayudarán a identificar áreas de oportunidad para mejorar el desempeño de su empresa.</p>
                 </div>
-                
-                <div id="quiz-content">
-                    <!-- Quiz questions will be loaded dynamically from JSON -->
-                </div>
-                
-                <div id="quiz-results" class="quiz-results">
+
+                <!-- 3D Diagnostic quiz renders here -->
+                <div id="quiz-content"></div>
+
+                <!-- Results panel (hidden until quiz completes) -->
+                <div id="quiz-results" class="quiz-results" style="display:none;">
                     <h2>Resultados de su Diagnóstico</h2>
-                    <div class="results-summary">
-                        <p>Basado en sus respuestas, hemos identificado las siguientes áreas de oportunidad en su organización:</p>
+                    <div id="results-detail"></div>
+                    <div style="text-align:center; margin-top:1.5rem;">
+                        <button id="restart-btn" class="d3d-btn-primary">
+                            <i class="fas fa-redo"></i> &nbsp;Realizar Diagnóstico Nuevamente
+                        </button>
                     </div>
-                    <div id="results-detail">
-                        <!-- Results will be populated here -->
-                    </div>
-                    <button id="restart-btn" class="quiz-button">Realizar Diagnóstico Nuevamente</button>
                 </div>
             </div>
         </div>

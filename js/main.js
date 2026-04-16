@@ -77,7 +77,7 @@ const mbtiInfo = {
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabNavigation();
     try { initialize3DOctagon(); } catch(e) { console.error('3D Octagon error:', e); }
-    initializeChat();
+    try { initializeChat(); } catch(e) { console.error('Chat error:', e); }
     try { loadQuizData(); } catch(e) { console.error('Quiz error:', e); }
     // Glossary search is now inline in index.html
 });
@@ -901,287 +901,459 @@ const sideDescCerebralPlain = [
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Quiz Functions
-async function loadQuizData() {
-    try {
-        const response = await fetch('data/quiz-questions.json');
-        quizData = await response.json();
-        initializeQuiz();
-    } catch (error) {
-        console.error('Error loading quiz data:', error);
-        // Fallback to hardcoded questions if JSON fails to load
-        loadFallbackQuizData();
-    }
-}
+// ─── Diagnóstico 3D ──────────────────────────────────────────────────────────
 
-function loadFallbackQuizData() {
+async function loadQuizData() {
+    // Inline data — avoids fetch() which is blocked under file:// protocol
     quizData = {
-        questions: [
-            {
-                id: 1,
-                text: "¿Su empresa tiene una estrategia claramente definida y comunicada a todos los niveles?",
-                category: "Estrategia",
-                options: [
-                    { value: "a", text: "Sí, totalmente definida y comunicada efectivamente", score: 4 },
-                    { value: "b", text: "Parcialmente definida pero no comunicada efectivamente", score: 3 },
-                    { value: "c", text: "Definida pero no alineada con las operaciones diarias", score: 2 },
-                    { value: "d", text: "No tenemos una estrategia claramente definida", score: 1 }
-                ]
-            },
-            {
-                id: 2,
-                text: "¿Cómo calificaría la estructura organizacional de su empresa?",
-                category: "Estructura",
-                options: [
-                    { value: "a", text: "Claramente definida y efectiva para nuestros objetivos", score: 4 },
-                    { value: "b", text: "Definida pero con algunas ineficiencias", score: 3 },
-                    { value: "c", text: "Demasiado rígida y limita la innovación", score: 2 },
-                    { value: "d", text: "Confusa o inexistente en algunos departamentos", score: 1 }
-                ]
-            },
-            {
-                id: 3,
-                text: "¿Sus procesos y sistemas están documentados y optimizados?",
-                category: "Sistemas",
-                options: [
-                    { value: "a", text: "Completamente documentados y optimizados", score: 4 },
-                    { value: "b", text: "Documentados pero no optimizados", score: 3 },
-                    { value: "c", text: "Parcialmente documentados", score: 2 },
-                    { value: "d", text: "Apenas documentados o inexistentes", score: 1 }
-                ]
-            }
-        ]
+  "instrucciones": "Gradúe su respuesta del 1 (completamente en desacuerdo) al 5 (completamente de acuerdo).",
+  "ejes": [
+    {
+      "id": "economico",
+      "nombre": "Eje Económico",
+      "color": "#c0392b",
+      "icon": "fas fa-chart-line",
+      "descripcion": "Evalúa la capacidad de la empresa para generar, medir y optimizar el valor económico a través de sus procesos, analítica y toma de decisiones.",
+      "secciones": [
+        {
+          "id": "flujo_valor",
+          "nombre": "Rastreo del Flujo de Valor",
+          "descripcion": "Para rastrear el flujo de valor, se requiere un mapa que segregue las ambiciones y metas de la compañía en elementos organizacionales tangibles, tales como sectores de negocio, segmentos de mercado, grupos de clientes, líneas de producto y procesos clave.",
+          "preguntas": [
+            { "id": 1, "texto": "Los procesos de mi empresa generan suficiente valor para mis clientes. Son eficientes y responden de manera diferenciada a sus necesidades." },
+            { "id": 2, "texto": "Medimos la renovación de nuestro portafolio de negocios en relación causal con la sustentabilidad de la empresa." },
+            { "id": 3, "texto": "Sabemos cuánto nos cuestan los procesos clave de la empresa." },
+            { "id": 4, "texto": "Conocemos la utilidad que nos deja cada producto y cada cliente." },
+            { "id": 5, "texto": "Tenemos una rentabilidad adecuada a nuestra inversión." }
+          ]
+        },
+        {
+          "id": "analitica",
+          "nombre": "Analítica Competitiva",
+          "descripcion": "Las empresas post-pandemia entienden que los datos continuamente avalan las decisiones y la propuesta de valor de maneras inesperadas pero prometedoras. Para aprovechar al máximo los datos, las compañías deben crear enfoques de gobernanza con base en información clasificada de nivel estratégico y operativo.",
+          "preguntas": [
+            { "id": 6, "texto": "Nuestra empresa es competitiva en su sector / mercado." },
+            { "id": 7, "texto": "Estamos identificando y aprovechando las oportunidades que ofrece el mercado." },
+            { "id": 8, "texto": "Tenemos una mentalidad analítica en la organización." },
+            { "id": 9, "texto": "En la empresa contamos con los indicadores adecuados." },
+            { "id": 10, "texto": "Contamos con metodologías y software para el análisis de datos de la industria y el mercado." },
+            { "id": 11, "texto": "En la empresa tenemos el hábito del pensamiento estratégico." }
+          ]
+        },
+        {
+          "id": "decisiones",
+          "nombre": "Análisis de Decisiones",
+          "descripcion": "Hay que asegurar la calidad y rapidez en la toma de decisiones y para esto los dilemas se deben asignar a los ejecutivos, equipos, individuos y algoritmos correctos. El equipo directivo necesita enfocar su tiempo y energía en las decisiones medulares del negocio.",
+          "preguntas": [
+            { "id": 12, "texto": "Tomamos decisiones juiciosas de forma ágil." },
+            { "id": 13, "texto": "Contamos con tablero de indicadores de sistemas y procesos que facilita la toma de decisiones." },
+            { "id": 14, "texto": "Contamos con mecanismos de evaluación del sistema y análisis del desempeño de nuestros procesos." },
+            { "id": 15, "texto": "Somos conscientes de la manera como tomamos las decisiones." },
+            { "id": 16, "texto": "El personal con mando sale de la zona de confort, afronta la incertidumbre y el cambio; desafiando sus resultados, prácticas y modelos mentales." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "nombre": "Eje Social",
+      "color": "#16a34a",
+      "icon": "fas fa-users",
+      "descripcion": "Evalúa la cohesión organizacional, el propósito compartido y la capacidad de la empresa para operar como un sistema interdependiente y adaptable.",
+      "secciones": [
+        {
+          "id": "propositos",
+          "nombre": "Administración por Propósitos",
+          "descripcion": "Es necesario fortalecer la identidad de la empresa, su razón de existir. Las compañías deben tener una identidad, pues la gente tiene una gran necesidad de pertenencia: quieren ser parte de algo más grande que ellos mismos.",
+          "preguntas": [
+            { "id": 17, "texto": "El personal conoce y se entusiasma con la misión de la empresa." },
+            { "id": 18, "texto": "Entregamos un valor auténtico a nuestros clientes o usuarios finales, en congruencia con nuestro propósito." },
+            { "id": 19, "texto": "Nuestra gestión considera la contribución alineada a nuestro propósito y nutre interacciones y flujos de valor con clientes y consumidores." },
+            { "id": 20, "texto": "Contamos con indicadores para identificar las afectaciones del cambio acelerado que vivimos." },
+            { "id": 21, "texto": "Las personas trabajan en puestos y funciones alineados con sus talentos." }
+          ]
+        },
+        {
+          "id": "sistemica",
+          "nombre": "Visión Sistémica",
+          "descripcion": "El nuevo modelo reconoce que el valor es creado a través de redes interconectadas donde los socios comparten datos, códigos y habilidades. Necesitamos considerar a nuestros socios y grupos de interés como extensiones de nosotros mismos.",
+          "preguntas": [
+            { "id": 22, "texto": "Nuestra empresa es un sistema abierto en el cual confluyen con fluidez procesos interactuantes e interdependientes que se adecuan a las necesidades del entorno." },
+            { "id": 23, "texto": "Las interacciones entre los procesos, y entre éstos y las partes interesadas están claramente definidas." },
+            { "id": 24, "texto": "Los equipos de proceso están conscientes de que sus decisiones resultan en sinergias para lograr capacidades y evolucionar." },
+            { "id": 25, "texto": "En la empresa estamos acostumbrados a pensar en sistemas." },
+            { "id": 26, "texto": "Tenemos muy claras las capacidades estratégicas de la empresa, los procesos y la combinación de recursos que las soportan." }
+          ]
+        },
+        {
+          "id": "complejidad",
+          "nombre": "Simplificación de la Complejidad",
+          "descripcion": "Comprender los principios sistémicos nos permite apreciar todos los fenómenos de la vida en forma de sistemas y entender su evolución. La teoría de sistemas resulta fundamental para guiar a las organizaciones a enfrentar la complejidad y lo caótico del entorno.",
+          "preguntas": [
+            { "id": 27, "texto": "Respecto a nuestra estructura organizacional, podemos decir que es plana y favorece la conectividad sobre la jerarquía." },
+            { "id": 28, "texto": "Hemos usado herramientas de dinámica de sistemas para entender cómo se afectan las partes y resolver situaciones problemáticas." },
+            { "id": 29, "texto": "Nuestros procesos clave están diseñados y sincronizados para entregar el valor específico que deseamos entregar." },
+            { "id": 30, "texto": "Los procesos que alimentan a los procesos clave se planifican adecuadamente para entregar sus insumos en el momento preciso." },
+            { "id": 31, "texto": "Reconocemos los recursos de cada proceso como fundamento de las capacidades operativas y consideramos clave su gestión." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "psicologico",
+      "nombre": "Eje Psicológico",
+      "color": "#2563eb",
+      "icon": "fas fa-brain",
+      "descripcion": "Evalúa la cultura organizacional, el aprendizaje continuo y el desarrollo del talento humano como motores de evolución y adaptación.",
+      "secciones": [
+        {
+          "id": "cultura",
+          "nombre": "Fortalecimiento de la Cultura",
+          "descripcion": "La cultura organizacional entraña los porqués del trabajo de las personas, sus creencias y valores en una amalgama que le da un propósito genuino y atractivo a la empresa. Empieza con ciertas creencias que luego influyen en la forma en que piensan y actúan los individuos.",
+          "preguntas": [
+            { "id": 32, "texto": "Tenemos definidos valores como creencias de éxito compartidas y elementos centrales de nuestra identidad organizacional." },
+            { "id": 33, "texto": "Tenemos definidas las competencias organizacionales en congruencia con la estrategia, estilo de gestión y cultura deseada." },
+            { "id": 34, "texto": "El sistema de planeación, la evaluación del desempeño y las estructuras de trabajo están alineados para eliminar comportamientos disfuncionales o incongruentes." },
+            { "id": 35, "texto": "Tenemos definidas las reglas de coordinación entre los procesos y los roles del personal con mando para garantizar el despliegue de la cultura deseada." },
+            { "id": 36, "texto": "Nuestra organización avanza a la par con la tecnología." },
+            { "id": 37, "texto": "Promovemos el pensamiento crítico y es parte de nuestra cultura." }
+          ]
+        },
+        {
+          "id": "aprendizaje",
+          "nombre": "Aprendizaje Organizacional",
+          "descripcion": "Las compañías deben promover una mentalidad de crecimiento, curiosidad y apertura a la experimentación y el fracaso. Estas empresas promueven el hábito del aprendizaje continuo que alienta a la gente a adaptarse y reinventarse según las necesidades cambiantes.",
+          "preguntas": [
+            { "id": 38, "texto": "Nuestra organización tiene definido cuál es el conocimiento relevante que soporta las capacidades estratégicas." },
+            { "id": 39, "texto": "Generamos continuamente nuevo conocimiento, lo documentamos y convertimos en roles de talento del personal." },
+            { "id": 40, "texto": "Los equipos de proceso administran el conocimiento que fundamenta su operación, su desempeño y sus tecnologías para la innovación." },
+            { "id": 41, "texto": "Promovemos la generación, publicación y reúso de lecciones aprendidas para evitar la recurrencia de fallas y acelerar el aprendizaje organizacional." },
+            { "id": 42, "texto": "Visualizamos a la organización como un sistema vivo que aprende con base en la calidad de las interacciones entre equipos." },
+            { "id": 43, "texto": "En nuestra empresa promovemos el método experimental: hipótesis, prueba, aprendizaje y repetición." }
+          ]
+        },
+        {
+          "id": "coaching",
+          "nombre": "Coaching",
+          "descripcion": "Hoy en día, los jefes son verdaderos coaches y facilitadores con tramos de control más amplios. Los coaches dedican tiempo de calidad a la gente y son expertos en delegar, asignándoles a sus colaboradores proyectos retadores.",
+          "preguntas": [
+            { "id": 44, "texto": "Tratamos al talento de nuestra organización como el recurso más escaso." },
+            { "id": 45, "texto": "Nuestra organización trata a las personas como proyectos en desarrollo que deben resolver retos para crecer." },
+            { "id": 46, "texto": "En nuestra organización ejercitamos y promovemos el pensamiento independiente." },
+            { "id": 47, "texto": "Hay conciencia de que la motivación intrínseca (más allá de lo material o externo) es clave para retener al personal." },
+            { "id": 48, "texto": "En general, confiamos en la inteligencia colectiva como motor de resultados." }
+          ]
+        }
+      ]
+    }
+  ],
+  "niveles": [
+    { "min": 1.0, "max": 2.4, "label": "Área Crítica",   "color": "#ef4444", "recomendacion": "Se requieren acciones inmediatas y prioritarias en esta dimensión. Considere un plan de intervención con metas claras y plazos definidos." },
+    { "min": 2.5, "max": 3.4, "label": "En Desarrollo",  "color": "#f59e0b", "recomendacion": "Hay bases, pero se necesitan mejoras estructuradas para alcanzar madurez. Identifique las secciones más débiles y trabaje en ellas de forma sistemática." },
+    { "min": 3.5, "max": 4.4, "label": "Maduro",         "color": "#22c55e", "recomendacion": "La organización muestra solidez en esta dimensión. Continúe fortaleciendo y comparta buenas prácticas con otras áreas." },
+    { "min": 4.5, "max": 5.0, "label": "Excelente",      "color": "#3b82f6", "recomendacion": "Alto nivel de madurez. Convierta estas fortalezas en ventajas competitivas sostenibles y en referente para el sector." }
+  ]
     };
     initializeQuiz();
 }
 
 function initializeQuiz() {
-    const quizContent = document.getElementById('quiz-content');
-    quizContent.innerHTML = '';
-    
-    // Create questions
-    quizData.questions.forEach((question, index) => {
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'quiz-question';
-        questionDiv.dataset.question = index + 1;
-        if (index === 0) questionDiv.classList.add('active');
-        
-        const questionText = document.createElement('p');
-        questionText.className = 'question-text';
-        questionText.textContent = `Pregunta ${index + 1}: ${question.text}`;
-        questionDiv.appendChild(questionText);
-        
-        const optionsDiv = document.createElement('div');
-        optionsDiv.className = 'answer-options';
-        
-        question.options.forEach(option => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'answer-option';
-            optionDiv.dataset.value = option.value;
-            optionDiv.dataset.score = option.score;
-            optionDiv.dataset.category = question.category;
-            optionDiv.textContent = option.text;
-            
-            optionDiv.addEventListener('click', function() {
-                // Remove selected class from all options in this question
-                optionsDiv.querySelectorAll('.answer-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                // Add selected class to clicked option
-                this.classList.add('selected');
-                
-                // Store the answer
-                userAnswers[index] = {
-                    questionId: question.id,
-                    category: question.category,
-                    value: option.value,
-                    score: option.score
-                };
-                
-                // Enable next button
-                document.getElementById('next-btn').disabled = false;
-            });
-            
-            optionsDiv.appendChild(optionDiv);
+    if (!quizData || !quizData.ejes) return;
+
+    // Flatten sections for navigation
+    const sections = [];
+    quizData.ejes.forEach(eje => {
+        eje.secciones.forEach(seccion => {
+            sections.push({ eje, seccion });
         });
-        
-        questionDiv.appendChild(optionsDiv);
-        quizContent.appendChild(questionDiv);
     });
-    
-    // Add navigation
-    const navDiv = document.createElement('div');
-    navDiv.className = 'quiz-nav';
-    
-    const prevButton = document.createElement('button');
-    prevButton.id = 'prev-btn';
-    prevButton.className = 'quiz-button';
-    prevButton.textContent = 'Anterior';
-    prevButton.disabled = true;
-    
-    const nextButton = document.createElement('button');
-    nextButton.id = 'next-btn';
-    nextButton.className = 'quiz-button';
-    nextButton.textContent = 'Siguiente';
-    nextButton.disabled = true;
-    
-    navDiv.appendChild(prevButton);
-    navDiv.appendChild(nextButton);
-    quizContent.appendChild(navDiv);
-    
-    initializeQuizNavigation();
-}
 
-function initializeQuizNavigation() {
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const restartBtn = document.getElementById('restart-btn');
-    
-    currentQuestion = 0;
-    
-    prevBtn.addEventListener('click', function() {
-        document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.remove('active');
-        currentQuestion--;
-        document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.add('active');
-        
-        nextBtn.textContent = 'Siguiente';
-        nextBtn.disabled = !userAnswers[currentQuestion];
-        prevBtn.disabled = currentQuestion === 0;
-    });
-    
-    nextBtn.addEventListener('click', function() {
-        document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.remove('active');
-        currentQuestion++;
-        
-        if (currentQuestion < quizData.questions.length) {
-            document.querySelector(`.quiz-question[data-question="${currentQuestion + 1}"]`).classList.add('active');
-            prevBtn.disabled = false;
-            
-            if (currentQuestion === quizData.questions.length - 1) {
-                nextBtn.textContent = 'Ver Resultados';
+    const totalSections = sections.length;
+    let currentSectionIdx = 0;
+    const answers = {}; // { questionId: score 1-5 }
+
+    const quizContent = document.getElementById('quiz-content');
+    const quizResults = document.getElementById('quiz-results');
+
+    // ── Render intro screen ───────────────────────────────────────────────────
+    function renderIntro() {
+        quizContent.style.display = 'block';
+        quizResults.style.display = 'none';
+        quizContent.innerHTML = `
+            <div class="d3d-intro">
+                <div class="d3d-intro-icon"><i class="fas fa-clipboard-check"></i></div>
+                <h3 class="d3d-intro-title">Diagnóstico Integral Básico 3D</h3>
+                <p class="d3d-intro-sub">${quizData.instrucciones}</p>
+                <p class="d3d-intro-meta">
+                    Este diagnóstico evalúa <strong>3 ejes estratégicos</strong> con
+                    <strong>${totalSections} secciones</strong> y <strong>48 reactivos</strong>.
+                </p>
+                <div class="d3d-ejes-row">
+                    ${quizData.ejes.map(e => `
+                        <div class="d3d-eje-chip" style="--eje-color:${e.color}">
+                            <i class="${e.icon}"></i>
+                            <span>${e.nombre}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="d3d-btn-primary" id="d3d-start">
+                    Comenzar Diagnóstico &nbsp;<i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        `;
+        document.getElementById('d3d-start').addEventListener('click', () => {
+            currentSectionIdx = 0;
+            renderSection(currentSectionIdx);
+        });
+    }
+
+    // ── Render a section ──────────────────────────────────────────────────────
+    function renderSection(idx) {
+        const { eje, seccion } = sections[idx];
+        const progressPct = Math.round((idx / totalSections) * 100);
+        const isLast = idx === totalSections - 1;
+
+        quizContent.innerHTML = `
+            <div class="d3d-section-wrap">
+                <!-- Progress bar -->
+                <div class="d3d-progress-track">
+                    <div class="d3d-progress-fill" style="width:${progressPct}%"></div>
+                </div>
+                <div class="d3d-progress-meta">
+                    <span class="d3d-eje-badge" style="--eje-color:${eje.color}">
+                        <i class="${eje.icon}"></i> ${eje.nombre}
+                    </span>
+                    <span class="d3d-section-counter">Sección ${idx + 1} de ${totalSections}</span>
+                </div>
+
+                <!-- Section header -->
+                <h3 class="d3d-section-title">${seccion.nombre}</h3>
+                <p class="d3d-section-desc">${seccion.descripcion}</p>
+
+                <!-- Scale legend -->
+                <div class="d3d-scale-legend">
+                    <span>1 = Completamente en desacuerdo</span>
+                    <span>5 = Completamente de acuerdo</span>
+                </div>
+
+                <!-- Questions -->
+                <div class="d3d-questions-list">
+                    ${seccion.preguntas.map((p, qi) => `
+                        <div class="d3d-q-item" data-qid="${p.id}">
+                            <p class="d3d-q-text">
+                                <span class="d3d-q-num">${qi + 1}.</span> ${p.texto}
+                            </p>
+                            <div class="d3d-likert">
+                                <span class="d3d-likert-lbl d3d-lbl-left">En desacuerdo</span>
+                                <div class="d3d-likert-btns">
+                                    ${[1, 2, 3, 4, 5].map(v => `
+                                        <label class="d3d-lk-opt">
+                                            <input type="radio" name="q${p.id}" value="${v}">
+                                            <span class="d3d-lk-face">${v}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                                <span class="d3d-likert-lbl d3d-lbl-right">De acuerdo</span>
+                            </div>
+                            <p class="d3d-q-error" style="display:none;">
+                                <i class="fas fa-exclamation-circle"></i> Por favor seleccione una opción.
+                            </p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Navigation -->
+                <div class="d3d-nav">
+                    <button class="d3d-btn-secondary" id="d3d-prev" ${idx === 0 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <button class="d3d-btn-primary" id="d3d-next">
+                        ${isLast
+                            ? 'Ver Resultados &nbsp;<i class="fas fa-chart-bar"></i>'
+                            : 'Siguiente &nbsp;<i class="fas fa-chevron-right"></i>'}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Restore previously saved answers for this section
+        seccion.preguntas.forEach(p => {
+            if (answers[p.id] !== undefined) {
+                const radio = quizContent.querySelector(`input[name="q${p.id}"][value="${answers[p.id]}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    radio.closest('.d3d-lk-opt').classList.add('selected');
+                }
             }
-            
-            nextBtn.disabled = !userAnswers[currentQuestion];
-        } else {
-            showQuizResults();
-        }
-    });
-    
-    restartBtn.addEventListener('click', function() {
-        document.getElementById('quiz-results').style.display = 'none';
-        document.getElementById('quiz-content').style.display = 'block';
-        
-        // Reset quiz state
-        currentQuestion = 0;
-        userAnswers = [];
-        
-        // Reset UI
-        document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
-        document.querySelector('.quiz-question[data-question="1"]').classList.add('active');
-        document.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('selected'));
-        
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
-        nextBtn.textContent = 'Siguiente';
-    });
-}
+        });
 
-function showQuizResults() {
-    document.getElementById('quiz-content').style.display = 'none';
-    document.getElementById('quiz-results').style.display = 'block';
-    
-    generateQuizResults();
-}
+        // Live radio styling + answer save
+        quizContent.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const qid = parseInt(radio.name.replace('q', ''));
+                answers[qid] = parseInt(radio.value);
+                // Update visual selection within this question
+                const btns = quizContent.querySelectorAll(`input[name="q${qid}"]`);
+                btns.forEach(r => r.closest('.d3d-lk-opt').classList.toggle('selected', r.checked));
+                // Clear error
+                const qEl = quizContent.querySelector(`.d3d-q-item[data-qid="${qid}"]`);
+                if (qEl) {
+                    qEl.classList.remove('d3d-q-unanswered');
+                    qEl.querySelector('.d3d-q-error').style.display = 'none';
+                }
+            });
+        });
 
-function generateQuizResults() {
-    const resultsContainer = document.getElementById('results-detail');
-    resultsContainer.innerHTML = '';
-    
-    // Calculate scores by category
-    const categoryScores = {};
-    const categories = ['Estrategia', 'Estructura', 'Sistemas', 'Personal', 'Habilidades', 'Estilos', 'Valores', 'Objetivos'];
-    
-    // Initialize categories
-    categories.forEach(cat => {
-        categoryScores[cat] = { total: 0, count: 0, percentage: 0 };
-    });
-    
-    // Calculate scores
-    userAnswers.forEach(answer => {
-        if (answer && categoryScores[answer.category]) {
-            categoryScores[answer.category].total += answer.score;
-            categoryScores[answer.category].count += 1;
+        // Prev button
+        document.getElementById('d3d-prev').addEventListener('click', () => {
+            saveCurrentAnswers(seccion);
+            currentSectionIdx--;
+            renderSection(currentSectionIdx);
+        });
+
+        // Next / Results button
+        document.getElementById('d3d-next').addEventListener('click', () => {
+            const unanswered = seccion.preguntas.filter(p => {
+                const checked = quizContent.querySelector(`input[name="q${p.id}"]:checked`);
+                return !checked && answers[p.id] === undefined;
+            });
+
+            if (unanswered.length > 0) {
+                unanswered.forEach(p => {
+                    const qEl = quizContent.querySelector(`.d3d-q-item[data-qid="${p.id}"]`);
+                    if (qEl) {
+                        qEl.classList.add('d3d-q-unanswered');
+                        qEl.querySelector('.d3d-q-error').style.display = 'flex';
+                        qEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+                return;
+            }
+
+            saveCurrentAnswers(seccion);
+
+            if (isLast) {
+                renderResults();
+            } else {
+                currentSectionIdx++;
+                renderSection(currentSectionIdx);
+                quizContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    }
+
+    function saveCurrentAnswers(seccion) {
+        seccion.preguntas.forEach(p => {
+            const radio = quizContent.querySelector(`input[name="q${p.id}"]:checked`);
+            if (radio) answers[p.id] = parseInt(radio.value);
+        });
+    }
+
+    // ── Render results ────────────────────────────────────────────────────────
+    function renderResults() {
+        quizContent.style.display = 'none';
+        quizResults.style.display = 'block';
+        quizResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Calculate per-eje and per-section averages
+        const ejeStats = quizData.ejes.map(eje => {
+            const secciones = eje.secciones.map(sec => {
+                const scores = sec.preguntas.map(p => answers[p.id] || 0).filter(s => s > 0);
+                const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+                return { nombre: sec.nombre, avg: avg.toFixed(2), scores };
+            });
+            const allScores = secciones.flatMap(s => s.scores);
+            const ejeAvg = allScores.length ? allScores.reduce((a, b) => a + b, 0) / allScores.length : 0;
+            return { eje, secciones, avg: ejeAvg };
+        });
+
+        // Overall average
+        const allScores = ejeStats.flatMap(e => e.secciones.flatMap(s => s.scores));
+        const overallAvg = allScores.length ? allScores.reduce((a, b) => a + b, 0) / allScores.length : 0;
+
+        function getNivel(avg) {
+            return quizData.niveles.find(n => avg >= n.min && avg <= n.max)
+                || quizData.niveles[0];
         }
-    });
-    
-    // Calculate percentages
-    Object.keys(categoryScores).forEach(category => {
-        const data = categoryScores[category];
-        if (data.count > 0) {
-            data.percentage = Math.round((data.total / (data.count * 4)) * 100);
-        }
-    });
-    
-    // Sort categories by score
-    const sortedCategories = Object.entries(categoryScores)
-        .filter(([category, data]) => data.count > 0)
-        .sort(([,a], [,b]) => a.percentage - b.percentage);
-    
-    // Create results display
-    const resultsDiv = document.createElement('div');
-    
-    // Strengths
-    const strengthsTitle = document.createElement('h3');
-    strengthsTitle.textContent = 'Fortalezas Principales';
-    strengthsTitle.style.color = 'var(--primary-color)';
-    strengthsTitle.style.marginBottom = '1rem';
-    resultsDiv.appendChild(strengthsTitle);
-    
-    const strengthsList = document.createElement('div');
-    strengthsList.style.marginBottom = '2rem';
-    
-    sortedCategories.slice(-3).reverse().forEach(([category, data]) => {
-        const item = document.createElement('div');
-        item.style.padding = '0.5rem';
-        item.style.backgroundColor = 'var(--light-color)';
-        item.style.borderRadius = '5px';
-        item.style.marginBottom = '0.5rem';
-        item.innerHTML = `<strong>${category}</strong>: ${data.percentage}% de efectividad`;
-        strengthsList.appendChild(item);
-    });
-    resultsDiv.appendChild(strengthsList);
-    
-    // Areas to improve
-    const improvementTitle = document.createElement('h3');
-    improvementTitle.textContent = 'Áreas de Oportunidad';
-    improvementTitle.style.color = 'var(--primary-color)';
-    improvementTitle.style.marginBottom = '1rem';
-    resultsDiv.appendChild(improvementTitle);
-    
-    const improvementList = document.createElement('div');
-    improvementList.style.marginBottom = '2rem';
-    
-    sortedCategories.slice(0, 3).forEach(([category, data]) => {
-        const item = document.createElement('div');
-        item.style.padding = '0.5rem';
-        item.style.backgroundColor = '#fff3cd';
-        item.style.borderRadius = '5px';
-        item.style.marginBottom = '0.5rem';
-        item.innerHTML = `<strong>${category}</strong>: ${data.percentage}% de efectividad`;
-        improvementList.appendChild(item);
-    });
-    resultsDiv.appendChild(improvementList);
-    
-    // Recommendations
-    const recommendationText = document.createElement('p');
-    recommendationText.style.fontStyle = 'italic';
-    recommendationText.style.textAlign = 'center';
-    recommendationText.style.marginTop = '2rem';
-    recommendationText.textContent = 'Basado en su diagnóstico, recomendamos enfocar sus esfuerzos de mejora en las áreas mencionadas arriba. Para una evaluación más detallada y un plan de acción personalizado, contáctenos para una sesión de consultoría.';
-    resultsDiv.appendChild(recommendationText);
-    
-    resultsContainer.appendChild(resultsDiv);
+
+        function pct(avg) { return Math.round(((avg - 1) / 4) * 100); }
+
+        const overallNivel = getNivel(overallAvg);
+        const overallPct = pct(overallAvg);
+
+        const resultsDetail = document.getElementById('results-detail');
+        resultsDetail.innerHTML = `
+            <!-- Overall score -->
+            <div class="d3d-overall-card" style="border-color:${overallNivel.color}">
+                <div class="d3d-overall-label">Resultado Global</div>
+                <div class="d3d-overall-score" style="color:${overallNivel.color}">${overallAvg.toFixed(2)}<span>/5</span></div>
+                <div class="d3d-nivel-badge" style="background:${overallNivel.color}">${overallNivel.label}</div>
+                <div class="d3d-overall-bar-track">
+                    <div class="d3d-overall-bar-fill" style="width:${overallPct}%; background:${overallNivel.color}"></div>
+                </div>
+                <p class="d3d-nivel-rec">${overallNivel.recomendacion}</p>
+            </div>
+
+            <!-- Per-eje cards -->
+            <div class="d3d-eje-results">
+                ${ejeStats.map(({ eje, secciones, avg }) => {
+                    const nivel = getNivel(avg);
+                    const p = pct(avg);
+                    return `
+                        <div class="d3d-eje-result-card" style="--eje-color:${eje.color}">
+                            <div class="d3d-eje-result-header">
+                                <div class="d3d-eje-result-icon" style="background:${eje.color}20; color:${eje.color}">
+                                    <i class="${eje.icon}"></i>
+                                </div>
+                                <div>
+                                    <div class="d3d-eje-result-name">${eje.nombre}</div>
+                                    <div class="d3d-nivel-badge-sm" style="background:${nivel.color}">${nivel.label}</div>
+                                </div>
+                                <div class="d3d-eje-result-score" style="color:${eje.color}">${avg.toFixed(2)}</div>
+                            </div>
+                            <div class="d3d-bar-track">
+                                <div class="d3d-bar-fill" style="width:${p}%; background:${eje.color}"></div>
+                            </div>
+                            <p class="d3d-eje-result-rec">${nivel.recomendacion}</p>
+
+                            <!-- Secciones breakdown -->
+                            <div class="d3d-sec-breakdown">
+                                ${secciones.map(sec => {
+                                    const sn = getNivel(parseFloat(sec.avg));
+                                    const sp = pct(parseFloat(sec.avg));
+                                    return `
+                                        <div class="d3d-sec-row">
+                                            <span class="d3d-sec-name">${sec.nombre}</span>
+                                            <div class="d3d-sec-bar-track">
+                                                <div class="d3d-sec-bar-fill" style="width:${sp}%; background:${sn.color}"></div>
+                                            </div>
+                                            <span class="d3d-sec-score" style="color:${sn.color}">${sec.avg}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+
+            <p class="d3d-results-cta">
+                Para una evaluación más detallada y un plan de acción personalizado,
+                <strong>contáctenos</strong> para una sesión de consultoría.
+            </p>
+        `;
+
+        // Restart button
+        document.getElementById('restart-btn').onclick = () => {
+            Object.keys(answers).forEach(k => delete answers[k]);
+            currentSectionIdx = 0;
+            quizResults.style.display = 'none';
+            renderIntro();
+            quizContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+    }
+
+    renderIntro();
 }
 
 // Chat Functions
