@@ -1255,31 +1255,72 @@ function initializeQuiz() {
         quizResults.style.display = 'block';
         quizResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // Calculate per-eje and per-section averages
+        // Helper: average of answers for a list of question IDs
+        const avgIds = ids => {
+            const vals = ids.map(id => answers[id]).filter(v => typeof v === 'number');
+            return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+        };
+        const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+
+        // Per-eje and per-section stats
         const ejeStats = quizData.ejes.map(eje => {
             const secciones = eje.secciones.map(sec => {
                 const scores = sec.preguntas.map(p => answers[p.id] || 0).filter(s => s > 0);
                 const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
-                return { nombre: sec.nombre, avg: avg.toFixed(2), scores };
+                const startId = sec.preguntas[0].id;
+                return { nombre: sec.nombre, avg, scores, startId };
             });
             const allScores = secciones.flatMap(s => s.scores);
             const ejeAvg = allScores.length ? allScores.reduce((a, b) => a + b, 0) / allScores.length : 0;
             return { eje, secciones, avg: ejeAvg };
         });
-
-        // Overall average
         const allScores = ejeStats.flatMap(e => e.secciones.flatMap(s => s.scores));
         const overallAvg = allScores.length ? allScores.reduce((a, b) => a + b, 0) / allScores.length : 0;
+        const allSecciones = ejeStats.flatMap(e => e.secciones);
+
+        // ── 6 dimensiones: V, R, P (ejes) y I, C, O (evolutivas) ───────────────
+        const V = avgIds(range(1, 16));
+        const R = avgIds(range(17, 31));
+        const P = avgIds(range(32, 48));
+        const I = avgIds([1,2,3,4,5,17,18,19,20,21,32,33,34,35,36,37]);
+        const C = avgIds([6,7,8,9,10,11,22,23,24,25,26,38,39,40,41,42,43]);
+        const O = avgIds([12,13,14,15,16,27,28,29,30,31,44,45,46,47,48]);
+
+        const ejeRanking = [['V', V], ['R', R], ['P', P]]
+            .sort((a, b) => b[1] - a[1]).map(x => x[0]).join('>');
+        const dimMax = [['I', I], ['C', C], ['O', O]]
+            .sort((a, b) => b[1] - a[1])[0][0];
+        const relatoriaKey = `${ejeRanking}_${dimMax}`;
+        const relatoria = (typeof RELATORIAS !== 'undefined' && RELATORIAS[relatoriaKey]) || null;
+
+        // ── Áreas temáticas ─────────────────────────────────────────────────────
+        const areasEvaluadas = (typeof AREAS_TEMATICAS !== 'undefined' ? AREAS_TEMATICAS : [])
+            .map(a => ({ nombre: a.nombre, avg: avgIds(a.reactivos) }));
+        const fortalezas = areasEvaluadas.filter(a => a.avg >= 3.5).sort((a, b) => b.avg - a.avg);
+        const debilidades = areasEvaluadas.filter(a => a.avg > 0 && a.avg <= 2.5).sort((a, b) => a.avg - b.avg);
+
+        // ── Top 3 / Bottom 3 secciones ─────────────────────────────────────────
+        const seccionesRanked = [...allSecciones].filter(s => s.avg > 0);
+        const top3 = [...seccionesRanked].sort((a, b) => b.avg - a.avg).slice(0, 3);
+        const bot3 = [...seccionesRanked].sort((a, b) => a.avg - b.avg).slice(0, 3);
 
         function getNivel(avg) {
-            return quizData.niveles.find(n => avg >= n.min && avg <= n.max)
-                || quizData.niveles[0];
+            return quizData.niveles.find(n => avg >= n.min && avg <= n.max) || quizData.niveles[0];
         }
-
         function pct(avg) { return Math.round(((avg - 1) / 4) * 100); }
 
         const overallNivel = getNivel(overallAvg);
         const overallPct = pct(overallAvg);
+
+        const ejeNombres = { V: 'Eje Económico (Valor)', R: 'Eje Sociológico (Relaciones)', P: 'Eje Psicológico (Personal)' };
+        const ejeColors  = { V: '#0ea5e9', R: '#22c55e', P: '#a855f7' };
+        const dimNombres = { I: 'Identidad — Dimensión protagónica', C: 'Crecimiento — Dimensión progresista', O: 'Operación — Dimensión práctica' };
+        const dimIcons   = { I: 'fas fa-star', C: 'fas fa-seedling', O: 'fas fa-cogs' };
+        const ejeData = { V, R, P };
+        const dimData = { I, C, O };
+
+        const hdr = (typeof RELATORIA_HEADER !== 'undefined') ? RELATORIA_HEADER : null;
+        const secInfo = (typeof SECCIONES_INFO !== 'undefined') ? SECCIONES_INFO : {};
 
         const resultsDetail = document.getElementById('results-detail');
         resultsDetail.innerHTML = `
@@ -1294,7 +1335,140 @@ function initializeQuiz() {
                 <p class="d3d-nivel-rec">${overallNivel.recomendacion}</p>
             </div>
 
-            <!-- Per-eje cards -->
+            ${relatoria ? `
+            <div class="d3d-relatoria-card">
+                <div class="d3d-relatoria-badge">
+                    <i class="fas fa-file-alt"></i> Relatoría ${relatoria.num} de 18
+                </div>
+                <h3 class="d3d-relatoria-title">Perfil estratégico de su empresa</h3>
+                <div class="d3d-relatoria-combo">
+                    <span class="d3d-combo-chip">Ranking de ejes: ${ejeRanking.replace(/>/g, ' › ')}</span>
+                    <span class="d3d-combo-chip">Dimensión dominante: ${dimMax}</span>
+                </div>
+
+                ${hdr ? `
+                <p class="d3d-relatoria-p"><strong>${hdr.intro}</strong></p>
+                <ul class="d3d-factor-list">
+                    ${hdr.factores.map(f => `<li><strong>${f.titulo}:</strong> ${f.texto}</li>`).join('')}
+                </ul>` : ''}
+                <p class="d3d-relatoria-p d3d-relatoria-highlight">${relatoria.eje}</p>
+
+                ${hdr ? `
+                <p class="d3d-relatoria-p"><strong>${hdr.etapasIntro}</strong></p>
+                <ul class="d3d-factor-list">
+                    ${hdr.etapas.map(e => `<li><strong>${e.titulo}:</strong> ${e.texto} <em>(${e.dim})</em></li>`).join('')}
+                </ul>` : ''}
+                <p class="d3d-relatoria-p d3d-relatoria-highlight">${relatoria.dim}</p>
+            </div>` : ''}
+
+            <!-- Perfil V/R/P -->
+            <div class="d3d-vrp-card">
+                <h3 class="d3d-subtitle"><i class="fas fa-layer-group"></i> Énfasis por factor de éxito</h3>
+                <div class="d3d-vrp-grid">
+                    ${['V','R','P'].map(k => {
+                        const v = ejeData[k];
+                        const p = pct(v);
+                        return `
+                            <div class="d3d-vrp-item" style="--k-color:${ejeColors[k]}">
+                                <div class="d3d-vrp-letter">${k}</div>
+                                <div class="d3d-vrp-meta">
+                                    <div class="d3d-vrp-name">${ejeNombres[k]}</div>
+                                    <div class="d3d-vrp-bar-track">
+                                        <div class="d3d-vrp-bar-fill" style="width:${p}%; background:${ejeColors[k]}"></div>
+                                    </div>
+                                </div>
+                                <div class="d3d-vrp-score">${v.toFixed(2)}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+
+            <!-- Dimensión I/C/O -->
+            <div class="d3d-dim-card">
+                <h3 class="d3d-subtitle"><i class="fas fa-compass"></i> Dimensión evolutiva</h3>
+                <div class="d3d-dim-grid">
+                    ${['I','C','O'].map(k => {
+                        const v = dimData[k];
+                        const p = pct(v);
+                        const isMax = k === dimMax;
+                        return `
+                            <div class="d3d-dim-item ${isMax ? 'd3d-dim-max' : ''}">
+                                <div class="d3d-dim-head">
+                                    <i class="${dimIcons[k]}"></i>
+                                    <span>${dimNombres[k]}</span>
+                                    ${isMax ? '<span class="d3d-dim-tag">Dominante</span>' : ''}
+                                </div>
+                                <div class="d3d-vrp-bar-track">
+                                    <div class="d3d-vrp-bar-fill" style="width:${p}%"></div>
+                                </div>
+                                <div class="d3d-dim-score">${v.toFixed(2)}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+
+            ${(fortalezas.length || debilidades.length) ? `
+            <div class="d3d-fd-grid">
+                ${fortalezas.length ? `
+                <div class="d3d-fd-card d3d-fd-strong">
+                    <h3 class="d3d-subtitle"><i class="fas fa-check-circle"></i> Fortalezas detectadas</h3>
+                    <p class="d3d-fd-sub">Áreas con promedio ≥ 3.5</p>
+                    <ul class="d3d-fd-list">
+                        ${fortalezas.map(a => `<li><span>${a.nombre}</span><strong>${a.avg.toFixed(2)}</strong></li>`).join('')}
+                    </ul>
+                </div>` : ''}
+                ${debilidades.length ? `
+                <div class="d3d-fd-card d3d-fd-weak">
+                    <h3 class="d3d-subtitle"><i class="fas fa-exclamation-triangle"></i> Áreas de oportunidad</h3>
+                    <p class="d3d-fd-sub">Áreas con promedio ≤ 2.5</p>
+                    <ul class="d3d-fd-list">
+                        ${debilidades.map(a => `<li><span>${a.nombre}</span><strong>${a.avg.toFixed(2)}</strong></li>`).join('')}
+                    </ul>
+                </div>` : ''}
+            </div>` : ''}
+
+            ${top3.length ? `
+            <div class="d3d-topbot-card">
+                <h3 class="d3d-subtitle"><i class="fas fa-trophy"></i> Sus 3 áreas de mejor desempeño</h3>
+                <p class="d3d-fd-sub">Las áreas de desempeño con las que usted parece estar más satisfecho.</p>
+                ${top3.map(s => {
+                    const info = secInfo[s.startId];
+                    const titulo = info ? info.titulo : s.nombre;
+                    const texto = info ? info.texto : '';
+                    return `
+                        <div class="d3d-topbot-item">
+                            <div class="d3d-topbot-head">
+                                <span class="d3d-topbot-name">${titulo}</span>
+                                <span class="d3d-topbot-score" style="color:${getNivel(s.avg).color}">${s.avg.toFixed(2)}</span>
+                            </div>
+                            ${texto ? `<p class="d3d-topbot-desc">${texto}</p>` : ''}
+                        </div>
+                    `;
+                }).join('')}
+            </div>` : ''}
+
+            ${bot3.length ? `
+            <div class="d3d-topbot-card d3d-topbot-card-bot">
+                <h3 class="d3d-subtitle"><i class="fas fa-wrench"></i> Sus 3 áreas a fortalecer</h3>
+                <p class="d3d-fd-sub">Las áreas de desempeño con las que usted parece estar menos satisfecho.</p>
+                ${bot3.map(s => {
+                    const info = secInfo[s.startId];
+                    const titulo = info ? info.titulo : s.nombre;
+                    const texto = info ? info.texto : '';
+                    return `
+                        <div class="d3d-topbot-item">
+                            <div class="d3d-topbot-head">
+                                <span class="d3d-topbot-name">${titulo}</span>
+                                <span class="d3d-topbot-score" style="color:${getNivel(s.avg).color}">${s.avg.toFixed(2)}</span>
+                            </div>
+                            ${texto ? `<p class="d3d-topbot-desc">${texto}</p>` : ''}
+                        </div>
+                    `;
+                }).join('')}
+            </div>` : ''}
+
             <div class="d3d-eje-results">
                 ${ejeStats.map(({ eje, secciones, avg }) => {
                     const nivel = getNivel(avg);
@@ -1316,18 +1490,17 @@ function initializeQuiz() {
                             </div>
                             <p class="d3d-eje-result-rec">${nivel.recomendacion}</p>
 
-                            <!-- Secciones breakdown -->
                             <div class="d3d-sec-breakdown">
                                 ${secciones.map(sec => {
-                                    const sn = getNivel(parseFloat(sec.avg));
-                                    const sp = pct(parseFloat(sec.avg));
+                                    const sn = getNivel(sec.avg);
+                                    const sp = pct(sec.avg);
                                     return `
                                         <div class="d3d-sec-row">
                                             <span class="d3d-sec-name">${sec.nombre}</span>
                                             <div class="d3d-sec-bar-track">
                                                 <div class="d3d-sec-bar-fill" style="width:${sp}%; background:${sn.color}"></div>
                                             </div>
-                                            <span class="d3d-sec-score" style="color:${sn.color}">${sec.avg}</span>
+                                            <span class="d3d-sec-score" style="color:${sn.color}">${sec.avg.toFixed(2)}</span>
                                         </div>
                                     `;
                                 }).join('')}
@@ -1337,10 +1510,15 @@ function initializeQuiz() {
                 }).join('')}
             </div>
 
+            ${hdr ? `
+            <div class="d3d-closing-card">
+                <p>${hdr.cierre}</p>
+                <p><strong>${hdr.cta}</strong></p>
+            </div>` : `
             <p class="d3d-results-cta">
                 Para una evaluación más detallada y un plan de acción personalizado,
                 <strong>contáctenos</strong> para una sesión de consultoría.
-            </p>
+            </p>`}
         `;
 
         // Restart button
