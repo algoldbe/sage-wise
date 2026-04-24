@@ -133,6 +133,6 @@ const RELATORIA_HEADER = {
         { titulo: "EL CRECIMIENTO", texto: "Cómo ser competitiva para aumentar la cuota de mercado.", dim: "Dimensión progresista" },
         { titulo: "LA IDENTIDAD", texto: "Cómo implementar ideas originales para asumir un papel principal y lograr la mayor rentabilidad de la inversión.", dim: "Dimensión protagónica" }
     ],
-    cierre: "El Centro Anáhuac de Ingeniería Empresarial es una comunidad de egresados al servicio de los egresados. Aglutina en conjunto miles de horas de experiencia de hombres y mujeres expertos en diversas áreas de la ingeniería empresarial, siempre dispuestos a brindar capacitación o asesoría en los más variados temas a precios muy accesibles.",
+    cierre: "Sage-Wise está conformado por un grupo de consultores con vasta experiencia en diversas áreas de la ingeniería empresarial, siempre dispuestos a brindar capacitación o asesoría en los más variados temas a precios muy accesibles.",
     cta: "Contáctenos. Con gusto exploraremos los temas que más le inquieten de su empresa en los que podamos ayudar."
 };
