@@ -1,0 +1,306 @@
+/* rentimetro.css */
+html,body{
+	background-color: white;
+	height: 100%;
+}
+.canvas{
+	margin: 0px;
+	padding: 1%;
+	background-color: white;
+	border-width: 5px;
+	border-style: solid;
+	border-color: black;
+	border-radius: 50px;
+	width: 90%;
+	height: 90%;
+	left: 3%;
+	top: 3%;
+	position: relative;
+}
+.board{
+	width: 100%;
+	position: absolute;
+	display: flex;
+	left: 0px;
+	top: 0px;
+}
+.svg-container{
+	position: absolute;
+}
+.boardElement{
+	/*width: 100%;*/
+	width: 44.23vw;
+	height: 68vh;
+	position: absolute;
+	display: flex;
+	left: 0px;
+	top: 0px;
+}
+.ros-reading-line{
+	position: absolute;
+	display: flex;
+	top: 39.5vh;
+	left: 14.3vw;
+	width: 0vw;
+	height: 0vh;
+	border-top: 0px red solid;
+	transform: rotate(-0deg);
+	transform-origin: 0vw 0vh;
+	z-index: 11;
+}
+.gear-rail{
+	position: absolute;
+	display: flex;
+	left: 15vw;
+	top: 39.5vh;
+	width: 0vw;
+	height: 9.5vh;
+	border: 0px blue solid;
+	transform: rotate(-0deg);
+	transform-origin: -1.1vw 1.1vh;
+	z-index: 1;
+}
+.hinge{
+	/*z-index: 1;*/
+}
+.bar{
+	transform-origin: 13.9vw 40.6vh;
+	/*transform-origin: 0vw 0vh;*/
+	/*transform: rotate(-10deg);*/
+}
+.clickableBucket{
+	width: 6.5vw;
+	height: 20vh;
+	position: absolute;
+	display: flex;
+	left: 4vw;
+	top: 47vh;
+	/*z-index: 11;*/
+	border: 0px red solid;
+}
+.grid{
+	position: relative;
+	width: 100%;
+}
+.boardFloatingElement{
+	position: absolute;
+	display: flex;
+	/*z-index: 6;*/
+}
+.metric-empuje{
+	width: 15%;
+	left: 50%;
+	top: 25vw;
+	border: 0px red solid;
+}
+.x-axis{
+	width: 15%;
+	left: 52%;
+	top: 21.5vw;
+	font-weight: bold;
+	font-size: 2vw;
+	text-align: center;
+}
+.y-axis{
+	left: 30%;
+	top: 1.8vw;
+}
+.gear-legend{
+	top: 41.8vw;
+}
+.stopperImg{
+	width: 0.7vw;
+	height: 0.7vw;
+	top: 0.2vh;
+}
+.stopper{
+	left: 35vw;
+	font-size: 0.9vw;
+	font-weight: bold;
+}
+.gearCanvas{
+	position: relative;
+}
+.main-row{
+	display: flex;
+	border: 0px dashed red;
+	height: 70%;
+}
+.column{
+	float: left;
+	position: relative;
+}
+.col-instructions-container{
+	width: 18%;
+	border: 0px dashed black;
+}
+.col-instructions-text{
+	width: 110%;
+	border: 0px dashed black;
+	text-align: left;
+	font-size: 0.8vw;
+}
+.col-instructions-status{
+	width: 20%;
+	border: 0px dashed black;
+}
+.col-main{
+	width: 50%;
+	border: 0px dashed blue;
+}
+.col-dupont-container{
+	width: 32%;
+	border: 0px dashed green;
+}
+.col-dupont{
+	width: 24%;
+	height: 100%;
+	border: 0px dashed black;
+}
+.row-dupont-tall{
+	width: 100%;
+	height: 11%;
+	border: 0px dashed red;
+}
+.row-dupont-short{
+	width: 100%;
+	height: 3%;
+	border: 0px dashed red;
+}
+.gear-shelf{
+	width: 95%;
+	margin-top: 3%;
+	margin-left: 2%;
+	border: 0px dashed gray;
+}
+.gear{
+	display: inline;
+	position: relative;
+	text-align: center;
+	/*width: 50px;*/
+	margin: 5px;
+	border: 0px solid black;
+}
+.gear-txt{
+	display: inline;
+	position: absolute;
+	bottom: -20px;
+  	left: 30%;
+  	font-size: 1vw;
+  	font-weight: bold;
+}
+img{
+	position: relative;
+	width: 100%;
+}
+h1{
+	font-size: 2vw;
+}
+#statusImg{
+	width: 15px;
+	height: 15px;
+}
+.metric-box{
+	display: flex;
+	border: 2px solid black;
+	width: 80%;
+	margin: 10%;
+	text-align: center;
+	font-size: 0.8vw;
+	/*font-weight: bold;*/
+}
+.metric-right{
+	width: 75%;
+	border-right: 1px solid black;
+}
+.metric-left{
+	width: 70%;
+	border-left: 1px solid black;
+}
+.metric-symbol{
+	width: 25%;
+	font-size: 1.7vw;
+}
+.simple-symbol{
+	text-align: center;
+	font-size: 1.5vw;
+}
+.large-symbol{
+	text-align: center;
+	font-size: 2vw;
+	margin-top: 10%;
+}
+.gradient-utilidad{
+	background-image: linear-gradient(to right, rgba(255,187,153,1), transparent);
+}
+.gradient-egresos{
+	background-image: linear-gradient(to right, rgba(255,179,198,1), transparent);
+}
+.gradient-ingresos{
+	background-image: linear-gradient(to right, rgba(255,255,194,1), transparent);
+}
+.gradient-inversiones{
+	background-image: linear-gradient(to right, rgba(46,255,150,1), transparent);
+}
+.gradient-deudas{
+	background-image: linear-gradient(to right, rgba(240,240,0,1), transparent);
+}
+.gradient-patrimonio{
+	background-image: linear-gradient(to right, rgba(46,150,255,1), transparent);
+}
+.gradient-ros{
+	background-image: linear-gradient(to right, rgba(245,184,0,1), transparent);
+}
+.gradient-tau{
+	background-image: linear-gradient(to right, rgba(255,113,10,1), transparent);
+}
+.gradient-lambda{
+	background-image: linear-gradient(to right, rgba(0,204,51,1), transparent);
+}
+.gradient-roe{
+	background-image: linear-gradient(to right, rgba(10,194,255,1), transparent);
+}
+.gradient-roa{
+	background-image: linear-gradient(to right, rgba(153,255,255,1), transparent);
+}
+.gradient-empuje{
+	background-image: linear-gradient(to right, rgba(10,194,255,1), transparent);
+}
+input{
+	width: 3vw;
+	height: 0.5vw;
+	font-size: 0.5vw;
+	text-align: center;
+}
+.no-metric-box{
+	width: 120%;
+	font-size: 0.8vw;
+	text-align: left;
+	padding-top: 17%;
+	padding-left: 6%;
+}
+.check{
+	width: 0.8vw;
+	height: 0.8vw;
+}
+.button {
+	width: 5vw;
+	height: 2vw;
+	font-size: 0.9vw;
+	margin-top: 10%;
+	margin-left: 20%;
+	color: white;
+	padding: 0px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+.calc-button{
+	background-color: #4CAF50; /* Green */
+	border-color: #4CAF50; /* Green */
+}
+.clean-button{
+	background-color: #008CBA;; /* Green */
+	border-color: #008CBA;; /* Green */
+}
+/*{},{},{10,194,255}*/

@@ -1,0 +1,88 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewbox="0 0 270 580" preserveAspectRatio="none">
+    <!-- <g transform="translate(270,58)"> -->
+    <g>
+
+<text x='2.0vw' y='100.0vh' fill='black' font-weight='bold' font-size='12px'>0</text>
+<text x='1.0vw' y='93.5vh' fill='black' font-weight='bold' font-size='12px'>10</text>
+<text x='1.0vw' y='87.1vh' fill='black' font-weight='bold' font-size='12px'>20</text>
+<text x='1.0vw' y='80.6vh' fill='black' font-weight='bold' font-size='12px'>30</text>
+<text x='1.0vw' y='74.1vh' fill='black' font-weight='bold' font-size='12px'>40</text>
+<text x='1.0vw' y='67.7vh' fill='black' font-weight='bold' font-size='12px'>50</text>
+<text x='1.0vw' y='61.2vh' fill='black' font-weight='bold' font-size='12px'>60</text>
+<text x='1.0vw' y='54.7vh' fill='black' font-weight='bold' font-size='12px'>70</text>
+<text x='1.0vw' y='48.3vh' fill='black' font-weight='bold' font-size='12px'>80</text>
+<text x='1.0vw' y='41.8vh' fill='black' font-weight='bold' font-size='12px'>90</text>
+<text x='0.0vw' y='35.3vh' fill='black' font-weight='bold' font-size='12px'>100</text>
+<text x='0.0vw' y='28.9vh' fill='black' font-weight='bold' font-size='12px'>110</text>
+<text x='0.0vw' y='22.4vh' fill='black' font-weight='bold' font-size='12px'>120</text>
+<text x='0.0vw' y='15.9vh' fill='black' font-weight='bold' font-size='12px'>130</text>
+<text x='0.0vw' y='9.5vh' fill='black' font-weight='bold' font-size='12px'>140</text>
+<text x='0.0vw' y='3.0vh' fill='black' font-weight='bold' font-size='12px'>150</text>
+
+
+
+
+
+
+
+
+<line x1='4.5vw' x2='95vw' y1='98.4vh' y2='98.4vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='95.2vh' y2='95.2vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='91.9vh' y2='91.9vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='88.7vh' y2='88.7vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='85.5vh' y2='85.5vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='82.2vh' y2='82.2vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='79.0vh' y2='79.0vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='75.8vh' y2='75.8vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='72.5vh' y2='72.5vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='69.3vh' y2='69.3vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='66.1vh' y2='66.1vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='62.8vh' y2='62.8vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='59.6vh' y2='59.6vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='56.4vh' y2='56.4vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='53.1vh' y2='53.1vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='49.9vh' y2='49.9vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='46.7vh' y2='46.7vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='43.4vh' y2='43.4vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='40.2vh' y2='40.2vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='37.0vh' y2='37.0vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='33.7vh' y2='33.7vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='30.5vh' y2='30.5vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='27.3vh' y2='27.3vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='24.0vh' y2='24.0vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='20.8vh' y2='20.8vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='17.6vh' y2='17.6vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='14.3vh' y2='14.3vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='11.1vh' y2='11.1vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='7.8vh' y2='7.8vh' stroke="black"  stroke-width='1' />
+<line x1='4.5vw' x2='95vw' y1='4.6vh' y2='4.6vh' stroke="black"  stroke-width='0.5' stroke-dasharray='10,5,5,5' />
+<line x1='4.5vw' x2='95vw' y1='1.4vh' y2='1.4vh' stroke="black"  stroke-width='1' />
+
+
+
+
+
+
+
+        <!-- <line x1='4.5vw' x2='95vw' y1='5vh' y2='50vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='6vh' y2='60vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='7vh' y2='70vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='8vh' y2='80vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='1vh' y2='10vh' stroke="black" stroke-width="1"/>
+        <line x1='4.5vw' x2='95vw' y1='2vh' y2='20vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='3vh' y2='30vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='4vh' y2='40vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='5vh' y2='50vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='6vh' y2='60vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='7vh' y2='70vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='8vh' y2='80vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='1vh' y2='10vh' stroke="black" stroke-width="1"/>
+        <line x1='4.5vw' x2='95vw' y1='2vh' y2='20vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='3vh' y2='30vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='4vh' y2='40vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='5vh' y2='50vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='6vh' y2='60vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/>
+        <line x1='4.5vw' x2='95vw' y1='7vh' y2='70vh' stroke="black" stroke-width="1" />
+        <line x1='4.5vw' x2='95vw' y1='10vh' y2='170vh' stroke="black" stroke-width="1" stroke-dasharray="5,10"/> -->
+    </g>
+</svg>
