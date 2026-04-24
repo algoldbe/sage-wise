@@ -20,6 +20,7 @@
                 <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
                 <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
                 <li><a href="#glossary" class="tab-link" data-tab="glossary">Glosario</a></li>
+                <li><a href="#contacto" class="tab-link" data-tab="contacto">Contacto</a></li>
             </ul>
         </div>
     </header>
@@ -298,6 +299,77 @@
             });
 
             document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hide(); });
+        })();
+        </script>
+
+        <!-- Contacto Tab -->
+        <div id="contacto" class="tab-content">
+            <div class="quiz-container" style="max-width:680px;">
+                <div class="quiz-intro">
+                    <h2>Contacto</h2>
+                    <p>Escríbanos para obtener más información sobre el modelo octagramal o solicitar una sesión de consultoría.</p>
+                </div>
+                <form id="contacto-form" class="contacto-form" action="https://api.web3forms.com/submit" method="POST">
+                    <!-- Access key de Web3Forms (form "Sage-Wise") -->
+                    <input type="hidden" name="access_key" value="79ef2262-74c2-479c-b2c3-7db7e9870c65">
+                    <input type="hidden" name="subject" value="Nuevo mensaje desde Sage-Wise">
+                    <input type="hidden" name="from_name" value="Sage-Wise Web">
+                    <!-- Destinatarios en copia (separados por coma). Pendiente: ocultar con regla de reenvío en Gmail. -->
+                    <input type="hidden" name="cc" value="jacuna@sage-wise.mx,menaser85@gmail.com,ghijar@prodigy.net.mx">
+                    <!-- Honeypot anti-bot (no se ve) -->
+                    <input type="checkbox" name="botcheck" class="contacto-honeypot" tabindex="-1" autocomplete="off">
+
+                    <label class="contacto-label">
+                        <span>Nombre</span>
+                        <input type="text" name="name" required>
+                    </label>
+                    <label class="contacto-label">
+                        <span>Correo electrónico</span>
+                        <input type="email" name="email" required>
+                    </label>
+                    <label class="contacto-label">
+                        <span>Mensaje</span>
+                        <textarea name="message" rows="5" required></textarea>
+                    </label>
+
+                    <div class="h-captcha" data-captcha="true"></div>
+
+                    <button type="submit" class="contacto-submit">Enviar</button>
+                    <div id="contacto-status" class="contacto-status" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://web3forms.com/client/script.js" async defer></script>
+        <script>
+        (function() {
+            var form = document.getElementById('contacto-form');
+            var status = document.getElementById('contacto-status');
+            if (!form || !status) return;
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                status.textContent = 'Enviando...';
+                status.className = 'contacto-status sending';
+                fetch(form.action, { method: 'POST', body: new FormData(form) })
+                    .then(function(r) { return r.json(); })
+                    .then(function(json) {
+                        if (json && json.success) {
+                            status.textContent = 'Mensaje enviado. Le contactaremos pronto.';
+                            status.className = 'contacto-status success';
+                            form.reset();
+                            if (window.hcaptcha && typeof window.hcaptcha.reset === 'function') {
+                                try { window.hcaptcha.reset(); } catch (err) {}
+                            }
+                        } else {
+                            status.textContent = (json && json.message) ? json.message : 'Hubo un error al enviar. Intente de nuevo.';
+                            status.className = 'contacto-status error';
+                        }
+                    })
+                    .catch(function() {
+                        status.textContent = 'Error de conexión. Intente de nuevo.';
+                        status.className = 'contacto-status error';
+                    });
+            });
         })();
         </script>
     </main>
