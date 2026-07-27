@@ -387,13 +387,21 @@ function initialize3DOctagon() {
     const root = new THREE.Group();
     scene.add(root);
 
+    // Vista de arranque: el vértice 1 queda de frente y el modelo quieto;
+    // girarlo es cosa de quien lo mira.
+    const VISTA = {
+        rx: 0.50,
+        ry: anguloVertice(0) - Math.PI / 2,   // deja el vértice 1 hacia el frente
+        zoom: 6.9
+    };
+
     // Estado de interacción
     const state = {
         drag: false, lastX: 0, lastY: 0,
-        targetRX: 0.50, targetRY: -0.35,
-        rx: 0.50, ry: -0.35,
-        zoom: 6.9, targetZoom: 6.9,
-        autoRotate: true,
+        targetRX: VISTA.rx, targetRY: VISTA.ry,
+        rx: VISTA.rx, ry: VISTA.ry,
+        zoom: VISTA.zoom, targetZoom: VISTA.zoom,
+        autoRotate: false,
         mostrarNombres: false,
         hovered: null,
         seleccionado: null
@@ -961,6 +969,15 @@ function initialize3DOctagon() {
         return piezas.find(p => p.userData.oct === oct && p.userData.tipo === tipo && p.userData.idx === idx);
     }
 
+    // Equivalente de `destino` (módulo 2π) más próximo a `referencia`, para que el
+    // giro tome siempre la vuelta más corta.
+    function masCercano(destino, referencia) {
+        let d = destino;
+        while (d - referencia > Math.PI) d -= Math.PI * 2;
+        while (d - referencia < -Math.PI) d += Math.PI * 2;
+        return d;
+    }
+
     octaViewer = {
         enfocar(oct, tipo, idx) {
             const p = piezaDe(oct, tipo, idx);
@@ -969,11 +986,8 @@ function initialize3DOctagon() {
             const ang = tipo === 'vertice' ? anguloVertice(idx)
                 : tipo === 'proceso' ? anguloVertice(idx + 1)
                 : anguloLado(idx);
-            // Deja el elemento al frente (dirección +Z) y suaviza la vuelta más corta
-            let destino = ang - Math.PI / 2;
-            while (destino - state.targetRY > Math.PI) destino -= Math.PI * 2;
-            while (destino - state.targetRY < -Math.PI) destino += Math.PI * 2;
-            state.targetRY = destino;
+            // Deja el elemento al frente (dirección +Z), por la vuelta más corta
+            state.targetRY = masCercano(ang - Math.PI / 2, state.targetRY);
             state.targetRX = tipo === 'proceso' ? 0.62 : (oct === 1 ? 0.55 : 0.34);
             state.autoRotate = false;
             sincronizarBotonAuto();
@@ -986,7 +1000,11 @@ function initialize3DOctagon() {
         },
         girar(delta) { state.targetRY += delta; state.autoRotate = false; sincronizarBotonAuto(); },
         reiniciar() {
-            state.targetRX = 0.50; state.targetRY = -0.35; state.targetZoom = 6.9;
+            state.targetRX = VISTA.rx;
+            state.targetRY = masCercano(VISTA.ry, state.targetRY);   // vuelta más corta
+            state.targetZoom = VISTA.zoom;
+            state.autoRotate = false;
+            sincronizarBotonAuto();
             if (state.seleccionado) { state.seleccionado.userData.activo = false; normalizar(state.seleccionado); state.seleccionado = null; }
             limpiarIndice();
             infoInicial();
