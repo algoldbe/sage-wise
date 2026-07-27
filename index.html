@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260727d" rel="stylesheet">
+    <link href="css/styles.css?v=20260727e" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -50,6 +50,41 @@
                             <i class="fas fa-file-pdf" style="margin-right: 0.5rem;"></i>Ver Presentación de Portada
                         </a>
                     </p>
+
+                    <!-- preload="none" para que los archivos no se descarguen hasta que alguien
+                         le dé al play; si no, la página cargaría 58 MB de entrada. -->
+                    <div class="medios">
+                        <div class="medio">
+                            <div class="medio-cab">
+                                <span class="medio-icono"><i class="fas fa-play"></i></span>
+                                <div>
+                                    <strong>El Modelo Octagramal en video</strong>
+                                    <em>8:28 min</em>
+                                </div>
+                            </div>
+                            <video controls playsinline preload="none"
+                                   poster="media/modelo-octagramal-poster.jpg">
+                                <source src="media/modelo-octagramal.mp4" type="video/mp4">
+                                Su navegador no puede reproducir el video.
+                                <a href="media/modelo-octagramal.mp4">Descárguelo aquí</a>.
+                            </video>
+                        </div>
+
+                        <div class="medio">
+                            <div class="medio-cab">
+                                <span class="medio-icono"><i class="fas fa-headphones"></i></span>
+                                <div>
+                                    <strong>Física y ficciones del Octagrama</strong>
+                                    <em>Audio · 25:32 min</em>
+                                </div>
+                            </div>
+                            <audio controls preload="none">
+                                <source src="media/fisica-y-ficciones-del-octagrama.m4a" type="audio/mp4">
+                                Su navegador no puede reproducir el audio.
+                                <a href="media/fisica-y-ficciones-del-octagrama.m4a">Descárguelo aquí</a>.
+                            </audio>
+                        </div>
+                    </div>
 
                     <div class="oct-leyenda">
                         <div class="oct-leyenda-tit">Cómo leer el modelo</div>
@@ -107,8 +142,17 @@
             </section>
 
             <section class="oct-explorer">
+                <!-- El índice completo va plegado: se abre sólo si alguien lo pide -->
+                <details class="oct-indice">
+                    <summary>
+                        <span class="oct-indice-tit">Índice completo del modelo</span>
+                        <span class="oct-indice-sub">Vértices, lados y procesos de los dos octagramas</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <div class="octagon-index" id="octagon-index"></div>
+                </details>
+
                 <div class="octagon-info-panel" id="octagon-info"></div>
-                <div class="octagon-index" id="octagon-index"></div>
             </section>
 
             <h2 class="section-title">Inventario de Recursos</h2>
@@ -536,9 +580,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260727d"></script>
-    <script src="js/octagrama.js?v=20260727d"></script>
-    <script src="js/main.js?v=20260727d"></script>
+    <script src="js/relatorias.js?v=20260727e"></script>
+    <script src="js/octagrama.js?v=20260727e"></script>
+    <script src="js/main.js?v=20260727e"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
