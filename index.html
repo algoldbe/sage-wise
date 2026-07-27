@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/styles.css?v=20260727" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -30,6 +30,7 @@
         <div id="home" class="tab-content active">
             <section class="intro-section">
                 <div class="intro-text">
+                    <span class="pagina-eyebrow"><i class="fas fa-draw-polygon"></i> Modelo octagramal</span>
                     <h2>Bienvenido a Sage-Wise</h2>
                     <p>Presentamos el modelo octagramal desarrollado por SAGE-WISE, el cual explica las
                     complejas interacciones que ocurren entre los procesos empresariales que generan valor
@@ -43,25 +44,67 @@
                             <i class="fas fa-file-pdf" style="margin-right: 0.5rem;"></i>Ver Presentación de Portada
                         </a>
                     </p>
-                </div>
-                <div class="octagon-section">
-                    <div class="octagon-model">
-                        <div class="octagon-title">Modelo del Octagrama</div>
-                        <div class="octagon-canvas" id="octagon-container">
-                            <!-- 3D Octagon will be rendered here using Three.js -->
-                            <div class="octagon-hint">
-                                <i class="fas fa-mouse-pointer"></i>
-                                Explora con tu ratón los vértices y conectores del Octagrama
+
+                    <div class="oct-leyenda">
+                        <div class="oct-leyenda-tit">Cómo leer el modelo</div>
+                        <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono vertice"></span>
+                            <div>
+                                <strong>Vértices</strong>
+                                <em>Ocho por octágono. En el de Valor son los resultados que la empresa persigue; en el Cerebral, quienes toman las decisiones.</em>
+                            </div>
+                        </div>
+                        <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono lado"></span>
+                            <div>
+                                <strong>Lados</strong>
+                                <em>La barra que une dos vértices contiguos. En el de Valor es el vínculo entre ambos; en el Cerebral, el mercado donde se interviene.</em>
+                            </div>
+                        </div>
+                        <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono cruce"></span>
+                            <div>
+                                <strong>Procesos</strong>
+                                <em>Las líneas que cruzan el octágono entre vértices no contiguos. Son los dos cuadrados inscritos que lo convierten en octagrama.</em>
                             </div>
                         </div>
                     </div>
-                    <div class="octagon-info-panel" id="octagon-info">
-                        <h3>Información del Modelo</h3>
-                        <p>Haga clic en cualquier lado o vértice de los octágonos para ver información detallada sobre cada componente de nuestro modelo del Octagrama. Cada elemento está diseñado para trabajar de manera integrada con los demás, creando un sistema holístico de análisis organizacional.</p>
+                </div>
+                <div class="octagon-section">
+                    <div class="octagon-model">
+                        <div class="octagon-title">
+                            <span class="octagon-title-main"><i class="fas fa-draw-polygon"></i> Modelo del Octagrama</span>
+                            <span class="octagon-title-sub">8 vértices · 8 lados · 8 procesos</span>
+                        </div>
+                        <div class="octagon-canvas" id="octagon-container">
+                            <!-- El modelo 3D se dibuja aquí (js/octagrama.js) -->
+                            <span class="oct-rotulo valor">Octagrama de Valor</span>
+                            <span class="oct-rotulo cerebral">Octagrama Cerebral</span>
+                            <div class="oct-controls" role="group" aria-label="Controles del modelo">
+                                <button type="button" onclick="octControl('izq')" title="Girar a la izquierda"><i class="fas fa-rotate-left"></i></button>
+                                <button type="button" onclick="octControl('der')" title="Girar a la derecha"><i class="fas fa-rotate-right"></i></button>
+                                <button type="button" id="oct-btn-auto" onclick="octControl('auto')" title="Giro automático"><i class="fas fa-arrows-rotate"></i></button>
+                                <button type="button" onclick="octControl('superior')" title="Vista superior"><i class="fas fa-square-full"></i></button>
+                                <button type="button" id="oct-btn-nombres" onclick="octControl('nombres')" title="Mostrar u ocultar los nombres"><i class="fas fa-tag"></i></button>
+                                <span class="oct-controls-sep"></span>
+                                <button type="button" onclick="octControl('zoom+')" title="Acercar"><i class="fas fa-plus"></i></button>
+                                <button type="button" onclick="octControl('zoom-')" title="Alejar"><i class="fas fa-minus"></i></button>
+                                <button type="button" onclick="octControl('reiniciar')" title="Reiniciar la vista"><i class="fas fa-crosshairs"></i></button>
+                            </div>
+                            <div class="octagon-hint">
+                                <i class="fas fa-hand-pointer"></i>
+                                Arrastre para girar · clic en un vértice, lado o proceso
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
-            
+
+            <section class="oct-explorer">
+                <div class="octagon-info-panel" id="octagon-info"></div>
+                <div class="octagon-index" id="octagon-index"></div>
+            </section>
+
             <h2 class="section-title">Inventario de Recursos</h2>
             <section class="glossary-section">
                 <div class="glossary-container">
@@ -88,9 +131,11 @@
         <!-- Quiz Tab -->
         <div id="quiz" class="tab-content">
             <div class="quiz-container">
-                <div class="quiz-intro">
+                <div class="pagina-cab">
+                    <span class="pagina-eyebrow"><i class="fas fa-clipboard-check"></i> Autoevaluación</span>
                     <h2>Diagnóstico Organizacional</h2>
-                    <p>Complete este cuestionario para recibir una evaluación preliminar de su organización basada en nuestro modelo del octágono. Los resultados le ayudarán a identificar áreas de oportunidad para mejorar el desempeño de su empresa.</p>
+                    <p>Un cuestionario breve que devuelve una evaluación preliminar de su empresa
+                    con base en el modelo del Octagrama e identifica sus áreas de oportunidad.</p>
                 </div>
 
                 <!-- 3D Diagnostic quiz renders here -->
@@ -111,27 +156,48 @@
         
         <!-- Chat Tab -->
         <div id="chat" class="tab-content">
-            <div class="chat-intro">
+            <div class="pagina-cab">
+                <span class="pagina-eyebrow"><i class="fas fa-comments"></i> Asistente</span>
                 <h2>El Explicador</h2>
-                <p>Nuestro asistente virtual responderá sus consultas sobre metodologías de consultoría, transformación organizacional y nuestro modelo del octágono. El Explicador tiene acceso a nuestra base de conocimientos y puede proporcionar información detallada sobre cómo implementar mejoras en su organización.</p>
+                <p>Resuelve dudas sobre el modelo del Octagrama, metodologías de consultoría y
+                transformación organizacional, con acceso a nuestra base de conocimientos.</p>
             </div>
-            
-            <div class="chat-container">
-                <iframe
-                    src="https://n8n.ottmc.com/webhook/133e5134-07db-45f7-84fe-6c28aeb78e33/chat"
-                    style="width: 100%; height: 100%; border: none; border-radius: 0 0 10px 10px;"
-                    allow="microphone"
-                    title="El Explicador - Chat Sage-Wise">
-                </iframe>
+
+            <div class="chat-marco">
+                <div class="chat-barra">
+                    <span class="chat-avatar"><i class="fas fa-comment-dots"></i></span>
+                    <div class="chat-barra-txt">
+                        <strong>El Explicador</strong>
+                        <em>Asistente de Sage-Wise</em>
+                    </div>
+                    <span class="chat-estado">En línea</span>
+                </div>
+                <!-- El widget trae su propio encabezado; se recorta para dejar sólo la conversación -->
+                <div class="chat-lienzo">
+                    <iframe
+                        src="https://n8n.ottmc.com/webhook/133e5134-07db-45f7-84fe-6c28aeb78e33/chat"
+                        allow="microphone"
+                        title="El Explicador - Chat Sage-Wise">
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="chat-sugerencias">
+                <span>Puede preguntarle, por ejemplo:</span>
+                <em>«¿Qué es el Octagrama de Valor?»</em>
+                <em>«¿Qué hace el CPO?»</em>
+                <em>«¿Cómo se mide la captura de valor?»</em>
             </div>
         </div>
 
         <!-- Glosario Tab -->
         <div id="glossary" class="tab-content">
             <div class="quiz-container" style="max-width:860px;">
-                <div class="quiz-intro">
+                <div class="pagina-cab">
+                    <span class="pagina-eyebrow"><i class="fas fa-book-open"></i> Referencia</span>
                     <h2>Glosario</h2>
-                    <p>Definiciones de los términos clave del Octagrama de Valor y el Octagrama Cerebral. Busque cualquier vértice, lado o rol del modelo para ver su descripción completa.</p>
+                    <p>Los términos clave de ambos octagramas. Busque cualquier vértice, lado,
+                    proceso o rol del modelo para ver su descripción completa.</p>
                 </div>
                 <div class="glossary-container" style="margin-top:1.5rem;">
                     <div class="glossary-search-wrapper">
@@ -140,6 +206,15 @@
                             <button class="search-button"><i class="fas fa-search"></i></button>
                         </div>
                         <div id="glossary-suggestions" class="glossary-suggestions"></div>
+                    </div>
+                    <div class="glosario-atajos">
+                        <span>Empiece por aquí:</span>
+                        <button type="button" data-termino="satisfacción">Satisfacción</button>
+                        <button type="button" data-termino="exclusividad">Exclusividad</button>
+                        <button type="button" data-termino="captura de valor">Captura de Valor</button>
+                        <button type="button" data-termino="cso · vendedor">CSO</button>
+                        <button type="button" data-termino="mercados financieros">Mercados Financieros</button>
+                        <button type="button" data-termino="modelo octagramal">Modelo octagramal</button>
                     </div>
                     <div class="glossary-content">
                         <div id="glossary-results" class="glossary-results">
@@ -151,7 +226,7 @@
         </div>
 
         <script>
-        (function() {
+        document.addEventListener('DOMContentLoaded', function() {
             var inp = document.getElementById('glossary-search');
             var sug = document.getElementById('glossary-suggestions');
             var res = document.getElementById('glossary-results');
@@ -207,7 +282,7 @@
                 'knowhow': 'Conocimiento práctico, técnicas y experiencia acumulada en una organización que constituyen una ventaja competitiva difícil de replicar.',
                 'segmentación': 'Proceso de dividir un mercado heterogéneo en grupos homogéneos de clientes con necesidades y características similares.',
                 'marca': 'Identidad percibida de una empresa o producto en la mente del consumidor. Incluye elementos tangibles (logotipo, nombre) e intangibles (reputación, promesa de valor).',
-                'promesa de valor': 'Compiso que una empresa hace a sus clientes sobre el beneficio que recibirán al adquirir su producto o servicio.',
+                'promesa de valor': 'Compromiso que una empresa hace a sus clientes sobre el beneficio que recibirán al adquirir su producto o servicio.',
                 'toma de decisiones': 'Proceso de selección entre alternativas para alcanzar objetivos organizacionales. En el Octagrama Cerebral, cada vértice representa un rol con un ámbito de decisión específico.',
                 'negociación': 'Proceso de comunicación entre partes con intereses comunes o divergentes, buscando un acuerdo mutuamente beneficioso. Habilidad clave del CPO.',
                 'comunicación': 'Transmisión efectiva de información, ideas y emociones. Competencia fundamental del CSO/Vendedor para influir y construir relaciones con clientes.',
@@ -224,6 +299,35 @@
                 'enfp': 'ENFP — El Activista. Espíritus libres creativos y sociables. Ven el potencial en cada persona y situación.',
                 'istp': 'ISTP — El Virtuoso. Artesanos ingeniosos que aprenden haciendo. Son observadores calmos, excelentes en resolver problemas prácticos.'
             };
+
+            // Los vértices y lados se toman directamente del modelo (js/octagrama.js)
+            // para que el glosario nunca se desincronice de los octagramas.
+            var ref = {};
+            if (typeof OCTAGRAMAS !== 'undefined') {
+                [1, 2].forEach(function(id) {
+                    var cfg = OCTAGRAMAS[id];
+                    var quita = function(h) { return h.replace(/<[^>]+>/g, ''); };
+                    cfg.vertices.forEach(function(v, i) {
+                        var clave = (id === 1 ? v.nombre : v.nombre + ' · ' + v.personaje).toLowerCase();
+                        data[clave] = id === 1
+                            ? quita(v.desc)
+                            : v.cargo + '. ' + v.rasgo + ' Tipo ' + v.mbti +
+                              ' · Interés vital: ' + v.interes + ' · Fórmula: ' + v.formula + ' · Modo de ser: ' + v.modo + '.';
+                        ref[clave] = { oct: id, tipo: 'vertice', idx: i };
+                    });
+                    cfg.lados.forEach(function(l, i) {
+                        var clave = l.nombre.toLowerCase();
+                        data[clave] = quita(l.desc);
+                        ref[clave] = { oct: id, tipo: 'lado', idx: i };
+                    });
+                    cfg.procesos.forEach(function(pr, i) {
+                        if (!pr.nombre) return;   // sólo cuando tengan nombre propio
+                        var clave = pr.nombre.toLowerCase();
+                        data[clave] = quita(descProceso(cfg, i));
+                        ref[clave] = { oct: id, tipo: 'proceso', idx: i };
+                    });
+                });
+            }
 
             var keys = Object.keys(data);
             var hlIdx = -1;
@@ -283,8 +387,35 @@
                 inp.value = term;
                 hide();
                 var def = data[term];
-                if (def) {
-                    res.innerHTML = '<div style="margin-bottom:1.5rem; padding:1rem; background-color:var(--light-color); border-radius:8px;"><h5 style="color:var(--primary-color); margin-bottom:0.5rem; text-transform:capitalize;">' + esc(term) + '</h5><p style="color:var(--light-text); line-height:1.6;">' + esc(def) + '</p></div>';
+                if (!def) return;
+
+                var enlace = '';
+                var r = ref[term];
+                if (r && typeof OCTAGRAMAS !== 'undefined') {
+                    var cfg = OCTAGRAMAS[r.oct];
+                    enlace = '<div style="margin-top:0.9rem; padding-top:0.75rem; border-top:1px solid rgba(15,33,62,0.1);">' +
+                        '<a href="#home" data-oct="' + r.oct + '" data-tipo="' + r.tipo + '" data-idx="' + r.idx +
+                        '" class="glosario-ir" style="color:' + cfg.color + '; font-weight:600; font-size:0.86rem; text-decoration:none;">' +
+                        '&rarr; Ver en el ' + cfg.nombre + ' · ' +
+                        (r.tipo === 'vertice' ? 'Vértice ' : r.tipo === 'proceso' ? 'Proceso ' : 'Lado ') +
+                        (r.idx + 1) + '</a></div>';
+                }
+
+                // Sólo la inicial en mayúscula: "Captura de valor", no "Captura De Valor"
+                var titulo = term.charAt(0).toUpperCase() + term.slice(1);
+
+                res.innerHTML = '<div style="margin-bottom:1.5rem; padding:1.15rem 1.25rem; background-color:var(--light-color); border-radius:10px;">' +
+                    '<h5 style="color:var(--primary-color); margin-bottom:0.5rem; font-size:1.05rem;">' + esc(titulo) + '</h5>' +
+                    '<p style="color:var(--light-text); line-height:1.7;">' + esc(def) + '</p>' + enlace + '</div>';
+
+                var ir = res.querySelector('.glosario-ir');
+                if (ir) {
+                    ir.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var enlaceInicio = document.querySelector('.tab-link[data-tab="home"]');
+                        if (enlaceInicio) enlaceInicio.click();
+                        octIr(+this.dataset.oct, this.dataset.tipo, +this.dataset.idx);
+                    });
                 }
             }
 
@@ -299,15 +430,22 @@
             });
 
             document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hide(); });
-        })();
+
+            // Atajos: llenan la búsqueda y muestran la definición directamente
+            document.querySelectorAll('.glosario-atajos button').forEach(function(b) {
+                b.addEventListener('click', function() { pick(this.dataset.termino); });
+            });
+        });
         </script>
 
         <!-- Contacto Tab -->
         <div id="contacto" class="tab-content">
             <div class="quiz-container" style="max-width:680px;">
-                <div class="quiz-intro">
-                    <h2>Contacto</h2>
-                    <p>Escríbanos para obtener más información sobre el modelo octagramal o solicitar una sesión de consultoría.</p>
+                <div class="pagina-cab">
+                    <span class="pagina-eyebrow"><i class="fas fa-envelope-open-text"></i> Contacto</span>
+                    <h2>Hablemos de su empresa</h2>
+                    <p>Escríbanos para obtener más información sobre el modelo octagramal
+                    o solicitar una sesión de consultoría.</p>
                 </div>
                 <form id="contacto-form" class="contacto-form" action="https://api.web3forms.com/submit" method="POST">
                     <!-- Access key de Web3Forms (form "Sage-Wise") -->
@@ -334,7 +472,8 @@
 
                     <div class="h-captcha" data-captcha="true"></div>
 
-                    <button type="submit" class="contacto-submit">Enviar</button>
+                    <button type="submit" class="contacto-submit">Enviar mensaje</button>
+                    <p class="contacto-nota"><i class="fas fa-lock"></i> Sus datos sólo se usan para responderle. No los compartimos con terceros.</p>
                     <div id="contacto-status" class="contacto-status" role="status" aria-live="polite"></div>
                 </form>
             </div>
@@ -381,12 +520,8 @@
             </div>
             <div class="footer-contact">
                 <div class="contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span><strong>Teléfono:</strong> +52 (55) 1234-5678</strong></span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span><strong>Email:</strong> contacto@sage-wise.net</strong></span>
+                    <i class="fas fa-paper-plane"></i>
+                    <span><a href="#contacto" onclick="document.querySelector('.nav-tabs .tab-link[data-tab=&quot;contacto&quot;]').click(); window.scrollTo({top:0,behavior:'smooth'}); return false;">Escríbanos desde el formulario de contacto</a></span>
                 </div>
             </div>
             <div class="copyright">
@@ -395,8 +530,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/relatorias.js?v=20260727"></script>
+    <script src="js/octagrama.js?v=20260727"></script>
+    <script src="js/main.js?v=20260727"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
@@ -424,18 +560,6 @@
             border-color: #1d4ed8;
         }
     </style>
-    <script>
-        // Close modal on backdrop click
-        document.getElementById('oct-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeOctModal();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.getElementById('oct-modal').style.display === 'flex') {
-                closeOctModal();
-            }
-        });
-    </script>
-
 
     <!-- Modal Rentímetro -->
     <div id="rentimetro-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; overflow:hidden;">
