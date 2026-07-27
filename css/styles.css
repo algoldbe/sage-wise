@@ -205,20 +205,22 @@ header {
     margin: auto;
 }
 
+/* En gris: el rojo y el azul están reservados para distinguir un octagrama
+   del otro, y aquí se confundirían con esa lectura. */
 .oct-leyenda-icono.vertice::before {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #c0392b;
-    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.18);
+    background: #6b7c93;
+    box-shadow: 0 0 0 3px rgba(107, 124, 147, 0.18);
 }
 
 .oct-leyenda-icono.lado::before {
     width: 15px;
     height: 5px;
     border-radius: 3px;
-    background: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+    background: #6b7c93;
+    box-shadow: 0 0 0 3px rgba(107, 124, 147, 0.16);
 }
 
 .oct-leyenda-icono.cruce::before {
