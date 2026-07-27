@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260727e" rel="stylesheet">
+    <link href="css/styles.css?v=20260727f" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -45,45 +45,18 @@
                     <p>La comprensión de estas interacciones coadyuva a que las empresas, independientemente
                     de su giro y tamaño, optimicen su modelo de negocio para ser más rentables y
                     competitivas en mercados cada día más dinámicos.</p>
-                    <p style="margin-top: 1.5rem;">
-                        <a href="#" onclick="openPdfViewer(); return false;" style="color: var(--accent-color, #4a90a4); text-decoration: none; font-weight: 600; cursor: pointer;">
-                            <i class="fas fa-file-pdf" style="margin-right: 0.5rem;"></i>Ver Presentación de Portada
+                    <div class="recursos">
+                        <a href="#" class="enlace-recurso" onclick="openPdfViewer(); return false;">
+                            <i class="fas fa-file-pdf"></i>Ver Presentación de Portada
                         </a>
-                    </p>
-
-                    <!-- preload="none" para que los archivos no se descarguen hasta que alguien
-                         le dé al play; si no, la página cargaría 58 MB de entrada. -->
-                    <div class="medios">
-                        <div class="medio">
-                            <div class="medio-cab">
-                                <span class="medio-icono"><i class="fas fa-play"></i></span>
-                                <div>
-                                    <strong>El Modelo Octagramal en video</strong>
-                                    <em>8:28 min</em>
-                                </div>
-                            </div>
-                            <video controls playsinline preload="none"
-                                   poster="media/modelo-octagramal-poster.jpg">
-                                <source src="media/modelo-octagramal.mp4" type="video/mp4">
-                                Su navegador no puede reproducir el video.
-                                <a href="media/modelo-octagramal.mp4">Descárguelo aquí</a>.
-                            </video>
-                        </div>
-
-                        <div class="medio">
-                            <div class="medio-cab">
-                                <span class="medio-icono"><i class="fas fa-headphones"></i></span>
-                                <div>
-                                    <strong>Física y ficciones del Octagrama</strong>
-                                    <em>Audio · 25:32 min</em>
-                                </div>
-                            </div>
-                            <audio controls preload="none">
-                                <source src="media/fisica-y-ficciones-del-octagrama.m4a" type="audio/mp4">
-                                Su navegador no puede reproducir el audio.
-                                <a href="media/fisica-y-ficciones-del-octagrama.m4a">Descárguelo aquí</a>.
-                            </audio>
-                        </div>
+                        <a href="#" class="enlace-recurso" onclick="abrirMedio('video'); return false;">
+                            <i class="fas fa-circle-play"></i>Ver el video del Modelo Octagramal
+                            <span>8:28 min</span>
+                        </a>
+                        <a href="#" class="enlace-recurso" onclick="abrirMedio('audio'); return false;">
+                            <i class="fas fa-headphones"></i>Escuchar «Física y ficciones del Octagrama»
+                            <span>25:32 min</span>
+                        </a>
                     </div>
 
                     <div class="oct-leyenda">
@@ -138,21 +111,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Índice y descripción, justo debajo del cuadro del modelo -->
+                    <div class="oct-explorer">
+                        <!-- El índice completo va plegado: se abre sólo si alguien lo pide -->
+                        <details class="oct-indice">
+                            <summary>
+                                <span class="oct-indice-tit">Índice completo del modelo</span>
+                                <span class="oct-indice-sub">Vértices, lados y procesos</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </summary>
+                            <div class="octagon-index" id="octagon-index"></div>
+                        </details>
+
+                        <div class="octagon-info-panel" id="octagon-info"></div>
+                    </div>
                 </div>
-            </section>
-
-            <section class="oct-explorer">
-                <!-- El índice completo va plegado: se abre sólo si alguien lo pide -->
-                <details class="oct-indice">
-                    <summary>
-                        <span class="oct-indice-tit">Índice completo del modelo</span>
-                        <span class="oct-indice-sub">Vértices, lados y procesos de los dos octagramas</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </summary>
-                    <div class="octagon-index" id="octagon-index"></div>
-                </details>
-
-                <div class="octagon-info-panel" id="octagon-info"></div>
             </section>
 
             <h2 class="section-title">Inventario de Recursos</h2>
@@ -580,9 +554,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260727e"></script>
-    <script src="js/octagrama.js?v=20260727e"></script>
-    <script src="js/main.js?v=20260727e"></script>
+    <script src="js/relatorias.js?v=20260727f"></script>
+    <script src="js/octagrama.js?v=20260727f"></script>
+    <script src="js/main.js?v=20260727f"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
@@ -610,6 +584,69 @@
             border-color: #1d4ed8;
         }
     </style>
+
+    <!-- Modal de video / audio -->
+    <div id="medio-modal" class="medio-modal">
+        <div class="medio-modal-caja">
+            <div class="medio-modal-cab">
+                <span id="medio-modal-titulo"></span>
+                <button onclick="cerrarMedio()" title="Cerrar"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="medio-modal-cuerpo" id="medio-modal-cuerpo"></div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var modal = document.getElementById('medio-modal');
+        var cuerpo = document.getElementById('medio-modal-cuerpo');
+        var titulo = document.getElementById('medio-modal-titulo');
+
+        var MEDIOS = {
+            video: {
+                titulo: '<i class="fas fa-circle-play"></i> El Modelo Octagramal',
+                html: '<video controls autoplay playsinline preload="metadata" ' +
+                      'poster="media/modelo-octagramal-poster.jpg">' +
+                      '<source src="media/modelo-octagramal.mp4" type="video/mp4">' +
+                      'Su navegador no puede reproducir el video. ' +
+                      '<a href="media/modelo-octagramal.mp4">Descárguelo aquí</a>.</video>'
+            },
+            audio: {
+                titulo: '<i class="fas fa-headphones"></i> Física y ficciones del Octagrama',
+                html: '<div class="medio-audio">' +
+                      '<span class="medio-audio-icono"><i class="fas fa-headphones"></i></span>' +
+                      '<strong>Física y ficciones del Octagrama</strong>' +
+                      '<em>Audio · 25:32 min</em>' +
+                      '<audio controls autoplay preload="metadata">' +
+                      '<source src="media/fisica-y-ficciones-del-octagrama.m4a" type="audio/mp4">' +
+                      'Su navegador no puede reproducir el audio. ' +
+                      '<a href="media/fisica-y-ficciones-del-octagrama.m4a">Descárguelo aquí</a>.' +
+                      '</audio></div>'
+            }
+        };
+
+        window.abrirMedio = function(tipo) {
+            var m = MEDIOS[tipo];
+            if (!m) return;
+            modal.classList.toggle('es-audio', tipo === 'audio');
+            titulo.innerHTML = m.titulo;
+            cuerpo.innerHTML = m.html;      // se crea al abrir: nada se descarga antes
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.cerrarMedio = function() {
+            cuerpo.innerHTML = '';          // vaciar detiene la reproducción y libera la descarga
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        modal.addEventListener('click', function(e) { if (e.target === this) cerrarMedio(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') cerrarMedio();
+        });
+    })();
+    </script>
 
     <!-- Modal Rentímetro -->
     <div id="rentimetro-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; overflow:hidden;">
