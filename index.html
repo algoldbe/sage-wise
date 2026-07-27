@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260727c" rel="stylesheet">
+    <link href="css/styles.css?v=20260727d" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -30,7 +30,13 @@
         <div id="home" class="tab-content active">
             <section class="intro-section">
                 <div class="intro-text">
-                    <span class="pagina-eyebrow"><i class="fas fa-draw-polygon"></i> Modelo octagramal</span>
+                    <span class="pagina-eyebrow">
+                        <!-- Octágono real: mismo trazado que el modelo, con el lado 1 vertical a la derecha -->
+                        <svg class="icono-octagono" viewBox="0 0 24 24" aria-hidden="true">
+                            <polygon points="21.2,8.2 15.8,2.8 8.2,2.8 2.8,8.2 2.8,15.8 8.2,21.2 15.8,21.2 21.2,15.8"/>
+                        </svg>
+                        Modelo octagramal
+                    </span>
                     <h2>Bienvenido a Sage-Wise</h2>
                     <p>Presentamos el modelo octagramal desarrollado por SAGE-WISE, el cual explica las
                     complejas interacciones que ocurren entre los procesos empresariales que generan valor
@@ -530,9 +536,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260727c"></script>
-    <script src="js/octagrama.js?v=20260727c"></script>
-    <script src="js/main.js?v=20260727c"></script>
+    <script src="js/relatorias.js?v=20260727d"></script>
+    <script src="js/octagrama.js?v=20260727d"></script>
+    <script src="js/main.js?v=20260727d"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">

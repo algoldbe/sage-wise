@@ -1071,6 +1071,16 @@ header {
 
 .pagina-eyebrow i { font-size: 0.78rem; }
 
+.icono-octagono {
+    width: 1.35em;
+    height: 1.35em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linejoin: miter;
+    flex-shrink: 0;
+}
+
 .pagina-cab h2 {
     font-size: 1.75rem;
     font-weight: 700;
