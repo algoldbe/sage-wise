@@ -419,9 +419,6 @@ function initialize3DOctagon() {
 
     // ── Construcción de un octágono ──────────────────────────────────────────
     function construirOctagono(cfg, yBase) {
-        // Los nombres del octágono superior se dibujan hacia arriba y los del
-        // inferior hacia abajo, para que no se encimen en el espacio intermedio.
-        const dir = yBase >= 0 ? 1 : -1;
         const grupo = new THREE.Group();
         grupo.position.y = yBase;
         root.add(grupo);
@@ -517,7 +514,7 @@ function initialize3DOctagon() {
             g.userData.badge = badge;
         });
 
-        // Título al centro de la placa
+        // Título al centro de la placa, justo sobre la cara superior.
         const titulo = crearTituloCentral(cfg.centro, cfg.color);
         titulo.position.set(0, yTop + 0.20, 0);
         grupo.add(titulo);
@@ -696,12 +693,18 @@ function initialize3DOctagon() {
 
         const tex = new THREE.CanvasTexture(cv);
         tex.minFilter = THREE.LinearFilter;
+        // El nombre es una pieza más de su octágono: se dibuja antes que las
+        // placas (renderOrder -1) y escribe profundidad, así la placa del otro
+        // octagrama lo cubre translúcida —se sigue leyendo por detrás— y la
+        // suya propia, que queda atrás, no lo empaña. El alphaTest evita que el
+        // rectángulo del sprite escriba profundidad donde no hay letra.
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: tex, transparent: true, depthTest: false, depthWrite: false, opacity: 0.9
+            map: tex, transparent: true, depthTest: true, depthWrite: true,
+            alphaTest: 0.05, opacity: 0.9
         }));
-        const k = 0.0050;
+        const k = 0.0037;
         sp.scale.set(w * k, h * k, 1);
-        sp.renderOrder = 12;
+        sp.renderOrder = -1;
         return sp;
     }
 
