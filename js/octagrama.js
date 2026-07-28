@@ -402,7 +402,6 @@ function initialize3DOctagon() {
         rx: VISTA.rx, ry: VISTA.ry,
         zoom: VISTA.zoom, targetZoom: VISTA.zoom,
         autoRotate: false,
-        mostrarNombres: false,
         hovered: null,
         seleccionado: null
     };
@@ -479,11 +478,6 @@ function initialize3DOctagon() {
             badge.position.set(Math.cos(am) * rm, yEstrella + 0.06, Math.sin(am) * rm);
             grupo.add(badge);
             g.userData.badge = badge;
-
-            const etiqueta = crearEtiqueta(nombreProceso(cfg, i), cfg.color, 'proceso');
-            etiqueta.position.set(Math.cos(am) * (rm * 1.3), yEstrella + 0.30 * dir, Math.sin(am) * (rm * 1.3));
-            grupo.add(etiqueta);
-            g.userData.etiqueta = etiqueta;
         });
 
         // ── Aristas del octágono (barra fina de referencia) ───────────────────
@@ -507,14 +501,6 @@ function initialize3DOctagon() {
             badge.position.set(Math.cos(a) * (OCT_R + 0.17), yTop + 0.08, Math.sin(a) * (OCT_R + 0.17));
             grupo.add(badge);
             g.userData.badge = badge;
-
-            // Nombre permanente
-            const etiqueta = crearEtiqueta(
-                cfg.id === 2 ? v.nombre + ' · ' + v.personaje : v.nombre, cfg.color, 'vertice'
-            );
-            etiqueta.position.set(Math.cos(a) * (OCT_R + 0.80), yTop + 0.42 * dir, Math.sin(a) * (OCT_R + 0.80));
-            grupo.add(etiqueta);
-            g.userData.etiqueta = etiqueta;
         });
 
         // ── Lados (barritas conectoras sobre la arista) ───────────────────────
@@ -529,11 +515,6 @@ function initialize3DOctagon() {
             badge.position.set(Math.cos(a) * (OCT_APOTEMA - 0.17), yTop + 0.07, Math.sin(a) * (OCT_APOTEMA - 0.17));
             grupo.add(badge);
             g.userData.badge = badge;
-
-            const etiqueta = crearEtiqueta(l.nombre, cfg.color, 'lado');
-            etiqueta.position.set(Math.cos(a) * (OCT_R + 0.18), yTop + 0.06 * dir, Math.sin(a) * (OCT_R + 0.18));
-            grupo.add(etiqueta);
-            g.userData.etiqueta = etiqueta;
         });
 
         // Título al centro de la placa
@@ -693,46 +674,6 @@ function initialize3DOctagon() {
         return sp;
     }
 
-    function crearEtiqueta(texto, color, tipo) {
-        const escala = 3;
-        const fs = 34;
-        const medidor = document.createElement('canvas').getContext('2d');
-        medidor.font = `600 ${fs}px "Segoe UI", Arial, sans-serif`;
-        const w = Math.ceil(medidor.measureText(texto).width) + 44;
-        const h = 66;
-
-        const cv = document.createElement('canvas');
-        cv.width = w * escala; cv.height = h * escala;
-        const c = cv.getContext('2d');
-        c.scale(escala, escala);
-
-        redondeado(c, 3, 3, w - 6, h - 6, 12);
-        c.fillStyle = 'rgba(255,255,255,0.96)';
-        c.fill();
-        c.lineWidth = tipo === 'vertice' ? 2.5 : 1.5;
-        c.strokeStyle = color;
-        c.stroke();
-
-        c.font = `600 ${fs}px "Segoe UI", Arial, sans-serif`;
-        c.textAlign = 'center';
-        c.textBaseline = 'middle';
-        c.fillStyle = '#1f2933';
-        c.fillText(texto, w / 2, h / 2 + 1);
-
-        const tex = new THREE.CanvasTexture(cv);
-        tex.minFilter = THREE.LinearFilter;
-        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        const sp = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: tex, transparent: true, depthTest: false, depthWrite: false, opacity: 0.94
-        }));
-        const k = 0.0036;
-        sp.scale.set(w * k, h * k, 1);
-        sp.renderOrder = 28;
-        sp.userData.baseScale = sp.scale.clone();
-        sp.visible = false;
-        return sp;
-    }
-
     function crearTituloCentral(texto, color) {
         const escala = 3, fs = 40;
         const medidor = document.createElement('canvas').getContext('2d');
@@ -845,19 +786,11 @@ function initialize3DOctagon() {
         if (u.nucleoMat.transparent) u.nucleoMat.opacity = opacidadNucleo;
     }
 
-    function mostrarEtiqueta(u, escalar) {
-        if (!u.etiqueta || !state.mostrarNombres) return;
-        u.etiqueta.userData.fijo = true;
-        u.etiqueta.material.opacity = 1;
-        u.etiqueta.scale.copy(u.etiqueta.userData.baseScale).multiplyScalar(escalar);
-    }
-
     function resaltar(p) {
         const u = p.userData;
         pintar(u, u.tipo === 'vertice' ? COL.hoverVertice : COL.hoverLado, 0.75, 1);
         u.auraMat.opacity = u.tipo === 'proceso' ? 0.34 : 0.55;
         if (u.tipo !== 'proceso') p.scale.setScalar(1.35);
-        mostrarEtiqueta(u, 1.22);
         if (u.badge) u.badge.scale.setScalar(0.21);
     }
 
@@ -867,11 +800,6 @@ function initialize3DOctagon() {
         pintar(u, u.colorNormal, 0.35, u.opacidadNormal);
         u.auraMat.opacity = u.auraNormal;
         p.scale.setScalar(1);
-        if (u.etiqueta) {
-            u.etiqueta.userData.fijo = false;
-            u.etiqueta.visible = state.mostrarNombres;
-            u.etiqueta.scale.copy(u.etiqueta.userData.baseScale);
-        }
         if (u.badge) u.badge.scale.setScalar(u.tipo === 'proceso' ? 0.14 : 0.155);
     }
 
@@ -880,7 +808,6 @@ function initialize3DOctagon() {
         pintar(u, COL.activo, 0.85, 1);
         u.auraMat.opacity = u.tipo === 'proceso' ? 0.3 : 0.5;
         if (u.tipo !== 'proceso') p.scale.setScalar(1.25);
-        mostrarEtiqueta(u, 1);
     }
 
     function seleccionar(p) {
@@ -939,7 +866,6 @@ function initialize3DOctagon() {
             state.targetRX = Math.max(-0.25, Math.min(1.15, state.targetRX + dy * 0.006));
             state.lastX = ev.clientX; state.lastY = ev.clientY;
             state.autoRotate = false;
-            sincronizarBotonAuto();
         }
         actualizarPuntero(ev);
         detectarHover(ev);
@@ -990,7 +916,6 @@ function initialize3DOctagon() {
             state.targetRY = masCercano(ang - Math.PI / 2, state.targetRY);
             state.targetRX = tipo === 'proceso' ? 0.62 : (oct === 1 ? 0.55 : 0.34);
             state.autoRotate = false;
-            sincronizarBotonAuto();
             seleccionar(p);
         },
         destacar(oct, tipo, idx, on) {
@@ -998,37 +923,16 @@ function initialize3DOctagon() {
             if (!p) return;
             if (on) resaltar(p); else normalizar(p);
         },
-        girar(delta) { state.targetRY += delta; state.autoRotate = false; sincronizarBotonAuto(); },
         reiniciar() {
             state.targetRX = VISTA.rx;
             state.targetRY = masCercano(VISTA.ry, state.targetRY);   // vuelta más corta
             state.targetZoom = VISTA.zoom;
             state.autoRotate = false;
-            sincronizarBotonAuto();
             if (state.seleccionado) { state.seleccionado.userData.activo = false; normalizar(state.seleccionado); state.seleccionado = null; }
             limpiarIndice();
             infoInicial();
-        },
-        vistaSuperior() { state.targetRX = 1.15; state.autoRotate = false; sincronizarBotonAuto(); },
-        alternarAuto() { state.autoRotate = !state.autoRotate; sincronizarBotonAuto(); return state.autoRotate; },
-        alternarNombres() {
-            state.mostrarNombres = !state.mostrarNombres;
-            piezas.forEach(p => {
-                const e = p.userData.etiqueta;
-                if (e) e.visible = state.mostrarNombres || !!e.userData.fijo;
-            });
-            // Con todos los nombres a la vista hace falta un poco más de aire
-            state.targetZoom = state.mostrarNombres ? 7.9 : 6.9;
-            return state.mostrarNombres;
-        },
-        zoom(d) { state.targetZoom = Math.max(4.2, Math.min(9.5, state.targetZoom + d)); }
+        }
     };
-
-    function sincronizarBotonAuto() {
-        const b = document.getElementById('oct-btn-auto');
-        if (b) b.classList.toggle('activo', state.autoRotate);
-    }
-    sincronizarBotonAuto();
 
     // ── Bucle de animación ───────────────────────────────────────────────────
     let t = 0;
@@ -1048,20 +952,8 @@ function initialize3DOctagon() {
 
         // Pulso sutil en las auras no resaltadas
         const pulso = 1 + Math.sin(t * 1.6) * 0.05;
-        const _v = new THREE.Vector3();
         piezas.forEach(p => {
             if (!p.userData.activo && p !== state.hovered) p.userData.aura.scale.setScalar(pulso);
-
-            // Los nombres del fondo se atenúan para no estorbar la lectura
-            const e = p.userData.etiqueta;
-            if (e && e.visible && !e.userData.fijo) {
-                e.getWorldPosition(_v).applyMatrix4(camera.matrixWorldInverse);
-                const prof = -_v.z;                       // distancia a la cámara
-                const k = (state.zoom + 1.35 - prof) / 2.7;
-                // Sólo se leen los nombres del frente; los del fondo se apagan.
-                const f = Math.max(0, Math.min(1, (k - 0.42) / 0.42));
-                e.material.opacity = f * f * 0.97;
-            }
         });
 
         renderer.render(scene, camera);
@@ -1335,28 +1227,6 @@ function showRoleInfo(role, idx) {
 function closeOctModal() {
     const m = document.getElementById('oct-modal');
     if (m) m.style.display = 'none';
-}
-
-/* =============================================================================
-   CONTROLES DE LA BARRA
-   ========================================================================== */
-function octControl(accion) {
-    if (!octaViewer) return;
-    switch (accion) {
-        case 'izq': octaViewer.girar(Math.PI / 4); break;
-        case 'der': octaViewer.girar(-Math.PI / 4); break;
-        case 'auto': octaViewer.alternarAuto(); break;
-        case 'superior': octaViewer.vistaSuperior(); break;
-        case 'reiniciar': octaViewer.reiniciar(); break;
-        case 'zoom+': octaViewer.zoom(-0.6); break;
-        case 'zoom-': octaViewer.zoom(0.6); break;
-        case 'nombres': {
-            const on = octaViewer.alternarNombres();
-            const b = document.getElementById('oct-btn-nombres');
-            if (b) b.classList.toggle('activo', on);
-            break;
-        }
-    }
 }
 
 // ─── Arranque ────────────────────────────────────────────────────────────────

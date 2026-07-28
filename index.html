@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260727g" rel="stylesheet">
+    <link href="css/styles.css?v=20260727h" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -94,17 +94,6 @@
                             <!-- El modelo 3D se dibuja aquí (js/octagrama.js) -->
                             <span class="oct-rotulo valor">Octagrama de Valor</span>
                             <span class="oct-rotulo cerebral">Octagrama Cerebral</span>
-                            <div class="oct-controls" role="group" aria-label="Controles del modelo">
-                                <button type="button" onclick="octControl('izq')" title="Girar a la izquierda"><i class="fas fa-rotate-left"></i></button>
-                                <button type="button" onclick="octControl('der')" title="Girar a la derecha"><i class="fas fa-rotate-right"></i></button>
-                                <button type="button" id="oct-btn-auto" onclick="octControl('auto')" title="Giro automático"><i class="fas fa-arrows-rotate"></i></button>
-                                <button type="button" onclick="octControl('superior')" title="Vista superior"><i class="fas fa-square-full"></i></button>
-                                <button type="button" id="oct-btn-nombres" onclick="octControl('nombres')" title="Mostrar u ocultar los nombres"><i class="fas fa-tag"></i></button>
-                                <span class="oct-controls-sep"></span>
-                                <button type="button" onclick="octControl('zoom+')" title="Acercar"><i class="fas fa-plus"></i></button>
-                                <button type="button" onclick="octControl('zoom-')" title="Alejar"><i class="fas fa-minus"></i></button>
-                                <button type="button" onclick="octControl('reiniciar')" title="Reiniciar la vista"><i class="fas fa-crosshairs"></i></button>
-                            </div>
                             <div class="octagon-hint">
                                 <i class="fas fa-hand-pointer"></i>
                                 Arrastre para girar · clic en un vértice, lado o proceso
@@ -554,9 +543,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260727g"></script>
-    <script src="js/octagrama.js?v=20260727g"></script>
-    <script src="js/main.js?v=20260727g"></script>
+    <script src="js/relatorias.js?v=20260727h"></script>
+    <script src="js/octagrama.js?v=20260727h"></script>
+    <script src="js/main.js?v=20260727h"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
