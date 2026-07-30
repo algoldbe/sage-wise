@@ -478,9 +478,8 @@ function anguloLado(i) { return -i * Math.PI / 4; }
    en el de Valor, aquél al que va el proceso; en el Cerebral, el gerente dueño
    de ese mercado, porque el mercado es de uno solo y no de los dos vecinos.
    -------------------------------------------------------------------------- */
-const LADO_LARGO = 0.36;      // largo de la flecha
-const LADO_PUNTA = 0.14;      // parte de ese largo que es cono
-const LADO_HUECO = 0.14;      // aire entre la punta y el vértice
+const LADO_LARGO = 0.42;      // largo de la flecha
+const LADO_PUNTA = 0.15;      // parte de ese largo que es cono
 
 // Vértice (0-based) al que apunta el lado i
 function verticeDestinoLado(cfg, i) {
@@ -488,7 +487,8 @@ function verticeDestinoLado(cfg, i) {
     return (l.a || l.vertice) - 1;
 }
 
-// Centro, dirección y posición angular de la flecha del lado i
+// Centro, dirección y posición angular de la flecha del lado i. Va centrada en
+// la arista; lo que la orienta es a cuál de sus dos vértices apunta.
 function geometriaLado(cfg, i) {
     const dest = verticeDestinoLado(cfg, i);
     const otro = dest === i ? (i + 1) % 8 : i;
@@ -499,11 +499,11 @@ function geometriaLado(cfg, i) {
     const A = pt(dest), B = pt(otro);
     const dx = A.x - B.x, dz = A.z - B.z;
     const len = Math.hypot(dx, dz);
-    const ux = dx / len, uz = dz / len;
-    // La punta queda a LADO_HUECO del vértice y la flecha crece hacia atrás
-    const x = A.x - ux * (LADO_HUECO + LADO_LARGO / 2);
-    const z = A.z - uz * (LADO_HUECO + LADO_LARGO / 2);
-    return { x, z, dest, ang: Math.atan2(uz, ux), angCentro: Math.atan2(z, x) };
+    return {
+        x: (A.x + B.x) / 2, z: (A.z + B.z) / 2, dest,
+        ang: Math.atan2(dz / len, dx / len),
+        angCentro: anguloLado(i)
+    };
 }
 
 // ─── Estado global del visor ─────────────────────────────────────────────────
@@ -709,17 +709,19 @@ function initialize3DOctagon() {
         });
         g.add(new THREE.Mesh(new THREE.SphereGeometry(0.085, 24, 24), nucleoMat));
 
+        // Burbuja discreta: apenas sobresale del núcleo y pulsa suave
         const auraMat = new THREE.MeshBasicMaterial({
-            color: cfg.hex, transparent: true, opacity: 0.22, depthWrite: false
+            color: cfg.hex, transparent: true, opacity: 0.12, depthWrite: false
         });
-        const aura = new THREE.Mesh(new THREE.SphereGeometry(0.15, 20, 20), auraMat);
+        const aura = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 20), auraMat);
         g.add(aura);
 
         g.position.copy(pos);
         g.userData = {
             tipo: 'vertice', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
             nucleoMat, auraMat, aura, activo: false,
-            colorNormal: COL.marca, opacidadNormal: 1, auraNormal: 0.22,
+            colorNormal: COL.marca, opacidadNormal: 1,
+            auraNormal: 0.12, auraHover: 0.30, auraActivo: 0.26,
             titulo: cfg.id === 2 ? datos.nombre + ' · ' + datos.personaje : datos.nombre
         };
         return g;
@@ -750,8 +752,10 @@ function initialize3DOctagon() {
         cono.position.x = vastago / 2;
         g.add(cono);
 
+        // Cilindro invisible: sólo zona sensible al ratón. La flecha no lleva
+        // burbuja; junto a la del vértice se veía sucio y encimado.
         const auraMat = new THREE.MeshBasicMaterial({
-            color: cfg.hex, transparent: true, opacity: 0.20, depthWrite: false
+            color: cfg.hex, transparent: true, opacity: 0, depthWrite: false
         });
         const aura = new THREE.Mesh(
             new THREE.CylinderGeometry(0.088, 0.088, LADO_LARGO * 1.05, 16), auraMat);
@@ -766,7 +770,8 @@ function initialize3DOctagon() {
         g.userData = {
             tipo: 'lado', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
             nucleoMat, auraMat, aura, activo: false,
-            colorNormal: COL.marca, opacidadNormal: 1, auraNormal: 0.20,
+            colorNormal: COL.marca, opacidadNormal: 1,
+            auraNormal: 0, auraHover: 0, auraActivo: 0,
             titulo: datos.nombre,
             detalle: cfg.id === 2
                 ? 'Mercado del ' + datos.rol + ' · ' + cfg.vertices[dest].personaje
@@ -805,7 +810,8 @@ function initialize3DOctagon() {
         g.userData = {
             tipo: 'proceso', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
             nucleoMat, auraMat, aura, activo: false,
-            colorNormal: cfg.hex, opacidadNormal: 0.6, auraNormal: 0.07,
+            colorNormal: cfg.hex, opacidadNormal: 0.6,
+            auraNormal: 0.07, auraHover: 0.34, auraActivo: 0.3,
             titulo: nombreProceso(cfg, i),
             detalle: nombreVertice(cfg, i) + ' ✕ ' + nombreVertice(cfg, (i + 3) % 8)
         };
@@ -985,7 +991,7 @@ function initialize3DOctagon() {
     function resaltar(p) {
         const u = p.userData;
         pintar(u, u.tipo === 'vertice' ? COL.hoverVertice : COL.hoverLado, 0.75, 1);
-        u.auraMat.opacity = u.tipo === 'proceso' ? 0.34 : 0.55;
+        u.auraMat.opacity = u.auraHover;
         if (u.tipo !== 'proceso') p.scale.setScalar(1.35);
         if (u.badge) u.badge.scale.setScalar(0.21);
     }
@@ -1002,7 +1008,7 @@ function initialize3DOctagon() {
     function activar(p) {
         const u = p.userData;
         pintar(u, COL.activo, 0.85, 1);
-        u.auraMat.opacity = u.tipo === 'proceso' ? 0.3 : 0.5;
+        u.auraMat.opacity = u.auraActivo;
         if (u.tipo !== 'proceso') p.scale.setScalar(1.25);
     }
 
@@ -1148,7 +1154,7 @@ function initialize3DOctagon() {
         camera.position.z = state.zoom;
 
         // Pulso sutil en las auras no resaltadas
-        const pulso = 1 + Math.sin(t * 1.6) * 0.05;
+        const pulso = 1 + Math.sin(t * 1.6) * 0.03;
         piezas.forEach(p => {
             if (!p.userData.activo && p !== state.hovered) p.userData.aura.scale.setScalar(pulso);
         });
