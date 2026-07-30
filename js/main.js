@@ -42,7 +42,7 @@ function initializeTabNavigation() {
 // ─── Diagnóstico 3D ──────────────────────────────────────────────────────────
 
 async function loadQuizData() {
-    // Inline data — avoids fetch() which is blocked under file:// protocol
+    // Inline data: avoids fetch() which is blocked under file:// protocol
     quizData = {
   "instrucciones": "Gradúe su respuesta del 1 (completamente en desacuerdo) al 5 (completamente de acuerdo).",
   "ejes": [
@@ -452,7 +452,7 @@ function initializeQuiz() {
 
         const ejeNombres = { V: 'Eje Económico (Valor)', R: 'Eje Sociológico (Relaciones)', P: 'Eje Psicológico (Personal)' };
         const ejeColors  = { V: '#0ea5e9', R: '#22c55e', P: '#a855f7' };
-        const dimNombres = { I: 'Identidad — Dimensión protagónica', C: 'Crecimiento — Dimensión progresista', O: 'Operación — Dimensión práctica' };
+        const dimNombres = { I: 'Identidad - Dimensión protagónica', C: 'Crecimiento - Dimensión progresista', O: 'Operación - Dimensión práctica' };
         const dimIcons   = { I: 'fas fa-star', C: 'fas fa-seedling', O: 'fas fa-cogs' };
         const ejeData = { V, R, P };
         const dimData = { I, C, O };

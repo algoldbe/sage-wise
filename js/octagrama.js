@@ -1,15 +1,24 @@
 /* =============================================================================
-   MODELO OCTAGRAMAL — Sage-Wise
+   MODELO OCTAGRAMAL - Sage-Wise
    Datos oficiales tomados de:
      · TEXTOS OCTAGRAMA DE VALOR.pptx   (octágono superior)
      · TEXTOS OCTAGRAMA CEREBRAL.pptx   (octágono inferior)
+
+   Nombres de los procesos y correcciones de los lados tomados de:
+     · PROCESOS EN EL OCTAGRAMA DE VALOR.pptx  (Guillermo, 29-jul-2026)
 
    Geometría (confirmada con los diagramas de los PPT):
      · El vértice 1 ocupa el extremo inferior del lado vertical derecho.
      · La numeración avanza en sentido ANTIHORARIO.
      · El lado N conecta el vértice N con el vértice N+1.
-     · Las líneas que cruzan entre vértices son los dos cuadrados inscritos
-       (1-3-5-7 y 2-4-6-8) que forman el octagrama propiamente dicho.
+     · El proceso N cruza el octágono entre el vértice N y el vértice N+3.
+       Los ocho cruces trazan la estrella {8/3} de un solo trazo, que es lo
+       que convierte al octágono en octagrama.
+     · En el Octagrama de Valor los 8 lados y los 8 cruces son, todos, PROCESOS,
+       y se agrupan en cuatro ciclos cerrados de cuatro procesos cada uno.
+     · En el Octagrama Cerebral no hay procesos: los lados son los MERCADOS de
+       cada gerente (flechas que salen del vértice hacia su mercado) y los cruces
+       son RELACIONES entre las personas, que conectan a todos con todos.
    ========================================================================== */
 
 // ─── Perfiles MBTI (modal) ───────────────────────────────────────────────────
@@ -108,7 +117,7 @@ const OCTAGRAMAS = {
             {
                 n: 5, nombre: 'Logística',
                 pregunta: '¿Qué tan efectivos son los canales?',
-                escala: ['Relación costo — beneficio.'],
+                escala: ['Relación costo-beneficio.'],
                 gradiente: 'Más efectivos → Más valor',
                 desc: 'Una <strong>logística</strong> efectiva se basa en una cadena de suministro que garantiza el abasto de los satisfactores y <em>entrega el valor</em> en el menor tiempo y en las mejores condiciones.'
             },
@@ -136,36 +145,104 @@ const OCTAGRAMAS = {
         ],
         lados: [
             {
-                n: 1, nombre: 'Experiencia del Cliente',
+                n: 1, nombre: 'Experiencia del cliente', ciclo: 3, de: 2, a: 1,
                 desc: 'El <strong>vínculo</strong> entre personalización y satisfacción es la <em>experiencia del cliente</em>, quien goza del bien suministrado y ve cumplidas sus expectativas.'
             },
             {
-                n: 2, nombre: 'Portafolio de Negocios',
-                desc: 'Un sector de negocio emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado. El <strong>portafolio de negocios</strong> es un conjunto de estos sectores. Se trata de asegurar un portafolio en el que un número de sectores de negocio estén bien posicionados en mercados atractivos.'
+                n: 2, nombre: 'Creación de cuasi-monopolios temporales', alias: 'Portafolio de negocios', ciclo: 2, de: 2, a: 3,
+                desc: 'Un sector de negocio emerge cuando se empata una necesidad segmentada con un satisfactor diferenciado, y mientras nadie lo imita la empresa goza de un <strong>cuasi-monopolio temporal</strong>. El conjunto de esos sectores forma el <em>portafolio de negocios</em>, que conviene mantener bien posicionado en mercados atractivos.'
             },
             {
-                n: 3, nombre: 'Desarrollo de un Prototipo',
-                desc: 'El <strong>vínculo</strong> entre innovación (I&amp;D) y prestigio (MKT) es el <em>desarrollo de un prototipo</em> que pruebe ser comercialmente viable.'
+                n: 3, nombre: 'Desarrollo de prototipos', ciclo: 4, de: 3, a: 4,
+                desc: 'El <strong>vínculo</strong> entre innovación (I&amp;D) y prestigio (MKT) es el <em>desarrollo de prototipos</em> que prueben ser comercialmente viables.'
             },
             {
-                n: 4, nombre: 'Propuesta de Valor',
+                n: 4, nombre: 'Contratación del valor', alias: 'Propuesta de valor', ciclo: 1, de: 5, a: 4,
                 desc: 'Una negociación ganar-ganar alinea la promesa y la entrega de valor por medio de un <strong>contrato</strong> de compra-venta en el que se especifican los requisitos de calidad y costo que han de cumplirse. La negociación se lleva a cabo no sólo con los clientes, sino con <em>todos los grupos de interés</em> que aportan sus recursos.'
             },
             {
-                n: 5, nombre: 'Abastecimiento de Insumos',
+                n: 5, nombre: 'Abastecimiento de insumos', ciclo: 3, de: 6, a: 5,
                 desc: 'El <strong>vínculo</strong> entre logística e informática son los procesos de <em>abastecimiento de los insumos</em> que requiere la empresa para cumplir con su misión. Este proceso capta asimismo la retroalimentación de los clientes para optimizar la cadena de suministro de valor.'
             },
             {
-                n: 6, nombre: 'Organización Competente',
-                desc: 'Una <strong>organización competente</strong> es aquélla que tiene sistemas de información efectivos que apoyan a gente capacitada. Las competencias organizacionales emergen cuando se conecta la información con el conocimiento. Se provee de información oportuna y confiable a personas y equipos de trabajo dispuestos a aprender.'
+                n: 6, nombre: 'Generación de competencias organizacionales', alias: 'Organización competente', ciclo: 2, de: 6, a: 7,
+                desc: 'Las <strong>competencias organizacionales</strong> emergen cuando se conecta la información con el conocimiento: sistemas de información efectivos que apoyan a gente capacitada. Se provee de información oportuna y confiable a personas y equipos de trabajo dispuestos a aprender.'
             },
             {
-                n: 7, nombre: 'Asignación de Recursos',
+                n: 7, nombre: 'Asignación de recursos', ciclo: 4, de: 7, a: 8,
                 desc: 'El <strong>vínculo</strong> entre rendimiento y talento es la <em>asignación de recursos</em> por medio de presupuestos realistas que especifican quién aporta las capacidades y en qué se aplican.'
             },
             {
-                n: 8, nombre: 'Captura de Valor',
+                n: 8, nombre: 'Captura del valor', ciclo: 1, de: 1, a: 8,
                 desc: 'La <strong>captura</strong> del mayor valor posible para el inversionista depende no sólo del valor agregado, sino también de las palancas que se han aplicado, equilibrando riesgo y rentabilidad. El cliente ya ha experimentado el valor prometido y ha satisfecho sus expectativas.'
+            }
+        ],
+        procesos: [
+            {
+                n: 1, nombre: 'Apreciación del valor', ciclo: 1, de: 4, a: 1,
+                desc: 'La <strong>apreciación del valor</strong> ocurre cuando el cliente confronta la promesa de la marca con el provecho que realmente obtuvo. Cruza del <em>prestigio</em> a la <em>satisfacción</em>: mientras mejor se cumple la promesa, mayor es el sobreprecio que el cliente está dispuesto a pagar.'
+            },
+            {
+                n: 2, nombre: 'Gestión del suministro de valor', ciclo: 3, de: 5, a: 2,
+                desc: 'La <strong>gestión del suministro de valor</strong> lleva el satisfactor desde la cadena de abasto hasta el segmento que lo pidió. Cruza de la <em>logística</em> a la <em>personalización</em> y es el proceso que asegura que lo entregado corresponda con lo que cada cliente ordenó.'
+            },
+            {
+                n: 3, nombre: 'Identificación de oportunidades', ciclo: 2, de: 3, a: 6,
+                desc: 'La <strong>identificación de oportunidades</strong> convierte la vigilancia tecnológica y de mercado en información aprovechable. Cruza de la <em>exclusividad</em> a la <em>informática</em>: lo que la empresa sabe hacer de manera distintiva se contrasta con los datos del entorno para descubrir dónde competir.'
+            },
+            {
+                n: 4, nombre: 'Diseño de proyectos', ciclo: 4, de: 4, a: 7,
+                desc: 'El <strong>diseño de proyectos</strong> traduce la promesa de valor en iniciativas con alcance, tiempos y responsables. Cruza del <em>prestigio</em> al <em>talento</em>: lo que la marca ofrece determina qué proyectos hay que emprender y qué capacidades hay que reunir para lograrlos.'
+            },
+            {
+                n: 5, nombre: 'Costeo del valor', ciclo: 1, de: 8, a: 5,
+                desc: 'El <strong>costeo del valor</strong> pone precio a cada eslabón de la cadena. Cruza del <em>rendimiento</em> a la <em>logística</em>: la exigencia de rentabilidad se traduce en una estructura de costos que la operación debe respetar para que el negocio cierre.'
+            },
+            {
+                n: 6, nombre: 'Gestión de relaciones con los clientes', ciclo: 3, de: 1, a: 6,
+                desc: 'La <strong>gestión de relaciones con los clientes</strong> recoge la experiencia del cliente y la devuelve a la organización. Cruza de la <em>satisfacción</em> a la <em>informática</em>: la retroalimentación se vuelve dato, y el dato, criterio para decidir.'
+            },
+            {
+                n: 7, nombre: 'Desarrollo de capacidades', ciclo: 2, de: 7, a: 2,
+                desc: 'El <strong>desarrollo de capacidades</strong> convierte el conocimiento de la gente en habilidad para atender necesidades cada vez más específicas. Cruza del <em>talento</em> a la <em>personalización</em>: sin capacidades desarrolladas no hay oferta que se ajuste a cada segmento.'
+            },
+            {
+                n: 8, nombre: 'Organización de proyectos', ciclo: 4, de: 8, a: 3,
+                desc: 'La <strong>organización de proyectos</strong> asigna equipos, plazos y recursos a los desarrollos en marcha. Cruza del <em>rendimiento</em> a la <em>exclusividad</em>: es el proceso que convierte el presupuesto aprobado en tecnología propia y en una oferta difícil de imitar.'
+            }
+        ],
+        ciclos: [
+            {
+                n: 1, nombre: 'Ciclo de comercialización creativa', color: '#e67e22',
+                desc: 'Cierra el trato con el cliente y recupera el valor: se costea lo que cuesta producirlo, se contrata lo que se promete, el cliente aprecia lo que recibió y la empresa captura el excedente.',
+                ruta: [
+                    { tipo: 'proceso', idx: 4 }, { tipo: 'lado', idx: 3 },
+                    { tipo: 'proceso', idx: 0 }, { tipo: 'lado', idx: 7 }
+                ]
+            },
+            {
+                n: 2, nombre: 'Ciclo de inteligencia competitiva', color: '#8e44ad',
+                desc: 'Explora el entorno y construye la ventaja: se identifican oportunidades, se generan competencias organizacionales, se desarrollan capacidades y se crean cuasi-monopolios temporales.',
+                ruta: [
+                    { tipo: 'proceso', idx: 2 }, { tipo: 'lado', idx: 5 },
+                    { tipo: 'proceso', idx: 6 }, { tipo: 'lado', idx: 1 }
+                ]
+            },
+            {
+                n: 3, nombre: 'Ciclo de operación del negocio', color: '#2980b9',
+                desc: 'Hace que el valor fluya día con día: se abastecen los insumos, se gestiona el suministro, el cliente vive la experiencia y su retroalimentación regresa por la relación con los clientes.',
+                ruta: [
+                    { tipo: 'lado', idx: 4 }, { tipo: 'proceso', idx: 1 },
+                    { tipo: 'lado', idx: 0 }, { tipo: 'proceso', idx: 5 }
+                ]
+            },
+            {
+                n: 4, nombre: 'Ciclo de renovación del negocio', color: '#16a085',
+                desc: 'Reinventa la oferta: se desarrollan prototipos, se diseñan los proyectos, se asignan los recursos y se organiza su ejecución.',
+                ruta: [
+                    { tipo: 'lado', idx: 2 }, { tipo: 'proceso', idx: 3 },
+                    { tipo: 'lado', idx: 6 }, { tipo: 'proceso', idx: 7 }
+                ]
             }
         ]
     },
@@ -270,55 +347,66 @@ const OCTAGRAMAS = {
                 ]
             }
         ],
+        // Los «lados» del Cerebral no unen dos vértices: son el mercado propio de
+        // cada gerente. Se dibujan como una flecha que sale de su vértice (`vertice`)
+        // hacia afuera, y forman parte de su perfil funcional.
         lados: [
             {
-                n: 1, nombre: 'Mercados de Clientes', rol: 'CSO',
+                n: 1, nombre: 'Mercados de clientes', rol: 'CSO', vertice: 1,
                 desc: 'El <strong>CSO</strong> interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas. Obtiene retroalimentación de sus clientes para mejorar los procesos de suministro de valor.'
             },
             {
-                n: 2, nombre: 'Mercados Fabriles', rol: 'COO',
+                n: 2, nombre: 'Mercados fabriles', rol: 'COO', vertice: 2,
                 desc: 'El <strong>COO</strong> es el encargado de que las cosas sucedan en la organización. Si bien permanece la mayor parte del tiempo dentro de la empresa liderando grupos de trabajo, ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos de la empresa.'
             },
             {
-                n: 3, nombre: 'Mercados Tecnológicos', rol: 'CTO',
+                n: 3, nombre: 'Mercados tecnológicos', rol: 'CTO', vertice: 3,
                 desc: 'El <strong>CTO</strong> interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos. Negocia acuerdos de licencia tecnológica, adjudicación de patentes, desarrollos de productos innovadores, entre otros.'
             },
             {
-                n: 4, nombre: 'Mercados de Medios', rol: 'CMO',
+                n: 4, nombre: 'Mercados de medios', rol: 'CMO', vertice: 4,
                 desc: 'El <strong>CMO</strong> interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas. Lleva a cabo estudios de mercado para formular e implementar las estrategias de precio y cobertura de clientes.'
             },
             {
-                n: 5, nombre: 'Mercados de Proveedores', rol: 'CPO',
+                n: 5, nombre: 'Mercados de proveedores', rol: 'CPO', vertice: 5,
                 desc: 'El <strong>CPO</strong> interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios y negocia con los proveedores las mejores condiciones de entrega y plazos de pago.'
             },
             {
-                n: 6, nombre: 'Mercados de TIC’s', rol: 'CIO',
+                n: 6, nombre: 'Mercados de TIC’s', rol: 'CIO', vertice: 6,
                 desc: 'El <strong>CIO</strong> interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones y el aprendizaje organizacional.'
             },
             {
-                n: 7, nombre: 'Mercados Laborales', rol: 'CHO',
+                n: 7, nombre: 'Mercados laborales', rol: 'CHO', vertice: 7,
                 desc: 'El <strong>CHO</strong> interviene en los mercados laborales para seleccionar y contratar a la mejor gente para la empresa. Es responsable de establecer los medios para aprovechar el talento del personal y de capacitarlo, así como de establecer métricas adecuadas para la evaluación del desempeño.'
             },
             {
-                n: 8, nombre: 'Mercados Financieros', rol: 'CFO',
+                n: 8, nombre: 'Mercados financieros', rol: 'CFO', vertice: 8,
                 desc: 'El <strong>CFO</strong> interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa para financiar sus inversiones fijas y en capital de trabajo. Es responsable también de la cobranza.'
             }
         ]
     }
 };
 
-/* ─── Procesos: las líneas que cruzan entre vértices ──────────────────────────
-   El proceso N enlaza el vértice N con el vértice N+2 (los dos cuadrados
-   inscritos 1-3-5-7 y 2-4-6-8).
-
-   PENDIENTE: en cuanto lleguen los nombres definitivos basta con rellenar
-   `nombre` y `desc` de cada entrada; el resto del sitio (modelo 3D, índice,
-   panel y glosario) los toma de aquí automáticamente.
+/* ─── Cruces del Octagrama Cerebral: relaciones, no procesos ──────────────────
+   En el Cerebral los conectores no representan procesos, sino relaciones entre
+   las personas que trabajan en la empresa. Pueden ser formales (las del
+   organigrama) o informales, y en la práctica conectan a todos con todos: la
+   malla completa se dibuja de fondo y estos ocho cruces son los seleccionables.
    -------------------------------------------------------------------------- */
-[1, 2].forEach(function (id) {
-    OCTAGRAMAS[id].procesos = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) {
-        return { n: n, nombre: '', desc: '' };
-    });
+OCTAGRAMAS[2].procesos = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) {
+    const i = n - 1;
+    const a = OCTAGRAMAS[2].vertices[i];
+    const b = OCTAGRAMAS[2].vertices[(i + 3) % 8];
+    return {
+        n: n,
+        nombre: 'Relación ' + a.nombre + ' ↔ ' + b.nombre,
+        desc: 'En el Octagrama Cerebral los cruces no son procesos, sino <strong>relaciones</strong> ' +
+            'entre las personas que trabajan en la empresa. Éste enlaza al <strong>' + a.nombre +
+            '</strong> (' + a.personaje.toLowerCase() + ') con el <strong>' + b.nombre +
+            '</strong> (' + b.personaje.toLowerCase() + '). Las relaciones pueden ser <em>formales</em> ' +
+            ', las que marca el organigrama, o <em>informales</em>, y en los hechos conectan a todos ' +
+            'con todos: por ellas fluye la información con la que se toman las decisiones.'
+    };
 });
 
 // Nombre corto de un vértice (en el Cerebral incluye el personaje)
@@ -327,22 +415,40 @@ function nombreVertice(cfg, i) {
     return cfg.id === 2 ? v.nombre + ' · ' + v.personaje : v.nombre;
 }
 
-// Nombre a mostrar de un proceso (provisional mientras no haya nombre propio)
+// Nombre a mostrar de un proceso / relación
 function nombreProceso(cfg, i) {
     const pr = cfg.procesos[i];
     return pr.nombre || ('Proceso ' + pr.n);
 }
 
-// Descripción a mostrar de un proceso
+// Descripción a mostrar de un proceso / relación
 function descProceso(cfg, i) {
-    const pr = cfg.procesos[i];
-    if (pr.desc) return pr.desc;
-    const a = cfg.vertices[i];
-    const b = cfg.vertices[(i + 2) % 8];
-    const nom = x => cfg.id === 2 ? x.nombre + ' · ' + x.personaje : x.nombre;
-    return 'Línea que cruza el octágono y enlaza dos vértices no contiguos: <strong>' +
-        nom(a) + '</strong> y <strong>' + nom(b) + '</strong>. Junto con las otras siete forma ' +
-        'los dos cuadrados inscritos que convierten al octágono en octagrama.';
+    return cfg.procesos[i].desc || '';
+}
+
+/* ─── Cómo se llama cada cosa en cada octagrama ───────────────────────────────
+   El de Valor tiene lados y cruces, y ambos son procesos. El Cerebral tiene
+   mercados (flechas que salen de cada vértice) y relaciones (los cruces).
+   -------------------------------------------------------------------------- */
+const TERMINOS = {
+    1: {
+        vertice: 'Vértice', vertices: 'Vértices', verticesSub: 'resultados',
+        lado: 'Lado', lados: 'Lados', ladosSub: 'procesos entre vértices contiguos',
+        proceso: 'Proceso', procesos: 'Procesos', procesosSub: 'cruces del octagrama'
+    },
+    2: {
+        vertice: 'Vértice', vertices: 'Vértices', verticesSub: 'quienes deciden',
+        lado: 'Mercado', lados: 'Mercados', ladosSub: 'a dónde sale cada gerente',
+        proceso: 'Relación', procesos: 'Relaciones', procesosSub: 'todos con todos'
+    }
+};
+function terminoDe(oct, tipo) { return TERMINOS[oct][tipo]; }
+
+// Ciclo (del Octagrama de Valor) al que pertenece un lado o un proceso
+function cicloDe(cfg, tipo, i) {
+    if (!cfg.ciclos) return null;
+    const d = (tipo === 'proceso' ? cfg.procesos : cfg.lados)[i];
+    return d && d.ciclo ? cfg.ciclos[d.ciclo - 1] : null;
 }
 
 // Etiquetas cortas (compatibilidad con el resto del sitio)
@@ -392,7 +498,9 @@ function initialize3DOctagon() {
     const VISTA = {
         rx: 0.50,
         ry: anguloVertice(0) - Math.PI / 2,   // deja el vértice 1 hacia el frente
-        zoom: 6.9
+        // Un poco más lejos que antes: las flechas de los mercados ensanchan el
+        // Octagrama Cerebral y si no, se salen del cuadro.
+        zoom: 7.5
     };
 
     // Estado de interacción
@@ -458,21 +566,41 @@ function initialize3DOctagon() {
             grupo.add(new THREE.Line(geo, marcoMat));
         });
 
-        // ── Procesos: las líneas que cruzan entre vértices ────────────────────
-        // Son los dos cuadrados inscritos (1-3-5-7 y 2-4-6-8), que juntos dan los
-        // ocho segmentos: el proceso N enlaza el vértice N con el vértice N+2.
+        // ── Cruces: las líneas que cruzan entre vértices ──────────────────────
+        // El cruce N enlaza el vértice N con el vértice N+3. Los ocho trazan la
+        // estrella {8/3}, que es la que convierte al octágono en octagrama.
         const yEstrella = yTop + 0.016;
+
+        // En el Cerebral, malla de fondo: las relaciones conectan a todos con
+        // todos, así que se insinúan también los cruces cortos y las diagonales
+        // largas que no son seleccionables.
+        if (cfg.id === 2) {
+            const mallaMat = new THREE.LineBasicMaterial({
+                color: cfg.hex, transparent: true, opacity: 0.16
+            });
+            const par = (i, j) => {
+                const geo = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(P[i].x, yEstrella, P[i].z),
+                    new THREE.Vector3(P[j].x, yEstrella, P[j].z)
+                ]);
+                grupo.add(new THREE.Line(geo, mallaMat));
+            };
+            for (let i = 0; i < 8; i++) par(i, (i + 2) % 8);   // cruces cortos
+            for (let i = 0; i < 4; i++) par(i, i + 4);         // diagonales largas
+        }
+
         cfg.procesos.forEach((pr, i) => {
-            const a = P[i], b = P[(i + 2) % 8];
+            const a = P[i], b = P[(i + 3) % 8];
             const g = crearProceso(a, b, yEstrella, cfg, i, pr);
             grupo.add(g);
             piezas.push(g);
 
-            // El punto medio de la cuerda queda sobre la bisectriz del vértice i+1
-            const am = anguloVertice(i + 1);
-            const rm = OCT_R * Math.cos(Math.PI / 4);
+            // La insignia no va al centro de la cuerda, donde se amontonarían las
+            // ocho sobre el título, sino cerca del vértice del que arranca.
+            const t = 0.24;
             const badge = crearInsignia(String(pr.n), cfg.color, '#ffffff', 'rombo');
-            badge.position.set(Math.cos(am) * rm, yEstrella + 0.06, Math.sin(am) * rm);
+            badge.position.set(
+                a.x + (b.x - a.x) * t, yEstrella + 0.06, a.z + (b.z - a.z) * t);
             grupo.add(badge);
             g.userData.badge = badge;
         });
@@ -493,23 +621,30 @@ function initialize3DOctagon() {
             grupo.add(g);
             piezas.push(g);
 
-            // Insignia numérica siempre legible
+            // Insignia numérica siempre legible. En el Cerebral se guarda hacia
+            // adentro para dejarle sitio a la flecha del mercado.
+            const rb = cfg.id === 2 ? OCT_R - 0.20 : OCT_R + 0.17;
             const badge = crearInsignia(String(v.n), cfg.color, '#ffffff');
-            badge.position.set(Math.cos(a) * (OCT_R + 0.17), yTop + 0.08, Math.sin(a) * (OCT_R + 0.17));
+            badge.position.set(Math.cos(a) * rb, yTop + 0.08, Math.sin(a) * rb);
             grupo.add(badge);
             g.userData.badge = badge;
         });
 
-        // ── Lados (barritas conectoras sobre la arista) ───────────────────────
+        // ── Lados ────────────────────────────────────────────────────────────
+        // Valor: barrita conectora sobre la arista, entre dos vértices contiguos.
+        // Cerebral: flecha que sale del vértice del gerente hacia su mercado.
         cfg.lados.forEach((l, i) => {
-            const a = anguloLado(i);
-            const pos = new THREE.Vector3(Math.cos(a) * OCT_APOTEMA, yTop + 0.02, Math.sin(a) * OCT_APOTEMA);
-            const g = crearLado(pos, a, cfg, i, l);
+            const esMercado = cfg.id === 2;
+            const a = esMercado ? anguloVertice(i) : anguloLado(i);
+            const rPieza = esMercado ? OCT_R + 0.30 : OCT_APOTEMA;
+            const pos = new THREE.Vector3(Math.cos(a) * rPieza, yTop + 0.02, Math.sin(a) * rPieza);
+            const g = esMercado ? crearMercado(pos, a, cfg, i, l) : crearLado(pos, a, cfg, i, l);
             grupo.add(g);
             piezas.push(g);
 
+            const rb = esMercado ? OCT_R + 0.66 : OCT_APOTEMA - 0.17;
             const badge = crearInsignia(String(l.n), '#ffffff', cfg.color, 'anillo');
-            badge.position.set(Math.cos(a) * (OCT_APOTEMA - 0.17), yTop + 0.07, Math.sin(a) * (OCT_APOTEMA - 0.17));
+            badge.position.set(Math.cos(a) * rb, yTop + 0.07, Math.sin(a) * rb);
             grupo.add(badge);
             g.userData.badge = badge;
         });
@@ -598,7 +733,50 @@ function initialize3DOctagon() {
         return g;
     }
 
-    // Proceso: barra que cruza entre dos vértices no contiguos
+    // Mercado (Cerebral): flecha que sale del vértice de un gerente hacia afuera.
+    // No une dos vértices, porque el mercado es de un solo gerente, y por eso se dibuja
+    // como «semi lado»: un vástago corto rematado en punta.
+    function crearMercado(pos, ang, cfg, i, datos) {
+        const g = new THREE.Group();
+        const vastago = 0.20, punta = 0.16;
+
+        const nucleoMat = new THREE.MeshPhongMaterial({
+            color: COL.marca, emissive: cfg.hexOscuro, emissiveIntensity: 0.35, shininess: 120
+        });
+
+        const barra = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, vastago, 14), nucleoMat);
+        barra.rotation.z = -Math.PI / 2;          // eje largo sobre +X local
+        barra.position.x = -punta / 2;
+        g.add(barra);
+
+        const cono = new THREE.Mesh(new THREE.ConeGeometry(0.075, punta, 16), nucleoMat);
+        cono.rotation.z = -Math.PI / 2;
+        cono.position.x = vastago / 2;
+        g.add(cono);
+
+        const auraMat = new THREE.MeshBasicMaterial({
+            color: cfg.hex, transparent: true, opacity: 0.20, depthWrite: false
+        });
+        const aura = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.085, 0.085, (vastago + punta) * 1.05, 14), auraMat);
+        aura.rotation.z = Math.PI / 2;
+        g.add(aura);
+
+        g.position.copy(pos);
+        // +X local apunta hacia afuera, en la dirección del vértice
+        g.rotation.y = -ang;
+
+        g.userData = {
+            tipo: 'lado', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
+            nucleoMat, auraMat, aura, activo: false,
+            colorNormal: COL.marca, opacidadNormal: 1, auraNormal: 0.20,
+            titulo: datos.nombre,
+            detalle: datos.rol + ' · ' + cfg.vertices[i].personaje
+        };
+        return g;
+    }
+
+    // Cruce: barra que cruza entre dos vértices no contiguos
     function crearProceso(a, b, y, cfg, i, datos) {
         const p1 = new THREE.Vector3(a.x, y, a.z);
         const p2 = new THREE.Vector3(b.x, y, b.z);
@@ -630,7 +808,7 @@ function initialize3DOctagon() {
             nucleoMat, auraMat, aura, activo: false,
             colorNormal: cfg.hex, opacidadNormal: 0.6, auraNormal: 0.07,
             titulo: nombreProceso(cfg, i),
-            detalle: nombreVertice(cfg, i) + ' ✕ ' + nombreVertice(cfg, (i + 2) % 8)
+            detalle: nombreVertice(cfg, i) + ' ✕ ' + nombreVertice(cfg, (i + 3) % 8)
         };
         return g;
     }
@@ -695,7 +873,7 @@ function initialize3DOctagon() {
         tex.minFilter = THREE.LinearFilter;
         // El nombre es una pieza más de su octágono: se dibuja antes que las
         // placas (renderOrder -1) y escribe profundidad, así la placa del otro
-        // octagrama lo cubre translúcida —se sigue leyendo por detrás— y la
+        // octagrama lo cubre translúcida, se sigue leyendo por detrás, y la
         // suya propia, que queda atrás, no lo empaña. El alphaTest evita que el
         // rectángulo del sprite escriba profundidad donde no hay letra.
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({
@@ -722,6 +900,24 @@ function initialize3DOctagon() {
     const octValor = construirOctagono(OCTAGRAMAS[1], OCT_SEP);
     const octCerebral = construirOctagono(OCTAGRAMAS[2], -OCT_SEP);
 
+    // ── Aprendizaje: los ocho vínculos entre un octagrama y el otro ───────────
+    // Cada gerente tiene su perfil funcional arriba y su perfil caracterológico
+    // abajo; los une el proceso de aprendizaje que desarrolla sus competencias
+    // individuales. En los diagramas del modelo son las flechas anaranjadas.
+    const aprendizajeMat = new THREE.MeshBasicMaterial({
+        color: 0xe67e22, transparent: true, opacity: 0.5
+    });
+    const yArriba = OCT_SEP - OCT_ESPESOR / 2;
+    const yAbajo = -OCT_SEP + OCT_ESPESOR / 2;
+    for (let i = 0; i < 8; i++) {
+        const a = anguloVertice(i);
+        const x = Math.cos(a) * OCT_R, z = Math.sin(a) * OCT_R;
+        const barra = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.014, 0.014, yArriba - yAbajo, 6), aprendizajeMat);
+        barra.position.set(x, (yArriba + yAbajo) / 2, z);
+        root.add(barra);
+    }
+
     // ── Luces ────────────────────────────────────────────────────────────────
     scene.add(new THREE.AmbientLight(0xffffff, 0.72));
     const key = new THREE.DirectionalLight(0xffffff, 0.75);
@@ -744,11 +940,9 @@ function initialize3DOctagon() {
     tip.className = 'oct-tip';
     container.appendChild(tip);
 
-    const NOMBRE_TIPO = { vertice: 'Vértice', lado: 'Lado', proceso: 'Proceso' };
-
     function mostrarTip(p, ev) {
         const u = p.userData;
-        const etiquetaN = NOMBRE_TIPO[u.tipo] + ' ' + (u.idx + 1);
+        const etiquetaN = terminoDe(u.oct, u.tipo) + ' ' + (u.idx + 1);
         // Mientras un proceso no tenga nombre propio se muestran los vértices que cruza
         const generico = u.titulo === etiquetaN;
         tip.innerHTML = '<span class="oct-tip-tag" style="background:' + u.cfg.color + '">' +
@@ -911,9 +1105,11 @@ function initialize3DOctagon() {
         enfocar(oct, tipo, idx) {
             const p = piezaDe(oct, tipo, idx);
             if (!p) return;
-            // El punto medio del proceso cae sobre la bisectriz del vértice idx+1
+            // El punto medio del cruce cae sobre la bisectriz del lado idx+1; el
+            // mercado del Cerebral sale del vértice, no del centro de la arista.
             const ang = tipo === 'vertice' ? anguloVertice(idx)
-                : tipo === 'proceso' ? anguloVertice(idx + 1)
+                : tipo === 'proceso' ? anguloLado(idx + 1)
+                : oct === 2 ? anguloVertice(idx)
                 : anguloLado(idx);
             // Deja el elemento al frente (dirección +Z), por la vuelta más corta
             state.targetRY = masCercano(ang - Math.PI / 2, state.targetRY);
@@ -985,15 +1181,37 @@ function infoInicial() {
         <div class="oct-info-vacio">
             <h3>El Modelo del Octagrama</h3>
             <p>Dos octágonos superpuestos explican la dinámica de la empresa. El
-            <strong style="color:#c0392b">Octagrama de Valor</strong> reúne los resultados
-            (vértices) y los vínculos que los enlazan (lados). El
-            <strong style="color:#2563eb">Octagrama Cerebral</strong> reúne a quienes deciden
-            (vértices) y los mercados donde intervienen (lados).</p>
-            <p>Las líneas que cruzan entre los vértices —los dos cuadrados inscritos— son
-            los <strong>procesos</strong>: cada uno enlaza dos vértices que no son vecinos y
-            son los que convierten al octágono en octagrama.</p>
-            <p class="oct-info-cta">Gire el modelo y seleccione cualquier vértice, lado o
-            proceso, o elija un elemento del índice.</p>
+            <strong style="color:#c0392b">Octagrama de Valor</strong> reúne los resultados que
+            la empresa persigue (vértices) y los <strong>procesos</strong> por los que fluye el
+            valor: ocho corren por los lados y ocho cruzan el octágono, y los dieciséis se
+            agrupan en <strong>cuatro ciclos cerrados</strong>.</p>
+            <p>El <strong style="color:#2563eb">Octagrama Cerebral</strong> reúne a quienes
+            deciden (vértices). De cada uno sale una flecha hacia el <strong>mercado</strong> en
+            el que interviene, y los cruces no son procesos sino <strong>relaciones</strong>
+            entre las personas, formales o informales, que conectan a todos con todos.</p>
+            <p>Las líneas anaranjadas que van de un octagrama al otro son los procesos de
+            aprendizaje que desarrollan las competencias individuales de cada gerente.</p>
+            <p class="oct-info-cta">Gire el modelo y seleccione cualquier elemento, o elíjalo
+            en el índice.</p>
+        </div>`;
+}
+
+// Bloque del ciclo al que pertenece un proceso del Octagrama de Valor
+function bloqueCiclo(cfg, tipo, idx) {
+    const c = cicloDe(cfg, tipo, idx);
+    if (!c) return '';
+    const eslabones = c.ruta.map(e => {
+        const el = (e.tipo === 'proceso' ? cfg.procesos : cfg.lados)[e.idx];
+        const actual = e.tipo === tipo && e.idx === idx;
+        return `<li${actual ? ' class="actual"' : ''}>
+            <a href="#" onclick="octIr(${cfg.id},'${e.tipo}',${e.idx});return false;">${el.nombre}</a>
+        </li>`;
+    }).join('');
+    return `
+        <div class="oct-caja oct-ciclo" style="--cc:${c.color};">
+            <div class="oct-caja-tit"><span class="oct-ciclo-punto"></span>${c.nombre}</div>
+            <p class="oct-ciclo-desc">${c.desc}</p>
+            <ol class="oct-ciclo-ruta">${eslabones}</ol>
         </div>`;
 }
 
@@ -1004,26 +1222,54 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
     const otro = OCTAGRAMAS[oct === 1 ? 2 : 1];
     const coleccion = tipo === 'vertice' ? 'vertices' : tipo === 'proceso' ? 'procesos' : 'lados';
     const d = cfg[coleccion][idx];
-    const etiquetaTipo = tipo === 'vertice' ? 'Vértice' : tipo === 'proceso' ? 'Proceso' : 'Lado';
+    const etiquetaTipo = terminoDe(oct, tipo);
 
     // Nombre corto de un vértice (en el Cerebral incluye el personaje)
     const nomV = (c, k) => c.id === 2
         ? `${c.vertices[k].nombre} · ${c.vertices[k].personaje}`
         : c.vertices[k].nombre;
 
+    // Línea «va de … a …» cuando el proceso tiene sentido dentro de su ciclo
+    const flujo = (el, verbo) => {
+        if (!el.de || !el.a) return '';
+        const i = el.de - 1, j = el.a - 1;
+        return `
+            <div class="oct-vincula">${verbo}
+                <a href="#" onclick="octIr(${oct},'vertice',${i});return false;">${el.de} · ${nomV(cfg, i)}</a>
+                <span>→</span>
+                <a href="#" onclick="octIr(${oct},'vertice',${j});return false;">${el.a} · ${nomV(cfg, j)}</a>
+            </div>`;
+    };
+
     let titulo, cuerpo = '';
 
     if (tipo === 'proceso') {
-        // El proceso N cruza el octágono entre los vértices N y N+2
-        const j = (idx + 2) % 8;
+        // El cruce N enlaza los vértices N y N+3
+        const j = (idx + 3) % 8;
         titulo = nombreProceso(cfg, idx);
-        cuerpo = `
-            <div class="oct-vincula">Cruza entre
+        cuerpo = (oct === 1 ? flujo(d, 'Va de') : `
+            <div class="oct-vincula">Enlaza a
                 <a href="#" onclick="octIr(${oct},'vertice',${idx});return false;">${idx + 1} · ${nomV(cfg, idx)}</a>
-                <span>✕</span>
+                <span>↔</span>
                 <a href="#" onclick="octIr(${oct},'vertice',${j});return false;">${j + 1} · ${nomV(cfg, j)}</a>
+            </div>`) +
+            `<p class="oct-p">${descProceso(cfg, idx)}</p>` +
+            bloqueCiclo(cfg, tipo, idx);
+    } else if (oct === 2 && tipo === 'lado') {
+        // El mercado es de un solo gerente: no une dos vértices
+        titulo = d.nombre;
+        cuerpo = `
+            <div class="oct-vincula">Mercado del
+                <a href="#" onclick="octIr(2,'vertice',${idx});return false;">${idx + 1} · ${nomV(cfg, idx)}</a>
+                <span class="oct-vincula-nota">(parte de su perfil funcional)</span>
             </div>
-            <p class="oct-p">${descProceso(cfg, idx)}</p>`;
+            <p class="oct-p">${d.desc}</p>`;
+    } else if (oct === 1 && tipo === 'lado') {
+        titulo = d.nombre;
+        cuerpo = flujo(d, 'Va de') +
+            (d.alias ? `<div class="oct-alias">También llamado <b>${d.alias}</b></div>` : '') +
+            `<p class="oct-p">${d.desc}</p>` +
+            bloqueCiclo(cfg, tipo, idx);
     } else if (oct === 1 && tipo === 'vertice') {
         titulo = d.nombre;
         cuerpo = `
@@ -1033,18 +1279,7 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                 <ul class="oct-lista">${d.escala.map(e => `<li>${e}</li>`).join('')}</ul>
                 <div class="oct-grad" style="background:${cfg.color}12; color:${cfg.color};">${d.gradiente}</div>
             </div>`;
-    } else if (oct === 1) {
-        const a = cfg.vertices[idx].nombre;
-        const b = cfg.vertices[(idx + 1) % 8].nombre;
-        titulo = d.nombre;
-        cuerpo = `
-            <div class="oct-vincula">Conecta
-                <a href="#" onclick="octIr(1,'vertice',${idx});return false;">${idx + 1} · ${a}</a>
-                <span>↔</span>
-                <a href="#" onclick="octIr(1,'vertice',${(idx + 1) % 8});return false;">${(idx + 1) % 8 + 1} · ${b}</a>
-            </div>
-            <p class="oct-p">${d.desc}</p>`;
-    } else if (tipo === 'vertice') {
+    } else {
         titulo = `${d.nombre} · ${d.personaje}`;
         cuerpo = `
             <div class="oct-sub">${d.cargo}</div>
@@ -1059,17 +1294,6 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                 ${d.qa.map(q => `<div class="oct-qa"><span>${q[0]}</span><b>${q[1]}</b></div>`).join('')}
                 <div class="oct-nota">E: Empatía · R: Racionalidad</div>
             </div>`;
-    } else {
-        const a = cfg.vertices[idx].nombre;
-        const b = cfg.vertices[(idx + 1) % 8].nombre;
-        titulo = d.nombre;
-        cuerpo = `
-            <div class="oct-vincula">Conecta
-                <a href="#" onclick="octIr(2,'vertice',${idx});return false;">${idx + 1} · ${a}</a>
-                <span>↔</span>
-                <a href="#" onclick="octIr(2,'vertice',${(idx + 1) % 8});return false;">${(idx + 1) % 8 + 1} · ${b}</a>
-            </div>
-            <p class="oct-p">${d.desc}</p>`;
     }
 
     const otroNombre = tipo === 'proceso'
@@ -1085,9 +1309,11 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
         </div>
         ${cuerpo}
         <div class="oct-info-pie">
-            <span>Elemento correspondiente</span>
+            <span>${tipo === 'vertice'
+                ? 'El mismo gerente en el otro octagrama, unido por su proceso de aprendizaje'
+                : 'Elemento correspondiente'}</span>
             <button onclick="octIr(${otro.id},'${tipo}',${idx})" style="border-color:${otro.color}; color:${otro.color};">
-                ${otro.nombre} · ${etiquetaTipo} ${idx + 1} — ${otroNombre}
+                ${otro.nombre} · ${terminoDe(otro.id, tipo)} ${idx + 1}: ${otroNombre}
             </button>
         </div>`;
 }
@@ -1120,7 +1346,7 @@ function construirIndiceOctagrama() {
                 </div>
             </div>
             <div class="oct-idx-grupo">
-                <div class="oct-idx-tit">Vértices <span>${cfg.id === 1 ? 'resultados' : 'quienes deciden'}</span></div>
+                <div class="oct-idx-tit">${TERMINOS[cfg.id].vertices} <span>${TERMINOS[cfg.id].verticesSub}</span></div>
                 <ol class="oct-idx-lista">
                     ${cfg.vertices.map((v, i) => `
                         <li data-oct="${cfg.id}" data-tipo="vertice" data-idx="${i}">
@@ -1130,26 +1356,41 @@ function construirIndiceOctagrama() {
                 </ol>
             </div>
             <div class="oct-idx-grupo">
-                <div class="oct-idx-tit">Lados <span>${cfg.id === 1 ? 'vínculos' : 'mercados'}</span></div>
+                <div class="oct-idx-tit">${TERMINOS[cfg.id].lados} <span>${TERMINOS[cfg.id].ladosSub}</span></div>
                 <ol class="oct-idx-lista">
                     ${cfg.lados.map((l, i) => `
                         <li data-oct="${cfg.id}" data-tipo="lado" data-idx="${i}">
                             <span class="oct-idx-num cuadro">${l.n}</span>
-                            <span class="oct-idx-txt">${l.nombre}</span>
+                            <span class="oct-idx-txt">${l.nombre}
+                                ${cfg.id === 1 ? `<em>${l.de} → ${l.a}</em>` : `<em>${l.rol}</em>`}</span>
                         </li>`).join('')}
                 </ol>
             </div>
             <div class="oct-idx-grupo">
-                <div class="oct-idx-tit">Procesos <span>líneas cruzadas</span></div>
+                <div class="oct-idx-tit">${TERMINOS[cfg.id].procesos} <span>${TERMINOS[cfg.id].procesosSub}</span></div>
                 <ol class="oct-idx-lista">
                     ${cfg.procesos.map((pr, i) => `
                         <li data-oct="${cfg.id}" data-tipo="proceso" data-idx="${i}">
                             <span class="oct-idx-num rombo">${pr.n}</span>
                             <span class="oct-idx-txt">${nombreProceso(cfg, i)}
-                                <em>${i + 1} ✕ ${(i + 2) % 8 + 1}</em></span>
+                                <em>${cfg.id === 1 ? pr.de + ' → ' + pr.a : (i + 1) + ' ✕ ' + ((i + 3) % 8 + 1)}</em></span>
                         </li>`).join('')}
                 </ol>
             </div>
+            ${cfg.ciclos ? `
+            <div class="oct-idx-grupo">
+                <div class="oct-idx-tit">Ciclos <span>los 16 procesos, en cuatro giros</span></div>
+                <ul class="oct-idx-ciclos">
+                    ${cfg.ciclos.map(c => `
+                        <li style="--cc:${c.color};">
+                            <strong>${c.nombre}</strong>
+                            <span>${c.ruta.map(e =>
+                                `<a href="#" onclick="octIr(${cfg.id},'${e.tipo}',${e.idx});return false;">${
+                                    (e.tipo === 'proceso' ? cfg.procesos : cfg.lados)[e.idx].nombre}</a>`
+                            ).join(' → ')} ↺</span>
+                        </li>`).join('')}
+                </ul>
+            </div>` : ''}
         </div>`;
 
     cont.innerHTML = bloque(OCTAGRAMAS[1]) + bloque(OCTAGRAMAS[2]);
@@ -1182,9 +1423,9 @@ function showMBTIInfo(code, idx) {
     const v = OCTAGRAMAS[2].vertices[idx];
     const vValor = OCTAGRAMAS[1].vertices[idx];
 
-    document.getElementById('oct-modal-title').textContent = `${code} — ${info.nombre}`;
+    document.getElementById('oct-modal-title').textContent = `${code} - ${info.nombre}`;
     document.getElementById('oct-modal-body').innerHTML = `
-        <div class="oct-modal-sub">${v ? v.nombre + ' · ' + v.personaje + ' — ' + v.cargo : ''}</div>
+        <div class="oct-modal-sub">${v ? v.nombre + ' · ' + v.personaje + ' · ' + v.cargo : ''}</div>
         <p style="margin-bottom:1rem; line-height:1.7;">${info.descripcion}</p>
         <div class="oct-modal-caja verde">
             <div class="oct-modal-cap">Fortalezas</div>
@@ -1199,7 +1440,7 @@ function showMBTIInfo(code, idx) {
             → Vértice ${idx + 1} de Valor: ${vValor.nombre}
         </button>
         <button class="oct-modal-btn" style="--c:#2563eb" onclick="closeOctModal(); octIr(2,'lado',${idx});">
-            → Lado ${idx + 1} Cerebral: ${OCTAGRAMAS[2].lados[idx].nombre}
+            → Mercado ${idx + 1} Cerebral: ${OCTAGRAMAS[2].lados[idx].nombre}
         </button>`;
     document.getElementById('oct-modal').style.display = 'flex';
 }
@@ -1209,7 +1450,7 @@ function showRoleInfo(role, idx) {
     const l = OCTAGRAMAS[2].lados[idx];
     if (!v) return;
 
-    document.getElementById('oct-modal-title').textContent = `${v.nombre} — ${v.cargo}`;
+    document.getElementById('oct-modal-title').textContent = `${v.nombre} - ${v.cargo}`;
     document.getElementById('oct-modal-body').innerHTML = `
         <div class="oct-modal-sub">${v.personaje} · ${v.mbti}</div>
         <p style="line-height:1.7; margin-bottom:1rem;">${l.desc}</p>

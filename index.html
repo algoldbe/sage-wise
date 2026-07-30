@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260728a" rel="stylesheet">
+    <link href="css/styles.css?v=20260730a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -71,15 +71,29 @@
                         <div class="oct-leyenda-item">
                             <span class="oct-leyenda-icono lado"></span>
                             <div>
-                                <strong>Lados</strong>
-                                <em>La barra que une dos vértices contiguos. En el de Valor es el vínculo entre ambos; en el Cerebral, el mercado donde se interviene.</em>
+                                <strong>Lados y mercados</strong>
+                                <em>En el de Valor, la barra que une dos vértices contiguos es un proceso. En el Cerebral no une nada: es la flecha que sale de cada gerente hacia el mercado donde interviene.</em>
                             </div>
                         </div>
                         <div class="oct-leyenda-item">
                             <span class="oct-leyenda-icono cruce"></span>
                             <div>
-                                <strong>Procesos</strong>
-                                <em>Las líneas que cruzan el octágono entre vértices no contiguos. Son los dos cuadrados inscritos que lo convierten en octagrama.</em>
+                                <strong>Cruces</strong>
+                                <em>Las ocho líneas que cruzan el octágono y lo convierten en octagrama. En el de Valor son procesos; en el Cerebral, relaciones entre las personas, que conectan a todos con todos.</em>
+                            </div>
+                        </div>
+                        <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono ciclo"></span>
+                            <div>
+                                <strong>Ciclos</strong>
+                                <em>Los 16 procesos del Octagrama de Valor giran en cuatro ciclos cerrados: comercialización creativa, inteligencia competitiva, operación del negocio y renovación del negocio.</em>
+                            </div>
+                        </div>
+                        <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono aprendizaje"></span>
+                            <div>
+                                <strong>Aprendizaje</strong>
+                                <em>Las líneas anaranjadas que van de un octagrama al otro unen el perfil funcional de cada gerente con el caracterológico: son los procesos que desarrollan sus competencias individuales.</em>
                             </div>
                         </div>
                     </div>
@@ -88,7 +102,7 @@
                     <div class="octagon-model">
                         <div class="octagon-title">
                             <span class="octagon-title-main">Modelo del Octagrama</span>
-                            <span class="octagon-title-sub">8 vértices · 8 lados · 8 procesos</span>
+                            <span class="octagon-title-sub">8 vértices · 16 procesos · 4 ciclos</span>
                         </div>
                         <div class="octagon-canvas" id="octagon-container">
                             <!-- El modelo 3D se dibuja aquí (js/octagrama.js) -->
@@ -96,7 +110,7 @@
                             <span class="oct-rotulo cerebral">Octagrama Cerebral</span>
                             <div class="octagon-hint">
                                 <i class="fas fa-hand-pointer"></i>
-                                Arrastre para girar · clic en un vértice, lado o proceso
+                                Arrastre para girar · clic en cualquier elemento
                             </div>
                         </div>
                     </div>
@@ -107,7 +121,7 @@
                         <details class="oct-indice">
                             <summary>
                                 <span class="oct-indice-tit">Índice completo del modelo</span>
-                                <span class="oct-indice-sub">Vértices, lados y procesos</span>
+                                <span class="oct-indice-sub">Vértices, lados, procesos y ciclos</span>
                                 <i class="fas fa-chevron-down"></i>
                             </summary>
                             <div class="octagon-index" id="octagon-index"></div>
@@ -263,16 +277,22 @@
                 'captura de valor': 'Depende del valor agregado al cliente, el turnover y las palancas aplicadas, equilibrando riesgo y rentabilidad.',
                 'abastecimiento de insumos': 'El vínculo entre logística e informática: los procesos de abastecimiento y la retroalimentación de clientes para optimizar la cadena de suministro.',
                 'organización competente': 'Sistemas de información efectivos que apoyan a gente bien capacitada. La inteligencia colectiva emerge al conectar información con conocimiento.',
-                'cso': 'CSO / Vendedor — ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
-                'coo': 'COO / Operador — ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
-                'cto': 'CTO / Tecnólogo — INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
-                'cmo': 'CMO / Mercadólogo — INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
-                'cpo': 'CPO / Comprador — ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
-                'cio': 'CIO / Informático — ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
-                'cho': 'CHO / Entrenador — ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
-                'cfo': 'CFO / Planificador — ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.',
-                'octagrama de valor': 'Modelo que explica las interacciones entre los procesos empresariales que generan valor. Sus vértices representan los resultados deseados y sus lados los procesos elementales y conectores sinérgicos.',
-                'octagrama cerebral': 'Modelo que representa a los miembros de la organización que toman decisiones. Sus vértices son los roles ejecutivos (C-suite) y sus lados los mercados en los que intervienen.',
+                'cso': 'CSO / Vendedor: ENFJ. Orientado por metas, solícito. Hábil comunicador. Interés vital: Influencia. Modo de ser: Audaz.',
+                'coo': 'COO / Operador: ESTJ. Decisivo, eficiente, a cargo del espectáculo. Interés vital: Afiliación. Modo de ser: Apasionado.',
+                'cto': 'CTO / Tecnólogo: INTP. Imaginativo. Pensador original. Creativo. Interés vital: Investigación. Modo de ser: Sereno.',
+                'cmo': 'CMO / Mercadólogo: INFP. Sensitivo, perceptivo, creativo, leal. Interés vital: Investigación. Modo de ser: Afable.',
+                'cpo': 'CPO / Comprador: ESTP. Bombero. Hábil negociador. Interés vital: Influencia. Modo de ser: Audaz.',
+                'cio': 'CIO / Informático: ISTJ. Práctico, analítico, reservado. Interés vital: Análisis. Modo de ser: Sereno.',
+                'cho': 'CHO / Entrenador: ENFP. Optimista, apoyador. Ve el potencial de otros. Interés vital: Afiliación. Modo de ser: Apasionado.',
+                'cfo': 'CFO / Planificador: ISTP. Orientado por la acción. Lógico, independiente. Interés vital: Análisis. Modo de ser: Afable.',
+                'octagrama de valor': 'Modelo que explica las interacciones entre los procesos empresariales que generan valor. Sus ocho vértices son los resultados que la empresa persigue; sus ocho lados y sus ocho cruces son los dieciséis procesos por los que fluye el valor, agrupados en cuatro ciclos cerrados.',
+                'octagrama cerebral': 'Modelo que representa a los miembros de la organización que toman decisiones. Sus vértices son los roles ejecutivos (C-suite); de cada uno sale una flecha hacia el mercado en el que interviene, y sus cruces no son procesos sino relaciones entre las personas, formales o informales, que conectan a todos con todos.',
+                'ciclo de comercialización creativa': 'Uno de los cuatro ciclos del Octagrama de Valor. Cierra el trato con el cliente y recupera el valor: costeo del valor, contratación del valor, apreciación del valor y captura del valor.',
+                'ciclo de inteligencia competitiva': 'Uno de los cuatro ciclos del Octagrama de Valor. Explora el entorno y construye la ventaja: identificación de oportunidades, generación de competencias organizacionales, desarrollo de capacidades y creación de cuasi-monopolios temporales.',
+                'ciclo de operación del negocio': 'Uno de los cuatro ciclos del Octagrama de Valor. Hace que el valor fluya día con día: abastecimiento de insumos, gestión del suministro de valor, experiencia del cliente y gestión de relaciones con los clientes.',
+                'ciclo de renovación del negocio': 'Uno de los cuatro ciclos del Octagrama de Valor. Reinventa la oferta: desarrollo de prototipos, diseño de proyectos, asignación de recursos y organización de proyectos.',
+                'procesos de aprendizaje': 'Los ocho vínculos que unen un octagrama con el otro. Conectan el perfil funcional de cada gerente (Octagrama de Valor) con su perfil caracterológico (Octagrama Cerebral) y desarrollan sus competencias individuales.',
+                'relaciones': 'Los cruces del Octagrama Cerebral. No son procesos: son los vínculos entre las personas que trabajan en la empresa, formales o informales, por los que fluye la información. Conectan a todos con todos.',
                 'modelo octagramal': 'Marco conceptual desarrollado por Sage-Wise que integra dos octágonos: el de Valor (procesos) y el Cerebral (roles de decisión) para explicar la dinámica organizacional.',
                 'estrategia': 'Plan de acción diseñado para alcanzar objetivos organizacionales a largo plazo. Incluye la definición de metas, asignación de recursos y ventajas competitivas.',
                 'estructura organizacional': 'Diseño jerárquico y funcional de una empresa que define roles, responsabilidades y flujos de comunicación entre sus miembros.',
@@ -303,14 +323,14 @@
                 'afiliación': 'Interés vital relacionado con la construcción de vínculos y pertenencia. Modo de ser del COO y el CHO en el Octagrama Cerebral.',
                 'influencia': 'Capacidad de afectar las decisiones y acciones de otros. Interés vital del CSO y el CPO en el Octagrama Cerebral.',
                 'análisis': 'Proceso de descomposición de un problema o sistema en sus partes constitutivas para comprender su funcionamiento. Interés vital del CIO y el CFO.',
-                'enfj': 'ENFJ — El Protagonista. Líderes carismáticos e inspiradores que guían mediante el ejemplo. Son empáticos, organizados y orientados a las personas.',
-                'estj': 'ESTJ — El Ejecutivo. Organizadores eficientes y directivos naturales. Valoran el orden, la tradición y la eficiencia.',
-                'intp': 'INTP — El Lógico. Pensadores analíticos con una sed insaciable de conocimiento. Brillan en el análisis de sistemas complejos.',
-                'infp': 'INFP — El Mediador. Idealistas creativos guiados por sus valores. Son empáticos, adaptables y apasionados.',
-                'estp': 'ESTP — El Emprendedor. Pragmáticos y orientados a la acción inmediata. Son observadores agudos, hábiles negociadores.',
-                'istj': 'ISTJ — El Logístico. Prácticos y metódicos, son el pilar de la confiabilidad organizacional. Tienen un fuerte sentido del deber.',
-                'enfp': 'ENFP — El Activista. Espíritus libres creativos y sociables. Ven el potencial en cada persona y situación.',
-                'istp': 'ISTP — El Virtuoso. Artesanos ingeniosos que aprenden haciendo. Son observadores calmos, excelentes en resolver problemas prácticos.'
+                'enfj': 'ENFJ: El Protagonista. Líderes carismáticos e inspiradores que guían mediante el ejemplo. Son empáticos, organizados y orientados a las personas.',
+                'estj': 'ESTJ: El Ejecutivo. Organizadores eficientes y directivos naturales. Valoran el orden, la tradición y la eficiencia.',
+                'intp': 'INTP: El Lógico. Pensadores analíticos con una sed insaciable de conocimiento. Brillan en el análisis de sistemas complejos.',
+                'infp': 'INFP: El Mediador. Idealistas creativos guiados por sus valores. Son empáticos, adaptables y apasionados.',
+                'estp': 'ESTP: El Emprendedor. Pragmáticos y orientados a la acción inmediata. Son observadores agudos, hábiles negociadores.',
+                'istj': 'ISTJ: El Logístico. Prácticos y metódicos, son el pilar de la confiabilidad organizacional. Tienen un fuerte sentido del deber.',
+                'enfp': 'ENFP: El Activista. Espíritus libres creativos y sociables. Ven el potencial en cada persona y situación.',
+                'istp': 'ISTP: El Virtuoso. Artesanos ingeniosos que aprenden haciendo. Son observadores calmos, excelentes en resolver problemas prácticos.'
             };
 
             // Los vértices y lados se toman directamente del modelo (js/octagrama.js)
@@ -332,9 +352,14 @@
                         var clave = l.nombre.toLowerCase();
                         data[clave] = quita(l.desc);
                         ref[clave] = { oct: id, tipo: 'lado', idx: i };
+                        if (l.alias) {   // el nombre con el que se le conocía antes
+                            var viejo = l.alias.toLowerCase();
+                            data[viejo] = quita(l.desc);
+                            ref[viejo] = { oct: id, tipo: 'lado', idx: i };
+                        }
                     });
                     cfg.procesos.forEach(function(pr, i) {
-                        if (!pr.nombre) return;   // sólo cuando tengan nombre propio
+                        if (!pr.nombre || id === 2) return;   // las relaciones no son términos
                         var clave = pr.nombre.toLowerCase();
                         data[clave] = quita(descProceso(cfg, i));
                         ref[clave] = { oct: id, tipo: 'proceso', idx: i };
@@ -410,7 +435,7 @@
                         '<a href="#home" data-oct="' + r.oct + '" data-tipo="' + r.tipo + '" data-idx="' + r.idx +
                         '" class="glosario-ir" style="color:' + cfg.color + '; font-weight:600; font-size:0.86rem; text-decoration:none;">' +
                         '&rarr; Ver en el ' + cfg.nombre + ' · ' +
-                        (r.tipo === 'vertice' ? 'Vértice ' : r.tipo === 'proceso' ? 'Proceso ' : 'Lado ') +
+                        terminoDe(r.oct, r.tipo) + ' ' +
                         (r.idx + 1) + '</a></div>';
                 }
 
@@ -543,9 +568,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260728a"></script>
-    <script src="js/octagrama.js?v=20260728a"></script>
-    <script src="js/main.js?v=20260728a"></script>
+    <script src="js/relatorias.js?v=20260730a"></script>
+    <script src="js/octagrama.js?v=20260730a"></script>
+    <script src="js/main.js?v=20260730a"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">

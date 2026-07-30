@@ -235,6 +235,24 @@ header {
     box-shadow: 0 0 0 1.5px rgba(22, 35, 61, 0.35) inset;
 }
 
+.oct-leyenda-icono.ciclo::before {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 1.5px solid #16233d;
+    border-right-color: transparent;
+    transform: rotate(-35deg);
+}
+
+/* Único icono en color: el anaranjado de las flechas que unen los octagramas */
+.oct-leyenda-icono.aprendizaje::before {
+    width: 4px;
+    height: 15px;
+    border-radius: 2px;
+    background: linear-gradient(#e67e22, #e67e22) center / 4px 15px no-repeat;
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.18);
+}
+
 /* ═══ Modelo del Octagrama ═══════════════════════════════════════════════ */
 .octagon-section {
     flex: 1.15;
@@ -541,6 +559,79 @@ header {
 
 .oct-vincula a:hover { border-bottom-color: currentColor; }
 
+.oct-vincula-nota { color: #a6b0bd; font-size: 0.78rem; }
+
+.oct-alias {
+    font-size: 0.8rem;
+    color: var(--light-text);
+    margin: -0.4rem 0 0.85rem;
+}
+
+.oct-alias b { color: #16233d; font-weight: 600; }
+
+/* Ciclo al que pertenece un proceso del Octagrama de Valor */
+.oct-ciclo { border-color: color-mix(in srgb, var(--cc) 35%, transparent); }
+
+.oct-ciclo .oct-caja-tit {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--cc);
+}
+
+.oct-ciclo-punto {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--cc);
+    flex-shrink: 0;
+}
+
+.oct-ciclo-desc {
+    font-size: 0.86rem;
+    color: var(--light-text);
+    line-height: 1.6;
+    margin: 0 0 0.7rem;
+}
+
+.oct-ciclo-ruta {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+}
+
+.oct-ciclo-ruta li::after {
+    content: '→';
+    color: color-mix(in srgb, var(--cc) 55%, #fff);
+    margin-left: 0.3rem;
+    font-weight: 700;
+}
+
+.oct-ciclo-ruta li:last-child::after { content: '↺'; }
+
+.oct-ciclo-ruta a {
+    font-size: 0.78rem;
+    color: #3c4858;
+    text-decoration: none;
+    padding: 0.18rem 0.45rem;
+    border-radius: 5px;
+    background: #fff;
+    border: 1px solid rgba(15, 33, 62, 0.12);
+}
+
+.oct-ciclo-ruta a:hover { border-color: var(--cc); color: var(--cc); }
+
+.oct-ciclo-ruta li.actual a {
+    background: var(--cc);
+    border-color: var(--cc);
+    color: #fff;
+    font-weight: 600;
+}
+
 .oct-caja {
     margin-top: 1.1rem;
     border: 1px solid rgba(15, 33, 62, 0.1);
@@ -758,6 +849,35 @@ header {
     letter-spacing: 0.04em;
 }
 .oct-idx-lista li.activo .oct-idx-txt { color: #16233d; font-weight: 600; }
+
+/* Los cuatro ciclos, al pie del índice del Octagrama de Valor */
+.oct-idx-ciclos { list-style: none; margin: 0; padding: 0; }
+
+.oct-idx-ciclos li {
+    padding: 0.4rem 0.55rem;
+    border-left: 3px solid var(--cc);
+    background: color-mix(in srgb, var(--cc) 6%, #fff);
+    border-radius: 0 6px 6px 0;
+}
+
+.oct-idx-ciclos li + li { margin-top: 0.35rem; }
+
+.oct-idx-ciclos strong {
+    display: block;
+    font-size: 0.79rem;
+    color: var(--cc);
+    margin-bottom: 0.15rem;
+}
+
+.oct-idx-ciclos span { font-size: 0.72rem; color: #7c8798; line-height: 1.5; }
+
+.oct-idx-ciclos a {
+    color: #3c4858;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(15, 33, 62, 0.15);
+}
+
+.oct-idx-ciclos a:hover { color: var(--cc); border-bottom-color: currentColor; }
 
 /* Modal del octagrama */
 .oct-modal-sub {
@@ -1619,7 +1739,7 @@ footer {
 .copyright p { margin: 0; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DIAGNÓSTICO 3D — Quiz styles
+   DIAGNÓSTICO 3D - Quiz styles
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Intro screen ─────────────────────────────────────────────────────────── */
@@ -2133,7 +2253,7 @@ footer {
     footer { padding: 0.7rem 5% 0.9rem; }
 }
 
-/* ────────── Diagnóstico 3D — Resultados enriquecidos (relatoría) ────────── */
+/* ────────── Diagnóstico 3D - Resultados enriquecidos (relatoría) ────────── */
 .d3d-relatoria-card {
     background: linear-gradient(135deg, #faf5ff 0%, #eff6ff 100%);
     border: 1px solid #e9d5ff;
