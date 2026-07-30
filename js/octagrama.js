@@ -16,9 +16,13 @@
        que convierte al octágono en octagrama.
      · En el Octagrama de Valor los 8 lados y los 8 cruces son, todos, PROCESOS,
        y se agrupan en cuatro ciclos cerrados de cuatro procesos cada uno.
+     · Un lado no se dibuja tendido entre dos vértices sino como «semi lado»:
+       media arista rematada en punta, apuntando al vértice que le corresponde.
+       En el de Valor, aquél al que va el proceso; en el Cerebral, el gerente
+       dueño de ese mercado, porque el mercado es de uno solo.
      · En el Octagrama Cerebral no hay procesos: los lados son los MERCADOS de
-       cada gerente (flechas que salen del vértice hacia su mercado) y los cruces
-       son RELACIONES entre las personas, que conectan a todos con todos.
+       cada gerente y los cruces son RELACIONES entre las personas, que conectan
+       a todos con todos.
    ========================================================================== */
 
 // ─── Perfiles MBTI (modal) ───────────────────────────────────────────────────
@@ -428,7 +432,7 @@ function descProceso(cfg, i) {
 
 /* ─── Cómo se llama cada cosa en cada octagrama ───────────────────────────────
    El de Valor tiene lados y cruces, y ambos son procesos. El Cerebral tiene
-   mercados (flechas que salen de cada vértice) y relaciones (los cruces).
+   mercados (medio lado, con la punta en el gerente dueño) y relaciones.
    -------------------------------------------------------------------------- */
 const TERMINOS = {
     1: {
@@ -438,7 +442,7 @@ const TERMINOS = {
     },
     2: {
         vertice: 'Vértice', vertices: 'Vértices', verticesSub: 'quienes deciden',
-        lado: 'Mercado', lados: 'Mercados', ladosSub: 'a dónde sale cada gerente',
+        lado: 'Mercado', lados: 'Mercados', ladosSub: 'de qué gerente es cada uno',
         proceso: 'Relación', procesos: 'Relaciones', procesosSub: 'todos con todos'
     }
 };
@@ -459,7 +463,6 @@ const sideLabelsCerebral = OCTAGRAMAS[2].lados.map(l => l.nombre);
 
 // ─── Geometría compartida ────────────────────────────────────────────────────
 const OCT_R = 1.28;                       // circunradio
-const OCT_APOTEMA = OCT_R * Math.cos(Math.PI / 8);
 const OCT_SEP = 0.92;                     // separación vertical entre octágonos
 const OCT_ESPESOR = 0.10;
 
@@ -468,6 +471,40 @@ const OCT_ESPESOR = 0.10;
 function anguloVertice(i) { return Math.PI / 8 - i * Math.PI / 4; }
 // Punto medio del lado i, que une los vértices i e i+1.
 function anguloLado(i) { return -i * Math.PI / 4; }
+
+/* ─── El lado como «semi lado»: media arista rematada en punta ────────────────
+   Un lado no se dibuja como una barra tendida entre dos vértices, sino como una
+   flecha que ocupa la mitad de la arista y apunta al vértice que le corresponde:
+   en el de Valor, aquél al que va el proceso; en el Cerebral, el gerente dueño
+   de ese mercado, porque el mercado es de uno solo y no de los dos vecinos.
+   -------------------------------------------------------------------------- */
+const LADO_LARGO = 0.36;      // largo de la flecha
+const LADO_PUNTA = 0.14;      // parte de ese largo que es cono
+const LADO_HUECO = 0.14;      // aire entre la punta y el vértice
+
+// Vértice (0-based) al que apunta el lado i
+function verticeDestinoLado(cfg, i) {
+    const l = cfg.lados[i];
+    return (l.a || l.vertice) - 1;
+}
+
+// Centro, dirección y posición angular de la flecha del lado i
+function geometriaLado(cfg, i) {
+    const dest = verticeDestinoLado(cfg, i);
+    const otro = dest === i ? (i + 1) % 8 : i;
+    const pt = k => {
+        const a = anguloVertice(k);
+        return { x: Math.cos(a) * OCT_R, z: Math.sin(a) * OCT_R };
+    };
+    const A = pt(dest), B = pt(otro);
+    const dx = A.x - B.x, dz = A.z - B.z;
+    const len = Math.hypot(dx, dz);
+    const ux = dx / len, uz = dz / len;
+    // La punta queda a LADO_HUECO del vértice y la flecha crece hacia atrás
+    const x = A.x - ux * (LADO_HUECO + LADO_LARGO / 2);
+    const z = A.z - uz * (LADO_HUECO + LADO_LARGO / 2);
+    return { x, z, dest, ang: Math.atan2(uz, ux), angCentro: Math.atan2(z, x) };
+}
 
 // ─── Estado global del visor ─────────────────────────────────────────────────
 let octaViewer = null;
@@ -498,9 +535,7 @@ function initialize3DOctagon() {
     const VISTA = {
         rx: 0.50,
         ry: anguloVertice(0) - Math.PI / 2,   // deja el vértice 1 hacia el frente
-        // Un poco más lejos que antes: las flechas de los mercados ensanchan el
-        // Octagrama Cerebral y si no, se salen del cuadro.
-        zoom: 7.5
+        zoom: 6.9
     };
 
     // Estado de interacción
@@ -621,30 +656,25 @@ function initialize3DOctagon() {
             grupo.add(g);
             piezas.push(g);
 
-            // Insignia numérica siempre legible. En el Cerebral se guarda hacia
-            // adentro para dejarle sitio a la flecha del mercado.
-            const rb = cfg.id === 2 ? OCT_R - 0.20 : OCT_R + 0.17;
+            // Insignia numérica siempre legible
             const badge = crearInsignia(String(v.n), cfg.color, '#ffffff');
-            badge.position.set(Math.cos(a) * rb, yTop + 0.08, Math.sin(a) * rb);
+            badge.position.set(Math.cos(a) * (OCT_R + 0.17), yTop + 0.08, Math.sin(a) * (OCT_R + 0.17));
             grupo.add(badge);
             g.userData.badge = badge;
         });
 
-        // ── Lados ────────────────────────────────────────────────────────────
-        // Valor: barrita conectora sobre la arista, entre dos vértices contiguos.
-        // Cerebral: flecha que sale del vértice del gerente hacia su mercado.
+        // ── Lados: media arista rematada en punta, apuntando a su vértice ─────
         cfg.lados.forEach((l, i) => {
-            const esMercado = cfg.id === 2;
-            const a = esMercado ? anguloVertice(i) : anguloLado(i);
-            const rPieza = esMercado ? OCT_R + 0.30 : OCT_APOTEMA;
-            const pos = new THREE.Vector3(Math.cos(a) * rPieza, yTop + 0.02, Math.sin(a) * rPieza);
-            const g = esMercado ? crearMercado(pos, a, cfg, i, l) : crearLado(pos, a, cfg, i, l);
+            const gl = geometriaLado(cfg, i);
+            const pos = new THREE.Vector3(gl.x, yTop + 0.02, gl.z);
+            const g = crearLado(pos, gl.ang, cfg, i, l);
             grupo.add(g);
             piezas.push(g);
 
-            const rb = esMercado ? OCT_R + 0.66 : OCT_APOTEMA - 0.17;
+            // La insignia acompaña a la flecha, un poco hacia el interior
+            const r = Math.hypot(gl.x, gl.z), k = (r - 0.19) / r;
             const badge = crearInsignia(String(l.n), '#ffffff', cfg.color, 'anillo');
-            badge.position.set(Math.cos(a) * rb, yTop + 0.07, Math.sin(a) * rb);
+            badge.position.set(gl.x * k, yTop + 0.07, gl.z * k);
             grupo.add(badge);
             g.userData.badge = badge;
         });
@@ -695,61 +725,27 @@ function initialize3DOctagon() {
         return g;
     }
 
+    // Lado: «semi lado», media arista rematada en punta. El vástago arranca en el
+    // centro de la arista y el cono llega junto al vértice al que apunta.
     function crearLado(pos, ang, cfg, i, datos) {
         const g = new THREE.Group();
-        const largo = 2 * OCT_R * Math.sin(Math.PI / 8) * 0.56;
-
-        const nucleoMat = new THREE.MeshPhongMaterial({
-            color: COL.marca, emissive: cfg.hexOscuro, emissiveIntensity: 0.35, shininess: 120
-        });
-        const barra = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, largo, 16), nucleoMat);
-        barra.rotation.z = Math.PI / 2;
-        g.add(barra);
-
-        // Remates redondeados
-        [-largo / 2, largo / 2].forEach(dx => {
-            const cap = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 16), nucleoMat);
-            cap.position.x = dx;
-            g.add(cap);
-        });
-
-        const auraMat = new THREE.MeshBasicMaterial({
-            color: cfg.hex, transparent: true, opacity: 0.20, depthWrite: false
-        });
-        const aura = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, largo * 1.05, 16), auraMat);
-        aura.rotation.z = Math.PI / 2;
-        g.add(aura);
-
-        g.position.copy(pos);
-        // Alinea el eje largo (X local) con la dirección de la arista
-        g.rotation.y = -ang - Math.PI / 2;
-
-        g.userData = {
-            tipo: 'lado', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
-            nucleoMat, auraMat, aura, activo: false,
-            colorNormal: COL.marca, opacidadNormal: 1, auraNormal: 0.20,
-            titulo: datos.nombre
-        };
-        return g;
-    }
-
-    // Mercado (Cerebral): flecha que sale del vértice de un gerente hacia afuera.
-    // No une dos vértices, porque el mercado es de un solo gerente, y por eso se dibuja
-    // como «semi lado»: un vástago corto rematado en punta.
-    function crearMercado(pos, ang, cfg, i, datos) {
-        const g = new THREE.Group();
-        const vastago = 0.20, punta = 0.16;
+        const vastago = LADO_LARGO - LADO_PUNTA;
 
         const nucleoMat = new THREE.MeshPhongMaterial({
             color: COL.marca, emissive: cfg.hexOscuro, emissiveIntensity: 0.35, shininess: 120
         });
 
-        const barra = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, vastago, 14), nucleoMat);
-        barra.rotation.z = -Math.PI / 2;          // eje largo sobre +X local
-        barra.position.x = -punta / 2;
+        const barra = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, vastago, 16), nucleoMat);
+        barra.rotation.z = -Math.PI / 2;              // eje largo sobre +X local
+        barra.position.x = -LADO_PUNTA / 2;
         g.add(barra);
 
-        const cono = new THREE.Mesh(new THREE.ConeGeometry(0.075, punta, 16), nucleoMat);
+        // Remate redondeado en la cola
+        const cap = new THREE.Mesh(new THREE.SphereGeometry(0.042, 16, 16), nucleoMat);
+        cap.position.x = -LADO_LARGO / 2;
+        g.add(cap);
+
+        const cono = new THREE.Mesh(new THREE.ConeGeometry(0.082, LADO_PUNTA, 18), nucleoMat);
         cono.rotation.z = -Math.PI / 2;
         cono.position.x = vastago / 2;
         g.add(cono);
@@ -758,20 +754,23 @@ function initialize3DOctagon() {
             color: cfg.hex, transparent: true, opacity: 0.20, depthWrite: false
         });
         const aura = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.085, 0.085, (vastago + punta) * 1.05, 14), auraMat);
+            new THREE.CylinderGeometry(0.088, 0.088, LADO_LARGO * 1.05, 16), auraMat);
         aura.rotation.z = Math.PI / 2;
         g.add(aura);
 
         g.position.copy(pos);
-        // +X local apunta hacia afuera, en la dirección del vértice
+        // +X local apunta al vértice de destino
         g.rotation.y = -ang;
 
+        const dest = verticeDestinoLado(cfg, i);
         g.userData = {
             tipo: 'lado', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
             nucleoMat, auraMat, aura, activo: false,
             colorNormal: COL.marca, opacidadNormal: 1, auraNormal: 0.20,
             titulo: datos.nombre,
-            detalle: datos.rol + ' · ' + cfg.vertices[i].personaje
+            detalle: cfg.id === 2
+                ? 'Mercado del ' + datos.rol + ' · ' + cfg.vertices[dest].personaje
+                : 'Hacia ' + (dest + 1) + ' · ' + cfg.vertices[dest].nombre
         };
         return g;
     }
@@ -1106,11 +1105,10 @@ function initialize3DOctagon() {
             const p = piezaDe(oct, tipo, idx);
             if (!p) return;
             // El punto medio del cruce cae sobre la bisectriz del lado idx+1; el
-            // mercado del Cerebral sale del vértice, no del centro de la arista.
+            // lado, corrido hacia el vértice al que apunta.
             const ang = tipo === 'vertice' ? anguloVertice(idx)
                 : tipo === 'proceso' ? anguloLado(idx + 1)
-                : oct === 2 ? anguloVertice(idx)
-                : anguloLado(idx);
+                : geometriaLado(OCTAGRAMAS[oct], idx).angCentro;
             // Deja el elemento al frente (dirección +Z), por la vuelta más corta
             state.targetRY = masCercano(ang - Math.PI / 2, state.targetRY);
             state.targetRX = tipo === 'proceso' ? 0.62 : (oct === 1 ? 0.55 : 0.34);
@@ -1186,9 +1184,9 @@ function infoInicial() {
             valor: ocho corren por los lados y ocho cruzan el octágono, y los dieciséis se
             agrupan en <strong>cuatro ciclos cerrados</strong>.</p>
             <p>El <strong style="color:#2563eb">Octagrama Cerebral</strong> reúne a quienes
-            deciden (vértices). De cada uno sale una flecha hacia el <strong>mercado</strong> en
-            el que interviene, y los cruces no son procesos sino <strong>relaciones</strong>
-            entre las personas, formales o informales, que conectan a todos con todos.</p>
+            deciden (vértices). Cada <strong>mercado</strong> apunta al gerente que interviene
+            en él, y los cruces no son procesos sino <strong>relaciones</strong> entre las
+            personas, formales o informales, que conectan a todos con todos.</p>
             <p>Las líneas anaranjadas que van de un octagrama al otro son los procesos de
             aprendizaje que desarrollan las competencias individuales de cada gerente.</p>
             <p class="oct-info-cta">Gire el modelo y seleccione cualquier elemento, o elíjalo

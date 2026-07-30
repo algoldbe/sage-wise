@@ -244,13 +244,12 @@ header {
     transform: rotate(-35deg);
 }
 
-/* Único icono en color: el anaranjado de las flechas que unen los octagramas */
 .oct-leyenda-icono.aprendizaje::before {
     width: 4px;
     height: 15px;
     border-radius: 2px;
-    background: linear-gradient(#e67e22, #e67e22) center / 4px 15px no-repeat;
-    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.18);
+    background: #16233d;
+    box-shadow: 0 0 0 3px rgba(22, 35, 61, 0.16);
 }
 
 /* ═══ Modelo del Octagrama ═══════════════════════════════════════════════ */
