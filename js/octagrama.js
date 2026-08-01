@@ -628,7 +628,6 @@ function initialize3DOctagon() {
     };
 
     const piezas = [];      // elementos interactivos (vértices y lados)
-    const ruedas = [];      // círculos de perfil caracterológico (sólo Cerebral)
 
     // ── Materiales base ──────────────────────────────────────────────────────
     const COL = {
@@ -735,10 +734,11 @@ function initialize3DOctagon() {
             grupo.add(g);
             piezas.push(g);
 
-            // Insignia numérica siempre legible
+            // Insignia numérica siempre legible. En el Cerebral se corre hacia
+            // afuera para librar el círculo del perfil, que es mucho más ancho.
+            const r = OCT_R + (cfg.id === 2 ? 0.32 : 0.17);
             const badge = crearInsignia(String(v.n), cfg.color, '#ffffff');
-            badge.position.set(Math.cos(a) * (OCT_R + 0.17), yTop + 0.08, Math.sin(a) * (OCT_R + 0.17));
-            badge.userData.base = badge.position.clone();
+            badge.position.set(Math.cos(a) * r, yTop + 0.08, Math.sin(a) * r);
             grupo.add(badge);
             g.userData.badge = badge;
         });
@@ -764,7 +764,7 @@ function initialize3DOctagon() {
         titulo.position.set(0, yTop + 0.20, 0);
         grupo.add(titulo);
 
-        return { grupo, placaMat };
+        return { grupo, placaMat, titulo, yTitulo3D: yTop + 0.20, yTitulo2D: yTop + 0.03 };
     }
 
     // ── Helpers de geometría ─────────────────────────────────────────────────
@@ -797,14 +797,14 @@ function initialize3DOctagon() {
         g.add(aura);
 
         // En el Cerebral, el círculo de perfil es mucho más ancho que el núcleo.
-        // Esta esfera invisible hace que todo el círculo sea sensible al ratón,
-        // pero sólo cuenta en la vista plana, que es donde se ve.
+        // Esta esfera invisible hace que casi todo el círculo sea sensible al
+        // ratón. No se agranda más porque la punta de la flecha del mercado
+        // llega hasta muy cerca del vértice y le quitaría sus clics.
         if (cfg.id === 2) {
             const zona = new THREE.Mesh(
-                new THREE.SphereGeometry(0.20, 12, 12),
+                new THREE.SphereGeometry(0.18, 12, 12),
                 new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
             );
-            zona.userData.solo2d = true;
             g.add(zona);
         }
 
@@ -817,13 +817,13 @@ function initialize3DOctagon() {
             titulo: cfg.id === 2 ? datos.nombre + ' · ' + datos.personaje : datos.nombre
         };
 
-        // Perfil caracterológico: sólo en el Cerebral y sólo en la vista plana
+        // Perfil caracterológico: sólo lo llevan los vértices del Cerebral, y se
+        // ve en las dos vistas. Como es sprite, siempre mira a la cámara.
         if (cfg.id === 2) {
             const rueda = crearRuedaPerfil(datos, cfg);
-            rueda.position.set(0, 0.12, 0);   // queda de frente cuando el modelo se aplana
+            rueda.position.set(0, 0.12, 0);   // apenas despegado de la placa
             g.add(rueda);
             g.userData.rueda = rueda;
-            ruedas.push(rueda);
         }
         return g;
     }
@@ -964,12 +964,13 @@ function initialize3DOctagon() {
 
         const tex = new THREE.CanvasTexture(cv);
         tex.minFilter = THREE.LinearFilter;
+        // Con `depthTest` puesto, el círculo se deja tapar por lo que quede
+        // delante: en la maqueta no flota por encima del otro octagrama.
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: tex, transparent: true, opacity: 0, depthTest: false, depthWrite: false
+            map: tex, transparent: true, depthTest: true, depthWrite: false
         }));
         sp.scale.set(0.42, 0.42, 1);
         sp.renderOrder = 6;
-        sp.visible = false;
         return sp;
     }
 
@@ -1128,19 +1129,16 @@ function initialize3DOctagon() {
             aprendizaje.forEach(b => { b.visible = opAp > 0.01; });
         }
 
-        // Los círculos de perfil aparecen al final del giro, ya con el plano de frente
-        const opRueda = Math.max(0, Math.min(1, (m - 0.55) / 0.4));
-        ruedas.forEach(r => {
-            r.material.opacity = opRueda;
-            r.visible = opRueda > 0.02;
-        });
-
-        // El número del vértice se corre hacia afuera para no montarse sobre el
-        // círculo del perfil, que es mucho más ancho que el núcleo.
-        piezas.forEach(p => {
-            const u = p.userData;
-            if (u.oct !== 2 || u.tipo !== 'vertice' || !u.badge) return;
-            u.badge.position.copy(u.badge.userData.base).multiplyScalar(1 + 0.085 * m);
+        /* El título va flotando sobre la placa en la maqueta, que es lo que le
+           da relieve. Puesto en plano ese vuelo lo descentra: el nombre queda
+           más cerca de la cámara que su placa y, como cada octagrama está fuera
+           del eje, la perspectiva lo corre hacia afuera. Al aplanar se baja casi
+           hasta la placa y se corre hacia adentro lo que la perspectiva lo va a
+           correr hacia afuera, de modo que caiga clavado en el centro. */
+        [octValor, octCerebral].forEach(o => {
+            const y0 = o.yTitulo3D - (o.yTitulo3D - o.yTitulo2D) * m;
+            const k = m * y0 / Math.max(1, state.zoom);
+            o.titulo.position.set(-o.grupo.position.x * k, y0, -o.grupo.position.z * k);
         });
     }
 
@@ -1201,10 +1199,8 @@ function initialize3DOctagon() {
 
     function mallasInteractivas() {
         const out = [];
-        const plano = state.mezcla > 0.5;
         piezas.forEach(p => p.children.forEach(ch => {
             if (!ch.isMesh) return;
-            if (ch.userData.solo2d && !plano) return;   // zona ampliada del círculo de perfil
             ch.userData.pieza = p;
             out.push(ch);
         }));
@@ -1285,6 +1281,10 @@ function initialize3DOctagon() {
     }
 
     container.addEventListener('pointerdown', ev => {
+        // Los mandos que van encima del lienzo se atienden solos. Si no se sale
+        // aquí, el lienzo captura el puntero para el arrastre y el clic del
+        // botón nunca llega a dispararse.
+        if (ev.target.closest && ev.target.closest('.oct-modo')) return;
         state.drag = true;
         state.lastX = ev.clientX; state.lastY = ev.clientY;
         state.movio = false;
@@ -1394,6 +1394,13 @@ function initialize3DOctagon() {
     }
 
     botonesModo.forEach(b => b.addEventListener('click', () => fijarModo(b.dataset.modo)));
+
+    // Doble seguro: nada de lo que pase sobre el conmutador llega al lienzo
+    const mandoModo = container.querySelector('.oct-modo');
+    if (mandoModo) {
+        ['pointerdown', 'pointerup', 'wheel'].forEach(t =>
+            mandoModo.addEventListener(t, ev => ev.stopPropagation()));
+    }
 
     octaViewer = {
         modo: fijarModo,
@@ -1601,7 +1608,7 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
             </div>
             <div class="oct-caja" style="border-color:${cfg.color}22;">
                 <div class="oct-caja-tit">Perfil caracterológico: las cuatro letras de
-                    <b>${d.mbti}</b> son los cuatro cuadrantes de su círculo en la vista plana</div>
+                    <b>${d.mbti}</b> son los cuatro cuadrantes de su círculo en el modelo</div>
                 ${d.qa.map((q, k) => `
                     <div class="oct-qa cuad">
                         <i style="background:${cuads[k].color}; color:${tintaSobre(cuads[k].color)};"
