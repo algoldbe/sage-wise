@@ -621,6 +621,7 @@ function initialize3DOctagon() {
         panX: 0, panY: 0, targetPanX: 0, targetPanY: 0,
         modo: '3d',
         mezcla: 0, targetMezcla: 0,     // 0 = maqueta 3D, 1 = diagrama plano
+        volteo: 0, targetVolteo: 0,     // 0 = piezas arriba, 1 = piezas abajo
         guard3d: null,                  // desde dónde se dejó el 3D al aplanar
         autoRotate: false,
         hovered: null,
@@ -628,6 +629,7 @@ function initialize3DOctagon() {
     };
 
     const piezas = [];      // elementos interactivos (vértices y lados)
+    const ruedas = [];      // círculos de perfil caracterológico (sólo Cerebral)
 
     // ── Materiales base ──────────────────────────────────────────────────────
     const COL = {
@@ -818,12 +820,17 @@ function initialize3DOctagon() {
         };
 
         // Perfil caracterológico: sólo lo llevan los vértices del Cerebral, y se
-        // ve en las dos vistas. Como es sprite, siempre mira a la cámara.
+        // ve en las dos vistas. Como es sprite, siempre mira a la cámara. Va
+        // clavado en el vértice: el bucle de animación lo despega hacia la
+        // cámara lo justo para que el núcleo no lo perfore, de modo que en
+        // pantalla queda siempre centrado en su vértice, se mire desde donde se
+        // mire. (Antes se despegaba hacia arriba y en la maqueta se veía
+        // corrido, con las letras perdidas detrás del canto.)
         if (cfg.id === 2) {
             const rueda = crearRuedaPerfil(datos, cfg);
-            rueda.position.set(0, 0.12, 0);   // apenas despegado de la placa
             g.add(rueda);
             g.userData.rueda = rueda;
+            ruedas.push(rueda);
         }
         return g;
     }
@@ -1119,11 +1126,43 @@ function initialize3DOctagon() {
         zoom2D = Math.max(5.2, Math.min(18, zoom2D));
     }
 
+    /* ─── El volteo: las piezas siempre en la cara que se está mirando ────────
+       Las piezas de cada octagrama van montadas sobre la cara de arriba de su
+       placa. Al girar el modelo para ver una placa por debajo, la placa misma
+       las tapaba y el octagrama quedaba mudo. Ahora, cuando la cámara cruza el
+       canto, cada octagrama gira media vuelta sobre su propio eje horizontal y
+       sus piezas quedan del lado que se ve.
+
+       Media vuelta sobre X, y no un espejo, es lo que importa: al mirar desde
+       abajo un octagrama volteado se ve exactamente igual que desde arriba sin
+       voltear, con el mismo sentido de giro de los ciclos. Un espejo lo
+       invertiría. Los dos octagramas voltean a la vez, así que sus vértices
+       siguen encontrándose, y como el juego de vértices del octágono es
+       simétrico, las barras de aprendizaje siguen cayendo en su sitio; sólo se
+       desvanecen mientras dura el giro.
+       ---------------------------------------------------------------------- */
+    const ejeCamara = new THREE.Vector3();
+    const giroAux = new THREE.Quaternion();
+    const DESPEGUE_RUEDA = 0.14;      // lo justo para librar el núcleo del vértice
+
+    function aplicarVolteo(f) {
+        const ang = Math.PI * f;
+        octValor.grupo.rotation.x = ang;
+        octCerebral.grupo.rotation.x = ang;
+
+        // Los círculos de perfil se despegan hacia la cámara, no hacia arriba,
+        // para que en pantalla no se corran de su vértice.
+        giroAux.copy(root.quaternion).multiply(octCerebral.grupo.quaternion).invert();
+        ejeCamara.set(0, 0, 1).applyQuaternion(giroAux).multiplyScalar(DESPEGUE_RUEDA);
+        ruedas.forEach(r => r.position.copy(ejeCamara));
+    }
+
     function aplicarAcomodo(m) {
         octValor.grupo.position.lerpVectors(POS3D.valor, POS2D.valor, m);
         octCerebral.grupo.position.lerpVectors(POS3D.cerebral, POS2D.cerebral, m);
 
-        const opAp = 0.5 * Math.max(0, 1 - m * 2.4);
+        // Se apagan al aplanar y también mientras los octagramas dan la vuelta
+        const opAp = 0.5 * Math.max(0, 1 - m * 2.4) * Math.abs(Math.cos(Math.PI * state.volteo));
         aprendizajeMat.opacity = opAp;
         if (aprendizaje[0].visible !== opAp > 0.01) {
             aprendizaje.forEach(b => { b.visible = opAp > 0.01; });
@@ -1454,11 +1493,20 @@ function initialize3DOctagon() {
         state.panX += (state.targetPanX - state.panX) * 0.12;
         state.panY += (state.targetPanY - state.panY) * 0.12;
 
+        // ¿Qué cara de las placas está mirando la cámara? La normal de la placa
+        // apunta hacia el objetivo cuando sen(rx) es positivo. La franja muerta
+        // evita que el volteo tiemble justo cuando el modelo queda de canto.
+        const cara = Math.sin(state.rx);
+        if (cara < -0.04) state.targetVolteo = 1;
+        else if (cara > 0.04) state.targetVolteo = 0;
+        state.volteo += (state.targetVolteo - state.volteo) * 0.09;
+
         root.rotation.x = state.rx;
         root.rotation.y = state.ry;
         root.position.set(state.panX, state.panY, 0);
         camera.position.z = state.zoom;
 
+        aplicarVolteo(state.volteo);
         aplicarAcomodo(state.mezcla);
 
         // Pulso sutil en las auras no resaltadas
