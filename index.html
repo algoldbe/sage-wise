@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260730c" rel="stylesheet">
+    <link href="css/styles.css?v=20260731a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -53,10 +53,6 @@
                             <i class="fas fa-circle-play"></i>Ver el video del Modelo Octagramal
                             <span>8:28 min</span>
                         </a>
-                        <a href="#" class="enlace-recurso" onclick="abrirMedio('audio'); return false;">
-                            <i class="fas fa-headphones"></i>Escuchar «Física y ficciones del Octagrama»
-                            <span>25:32 min</span>
-                        </a>
                     </div>
 
                     <div class="oct-leyenda">
@@ -90,6 +86,13 @@
                             </div>
                         </div>
                         <div class="oct-leyenda-item">
+                            <span class="oct-leyenda-icono perfil"></span>
+                            <div>
+                                <strong>Perfiles caracterológicos</strong>
+                                <em>En la vista 2D, el círculo de cada vértice del Cerebral se parte en cuatro cuadrantes, uno por rasgo: de dónde saca su energía, con qué elementos resuelve, qué resultados valora y qué modo de vivir prefiere. Cada gerente tiene su propia combinación.</em>
+                            </div>
+                        </div>
+                        <div class="oct-leyenda-item">
                             <span class="oct-leyenda-icono aprendizaje"></span>
                             <div>
                                 <strong>Aprendizaje</strong>
@@ -106,11 +109,17 @@
                         </div>
                         <div class="octagon-canvas" id="octagon-container">
                             <!-- El modelo 3D se dibuja aquí (js/octagrama.js) -->
+                            <div class="oct-modo" role="group" aria-label="Vista del modelo">
+                                <button type="button" class="oct-modo-btn activo" data-modo="3d" aria-pressed="true"
+                                    title="Maqueta: los dos octagramas apilados, se gira con el ratón">3D</button>
+                                <button type="button" class="oct-modo-btn" data-modo="2d" aria-pressed="false"
+                                    title="Diagrama plano: los dos octagramas lado a lado">2D</button>
+                            </div>
                             <span class="oct-rotulo valor">Octagrama de Valor</span>
                             <span class="oct-rotulo cerebral">Octagrama Cerebral</span>
                             <div class="octagon-hint">
                                 <i class="fas fa-hand-pointer"></i>
-                                Arrastre para girar · clic en cualquier elemento
+                                <span class="octagon-hint-txt">Arrastre para girar · clic en cualquier elemento</span>
                             </div>
                         </div>
                     </div>
@@ -149,6 +158,26 @@
                             onmouseover="this.style.background='#d35400'" onmouseout="this.style.background='#e67e22'">
                             <i class="fas fa-external-link-alt"></i> Abrir Rentímetro
                         </a>
+                    </div>
+                    <!-- Audios: son una serie, así que la tarjeta es una lista que crece -->
+                    <div class="recurso-audios">
+                        <div class="recurso-audios-cab">
+                            <i class="fas fa-headphones"></i>
+                            <h3>Conversaciones sobre el modelo</h3>
+                            <span class="recurso-audios-tag">SERIE</span>
+                        </div>
+                        <p class="recurso-audios-desc">Charlas de fondo sobre los temas del modelo
+                        octagramal, para escuchar con calma. Se irán agregando nuevos episodios.</p>
+
+                        <ul class="recurso-audios-lista">
+                            <li>
+                                <button type="button" onclick="abrirMedio('audio')">
+                                    <i class="fas fa-circle-play"></i>
+                                    <span class="recurso-audios-tit">Física y ficciones del Octagrama</span>
+                                    <span class="recurso-audios-dur">25:32 min</span>
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                     <!-- Más recursos se agregarán aquí -->
                 </div>
@@ -568,9 +597,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260730c"></script>
-    <script src="js/octagrama.js?v=20260730c"></script>
-    <script src="js/main.js?v=20260730c"></script>
+    <script src="js/relatorias.js?v=20260731a"></script>
+    <script src="js/octagrama.js?v=20260731a"></script>
+    <script src="js/main.js?v=20260731a"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">

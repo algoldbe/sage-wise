@@ -244,6 +244,17 @@ header {
     transform: rotate(-35deg);
 }
 
+/* Único icono de la leyenda con color propio: aquí el color es justamente lo
+   que hay que explicar, porque cada cuadrante lleva el suyo. */
+.oct-leyenda-icono.perfil::before {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: conic-gradient(from -90deg,
+        #2f9e8f 0 25%, #7b5ea7 0 50%, #4f9d5d 0 75%, #e07b39 0 100%);
+    box-shadow: 0 0 0 1.5px #fff inset;
+}
+
 .oct-leyenda-icono.aprendizaje::before {
     width: 4px;
     height: 15px;
@@ -352,8 +363,51 @@ header {
     transform: rotate(45deg);
 }
 
-.oct-rotulo.valor { top: 14px; background: #c0392b; }
+.oct-rotulo.valor { top: 14px; left: 104px; background: #c0392b; }
 .oct-rotulo.cerebral { bottom: 14px; background: #2563eb; }
+
+/* En plano los dos octagramas van lado a lado, así que el rótulo del Cerebral
+   sube a la derecha, sobre el suyo. Si el recuadro es angosto se apilan, y
+   entonces vuelve abajo. */
+.modo-2d .oct-rotulo.cerebral { top: 14px; bottom: auto; left: auto; right: 14px; }
+.modo-2d.plano-columna .oct-rotulo.cerebral { top: auto; bottom: 14px; left: 14px; right: auto; }
+
+/* ═══ Conmutador de vista 3D / 2D ═════════════════════════════════════════ */
+.oct-modo {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 12;
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 33, 62, 0.1);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px -6px rgba(15, 33, 62, 0.55);
+}
+
+.oct-modo-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.24rem 0.66rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6b7686;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.oct-modo-btn:hover { color: #16233d; background: rgba(15, 33, 62, 0.06); }
+
+.oct-modo-btn.activo {
+    background: var(--primary-color, #1a73e8);
+    color: #fff;
+}
+
 
 /* Rótulo que sigue al cursor sobre el modelo */
 .oct-tip {
@@ -691,6 +745,27 @@ header {
 .oct-qa:last-of-type { border-bottom: none; }
 .oct-qa span { font-size: 0.8rem; color: var(--light-text); }
 .oct-qa b { font-size: 0.89rem; color: #16233d; font-weight: 600; }
+
+/* Cada respuesta con la letra y el color del cuadrante que le toca en el círculo */
+.oct-qa.cuad {
+    display: grid;
+    grid-template-columns: 27px 1fr;
+    column-gap: 0.65rem;
+    align-items: center;
+}
+
+.oct-qa.cuad i {
+    grid-row: span 2;
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.82rem;
+}
 
 .oct-nota {
     margin-top: 0.6rem;
@@ -1068,7 +1143,12 @@ header {
     .octagon-title-sub { white-space: normal; font-size: 0.66rem; }
     .octagon-hint { font-size: 0.7rem; padding: 6px 9px; left: 8px; right: 8px; bottom: 8px; justify-content: center; }
     .oct-rotulo { font-size: 0.62rem; padding: 0.24rem 0.6rem; left: 8px; }
+    .oct-rotulo.valor { left: 84px; }
     .oct-rotulo.cerebral { bottom: 46px; }
+    .modo-2d .oct-rotulo.cerebral { right: 8px; }
+    .modo-2d.plano-columna .oct-rotulo.cerebral { left: 8px; bottom: 46px; }
+    .oct-modo { top: 8px; left: 8px; }
+    .oct-modo-btn { padding: 0.2rem 0.55rem; font-size: 0.68rem; }
     .octagon-info-panel { padding: 1.2rem 1.1rem; }
 }
 
@@ -1103,6 +1183,89 @@ header {
     padding: 2rem;
     max-width: 1000px;
     margin: 0 auto;
+}
+
+/* ═══ Recursos: la serie de audios ════════════════════════════════════════ */
+.recurso-audios {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #f5f8ff, #eaf1fe);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-color, #1a73e8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.recurso-audios-cab {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.recurso-audios-cab i { color: var(--primary-color, #1a73e8); font-size: 1.2rem; }
+.recurso-audios-cab h3 { margin: 0; color: #14459c; }
+
+.recurso-audios-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: var(--primary-color, #1a73e8);
+    color: #fff;
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+}
+
+.recurso-audios-desc {
+    color: #5f6368;
+    font-size: 0.9rem;
+    margin-bottom: 0.9rem;
+}
+
+.recurso-audios-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.recurso-audios-lista button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.9rem;
+    background: #fff;
+    border: 1px solid rgba(26, 115, 232, 0.18);
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #16233d;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.recurso-audios-lista button:hover {
+    border-color: var(--primary-color, #1a73e8);
+    box-shadow: 0 6px 16px -10px rgba(15, 33, 62, 0.8);
+}
+
+.recurso-audios-lista i { color: var(--primary-color, #1a73e8); font-size: 1.05rem; }
+.recurso-audios-tit { font-weight: 600; }
+
+.recurso-audios-dur {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #8b96a5;
+    white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+    .recurso-audios { padding: 1rem 1.1rem; }
+    .recurso-audios-cab { flex-wrap: wrap; gap: 0.5rem; }
+    .recurso-audios-lista button { font-size: 0.86rem; padding: 0.55rem 0.7rem; }
+    .recurso-audios-dur { margin-left: 0; width: 100%; }
 }
 
 .glossary-search-wrapper {

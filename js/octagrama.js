@@ -77,6 +77,68 @@ const mbtiInfo = {
     }
 };
 
+/* ─── Perfiles caracterológicos: el círculo partido en cuadrantes ─────────────
+   Guillermo pidió que en el plano del Octagrama Cerebral el círculo de cada
+   vértice se divida en cuadrantes coloreados, uno por cada rasgo del perfil
+   caracterológico, para que los ocho perfiles se distingan de un vistazo.
+
+   Cada cuadrante corresponde a una de las cuatro preguntas que ya trae cada
+   gerente en su ficha (`qa`), y toma color según su respuesta. Las cuatro
+   letras salen del código de cuatro caracteres del perfil: la primera dice de
+   dónde saca su energía, la segunda con qué elementos resuelve, la tercera qué
+   resultados valora y la cuarta qué modo de vivir prefiere.
+
+   Se leen en el sentido de las manecillas empezando arriba a la izquierda, en
+   el mismo orden en que aparecen las preguntas en la ficha.
+   -------------------------------------------------------------------------- */
+const CUADRANTES = [
+    {
+        clave: 'Energía', pregunta: '¿De dónde extrae su energía?',
+        polos: {
+            E: { nombre: 'Exterior', color: '#e07b39' },
+            I: { nombre: 'Interior', color: '#f3c9a6' }
+        }
+    },
+    {
+        clave: 'Elementos', pregunta: '¿Con qué elementos resuelve?',
+        polos: {
+            S: { nombre: 'Datos duros', color: '#2f9e8f' },
+            N: { nombre: 'Ideas', color: '#a3d9d1' }
+        }
+    },
+    {
+        clave: 'Resultados', pregunta: '¿Qué resultados valora?',
+        polos: {
+            T: { nombre: 'Racionalidad', color: '#7b5ea7' },
+            F: { nombre: 'Empatía', color: '#c8b6e2' }
+        }
+    },
+    {
+        clave: 'Modo de vivir', pregunta: '¿Qué modo de vivir prefiere?',
+        polos: {
+            J: { nombre: 'Orden', color: '#4f9d5d' },
+            P: { nombre: 'Apertura', color: '#aed6b4' }
+        }
+    }
+];
+
+// Los cuatro cuadrantes de un gerente, ya resueltos a letra, nombre y color
+function cuadrantesDe(datos) {
+    const codigo = (datos && datos.mbti) || '';
+    return CUADRANTES.map(function (c, k) {
+        const letra = codigo.charAt(k);
+        const polo = c.polos[letra] || { nombre: '', color: '#d5dbe4' };
+        return { letra: letra, clave: c.clave, pregunta: c.pregunta, nombre: polo.nombre, color: polo.color };
+    });
+}
+
+// Tinta legible sobre un fondo dado (los polos claros piden texto oscuro)
+function tintaSobre(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const lum = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+    return lum > 0.62 ? '#2b3a4d' : '#ffffff';
+}
+
 // ─── Datos del modelo ────────────────────────────────────────────────────────
 const OCTAGRAMAS = {
     1: {
@@ -538,18 +600,35 @@ function initialize3DOctagon() {
         zoom: 6.9
     };
 
+    /* ─── La vista plana ──────────────────────────────────────────────────────
+       En 2D el modelo deja de ser una maqueta y se lee como diagrama: los dos
+       octagramas se separan y quedan uno junto al otro sobre el mismo plano,
+       Valor a la izquierda y Cerebral a la derecha, cada uno con todas sus
+       piezas. La cámara mira la cara del plano de frente (rx = 90°) y el giro
+       propio se fija en 0, que es donde el lado 1 queda vertical a la derecha,
+       igual que en los diagramas del modelo.
+       En un recuadro angosto no caben lado a lado, así que se acomodan uno
+       encima del otro.
+       ---------------------------------------------------------------------- */
+    const VISTA2D = { rx: Math.PI / 2, ry: 0, sep: 2.0 };
+
     // Estado de interacción
     const state = {
         drag: false, lastX: 0, lastY: 0,
         targetRX: VISTA.rx, targetRY: VISTA.ry,
         rx: VISTA.rx, ry: VISTA.ry,
         zoom: VISTA.zoom, targetZoom: VISTA.zoom,
+        panX: 0, panY: 0, targetPanX: 0, targetPanY: 0,
+        modo: '3d',
+        mezcla: 0, targetMezcla: 0,     // 0 = maqueta 3D, 1 = diagrama plano
+        guard3d: null,                  // desde dónde se dejó el 3D al aplanar
         autoRotate: false,
         hovered: null,
         seleccionado: null
     };
 
     const piezas = [];      // elementos interactivos (vértices y lados)
+    const ruedas = [];      // círculos de perfil caracterológico (sólo Cerebral)
 
     // ── Materiales base ──────────────────────────────────────────────────────
     const COL = {
@@ -659,6 +738,7 @@ function initialize3DOctagon() {
             // Insignia numérica siempre legible
             const badge = crearInsignia(String(v.n), cfg.color, '#ffffff');
             badge.position.set(Math.cos(a) * (OCT_R + 0.17), yTop + 0.08, Math.sin(a) * (OCT_R + 0.17));
+            badge.userData.base = badge.position.clone();
             grupo.add(badge);
             g.userData.badge = badge;
         });
@@ -716,6 +796,18 @@ function initialize3DOctagon() {
         const aura = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 20), auraMat);
         g.add(aura);
 
+        // En el Cerebral, el círculo de perfil es mucho más ancho que el núcleo.
+        // Esta esfera invisible hace que todo el círculo sea sensible al ratón,
+        // pero sólo cuenta en la vista plana, que es donde se ve.
+        if (cfg.id === 2) {
+            const zona = new THREE.Mesh(
+                new THREE.SphereGeometry(0.20, 12, 12),
+                new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+            );
+            zona.userData.solo2d = true;
+            g.add(zona);
+        }
+
         g.position.copy(pos);
         g.userData = {
             tipo: 'vertice', idx: i, oct: cfg.id, datos: datos, cfg: cfg,
@@ -724,6 +816,15 @@ function initialize3DOctagon() {
             auraNormal: 0.12, auraHover: 0.30, auraActivo: 0.26,
             titulo: cfg.id === 2 ? datos.nombre + ' · ' + datos.personaje : datos.nombre
         };
+
+        // Perfil caracterológico: sólo en el Cerebral y sólo en la vista plana
+        if (cfg.id === 2) {
+            const rueda = crearRuedaPerfil(datos, cfg);
+            rueda.position.set(0, 0.12, 0);   // queda de frente cuando el modelo se aplana
+            g.add(rueda);
+            g.userData.rueda = rueda;
+            ruedas.push(rueda);
+        }
         return g;
     }
 
@@ -819,6 +920,59 @@ function initialize3DOctagon() {
     }
 
     // ── Sprites de texto ─────────────────────────────────────────────────────
+    /* Círculo del perfil caracterológico: cuatro cuadrantes coloreados, uno por
+       rasgo, con la letra de cada polo. Sólo lo llevan los vértices del
+       Cerebral y sólo se ve en la vista plana, donde el modelo se lee como
+       diagrama. Va como sprite, así siempre mira a la cámara. */
+    function crearRuedaPerfil(datos, cfg) {
+        const S = 256, k = S / 2, R = k - 12;
+        const cv = document.createElement('canvas');
+        cv.width = cv.height = S;
+        const c = cv.getContext('2d');
+
+        // Arriba izquierda, arriba derecha, abajo derecha, abajo izquierda:
+        // el mismo orden en que se leen las cuatro preguntas de la ficha.
+        const desde = [Math.PI, -Math.PI / 2, 0, Math.PI / 2];
+        cuadrantesDe(datos).forEach(function (q, i) {
+            c.beginPath();
+            c.moveTo(k, k);
+            c.arc(k, k, R, desde[i], desde[i] + Math.PI / 2);
+            c.closePath();
+            c.fillStyle = q.color;
+            c.fill();
+
+            const a = desde[i] + Math.PI / 4;
+            c.font = '700 46px "Segoe UI", Arial, sans-serif';
+            c.textAlign = 'center';
+            c.textBaseline = 'middle';
+            c.fillStyle = tintaSobre(q.color);
+            c.fillText(q.letra, k + Math.cos(a) * R * 0.56, k + Math.sin(a) * R * 0.56);
+        });
+
+        c.strokeStyle = 'rgba(255,255,255,0.92)';
+        c.lineWidth = 7;
+        c.beginPath();
+        c.moveTo(k - R, k); c.lineTo(k + R, k);
+        c.moveTo(k, k - R); c.lineTo(k, k + R);
+        c.stroke();
+
+        c.strokeStyle = cfg.color;
+        c.lineWidth = 11;
+        c.beginPath();
+        c.arc(k, k, R - 4, 0, Math.PI * 2);
+        c.stroke();
+
+        const tex = new THREE.CanvasTexture(cv);
+        tex.minFilter = THREE.LinearFilter;
+        const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+            map: tex, transparent: true, opacity: 0, depthTest: false, depthWrite: false
+        }));
+        sp.scale.set(0.42, 0.42, 1);
+        sp.renderOrder = 6;
+        sp.visible = false;
+        return sp;
+    }
+
     function crearInsignia(texto, fondo, tinta, forma) {
         const S = 128;
         const cv = document.createElement('canvas');
@@ -914,6 +1068,7 @@ function initialize3DOctagon() {
     });
     const yArriba = OCT_SEP - OCT_ESPESOR / 2;
     const yAbajo = -OCT_SEP + OCT_ESPESOR / 2;
+    const aprendizaje = [];
     for (let i = 0; i < 8; i++) {
         const a = anguloVertice(i);
         const x = Math.cos(a) * OCT_R, z = Math.sin(a) * OCT_R;
@@ -921,7 +1076,81 @@ function initialize3DOctagon() {
             new THREE.CylinderGeometry(0.014, 0.014, yArriba - yAbajo, 6), aprendizajeMat);
         barra.position.set(x, (yArriba + yAbajo) / 2, z);
         root.add(barra);
+        aprendizaje.push(barra);
     }
+
+    /* ─── Acomodo de los dos octagramas según la vista ────────────────────────
+       En 3D van apilados, Valor arriba y Cerebral abajo, unidos por las barras
+       de aprendizaje. Al aplanar se separan sobre el mismo plano y las barras
+       se desvanecen, porque irían de un dibujo al otro cruzando todo.
+       ---------------------------------------------------------------------- */
+    const TAN_MEDIO_FOV = Math.tan(camera.fov * Math.PI / 360);
+    // Radio que ocupa un octagrama con lo que le sobresale: la insignia del
+    // vértice, ya corrida, y el círculo del perfil.
+    const R_UTIL = OCT_R + 0.36;
+
+    const POS3D = {
+        valor: new THREE.Vector3(0, OCT_SEP, 0),
+        cerebral: new THREE.Vector3(0, -OCT_SEP, 0)
+    };
+    const POS2D = {
+        valor: new THREE.Vector3(-VISTA2D.sep, 0, 0),
+        cerebral: new THREE.Vector3(VISTA2D.sep, 0, 0)
+    };
+    let zoom2D = 8.6;      // lo recalcula redimensionar() según la forma del recuadro
+
+    // Con rx = 90° y ry = 0, la X del modelo cae horizontal en pantalla y la Z
+    // vertical e invertida; por eso la columna pone a Valor en z negativa.
+    function acomodar2D(aspect) {
+        const t = TAN_MEDIO_FOV;
+        container.classList.toggle('plano-columna', aspect < 1.05);
+        if (aspect >= 1.05) {                       // recuadro ancho: lado a lado
+            const sep = VISTA2D.sep;
+            POS2D.valor.set(-sep, 0, 0);
+            POS2D.cerebral.set(sep, 0, 0);
+            zoom2D = Math.max((sep + R_UTIL) / (t * aspect), R_UTIL / t) * 1.06;
+        } else {                                    // recuadro angosto: en columna
+            const sep = 1.95;
+            POS2D.valor.set(0, 0, -sep);
+            POS2D.cerebral.set(0, 0, sep);
+            zoom2D = Math.max((sep + R_UTIL) / t, R_UTIL / (t * aspect)) * 1.06;
+        }
+        zoom2D = Math.max(5.2, Math.min(18, zoom2D));
+    }
+
+    function aplicarAcomodo(m) {
+        octValor.grupo.position.lerpVectors(POS3D.valor, POS2D.valor, m);
+        octCerebral.grupo.position.lerpVectors(POS3D.cerebral, POS2D.cerebral, m);
+
+        const opAp = 0.5 * Math.max(0, 1 - m * 2.4);
+        aprendizajeMat.opacity = opAp;
+        if (aprendizaje[0].visible !== opAp > 0.01) {
+            aprendizaje.forEach(b => { b.visible = opAp > 0.01; });
+        }
+
+        // Los círculos de perfil aparecen al final del giro, ya con el plano de frente
+        const opRueda = Math.max(0, Math.min(1, (m - 0.55) / 0.4));
+        ruedas.forEach(r => {
+            r.material.opacity = opRueda;
+            r.visible = opRueda > 0.02;
+        });
+
+        // El número del vértice se corre hacia afuera para no montarse sobre el
+        // círculo del perfil, que es mucho más ancho que el núcleo.
+        piezas.forEach(p => {
+            const u = p.userData;
+            if (u.oct !== 2 || u.tipo !== 'vertice' || !u.badge) return;
+            u.badge.position.copy(u.badge.userData.base).multiplyScalar(1 + 0.085 * m);
+        });
+    }
+
+    /* Nota sobre los nombres en la vista plana: se probaron los dieciséis
+       rótulos alrededor de los dos octagramas y no caben. Al hacerles lugar,
+       cada dibujo se encoge a la mitad y los círculos de perfil dejan de
+       leerse, que es justo lo que hay que ver. Se quedan los números, que son
+       el índice del modelo, y el nombre aparece en el rótulo del cursor, en el
+       índice y en la ficha. Si algún día el diagrama ocupa el ancho completo
+       de la página, ahí sí caben. */
 
     // ── Luces ────────────────────────────────────────────────────────────────
     scene.add(new THREE.AmbientLight(0xffffff, 0.72));
@@ -972,8 +1201,12 @@ function initialize3DOctagon() {
 
     function mallasInteractivas() {
         const out = [];
+        const plano = state.mezcla > 0.5;
         piezas.forEach(p => p.children.forEach(ch => {
-            if (ch.isMesh) { ch.userData.pieza = p; out.push(ch); }
+            if (!ch.isMesh) return;
+            if (ch.userData.solo2d && !plano) return;   // zona ampliada del círculo de perfil
+            ch.userData.pieza = p;
+            out.push(ch);
         }));
         return out;
     }
@@ -1064,8 +1297,17 @@ function initialize3DOctagon() {
             const dx = ev.clientX - state.lastX;
             const dy = ev.clientY - state.lastY;
             if (Math.abs(dx) + Math.abs(dy) > 3) state.movio = true;
-            state.targetRY += dx * 0.008;
-            state.targetRX = Math.max(-0.25, Math.min(1.15, state.targetRX + dy * 0.006));
+            if (state.modo === '2d') {
+                // Puesto en plano no se gira: se arrastra el diagrama
+                const k = 2 * state.zoom * TAN_MEDIO_FOV / Math.max(1, container.clientHeight);
+                state.targetPanX = Math.max(-4, Math.min(4, state.targetPanX + dx * k));
+                state.targetPanY = Math.max(-4, Math.min(4, state.targetPanY - dy * k));
+            } else {
+                // Giro libre en las dos direcciones: la vuelta completa deja ver
+                // el octagrama de abajo por su propia cara.
+                state.targetRY += dx * 0.008;
+                state.targetRX += dy * 0.006;
+            }
             state.lastX = ev.clientX; state.lastY = ev.clientY;
             state.autoRotate = false;
         }
@@ -1089,7 +1331,9 @@ function initialize3DOctagon() {
 
     container.addEventListener('wheel', ev => {
         ev.preventDefault();
-        state.targetZoom = Math.max(4.2, Math.min(9.5, state.targetZoom + ev.deltaY * 0.0025));
+        const cerca = state.modo === '2d' ? zoom2D * 0.45 : 4.2;
+        const lejos = state.modo === '2d' ? zoom2D * 1.30 : 9.5;
+        state.targetZoom = Math.max(cerca, Math.min(lejos, state.targetZoom + ev.deltaY * 0.0025));
     }, { passive: false });
 
     // ── API pública del visor ────────────────────────────────────────────────
@@ -1106,10 +1350,58 @@ function initialize3DOctagon() {
         return d;
     }
 
+    /* ─── El conmutador 3D / 2D ───────────────────────────────────────────────
+       Una misma escena en dos lecturas: la maqueta, que se gira, y el diagrama
+       plano, que se arrastra. El cambio se anima, no se salta, para que se vea
+       de dónde sale cada cosa.
+       ---------------------------------------------------------------------- */
+    const botonesModo = Array.prototype.slice.call(
+        container.querySelectorAll('.oct-modo-btn'));
+    const pista = container.querySelector('.octagon-hint-txt');
+
+    function fijarModo(m) {
+        if (m === state.modo) return;
+        state.modo = m;
+
+        if (m === '2d') {
+            state.guard3d = { rx: state.targetRX, ry: state.targetRY, zoom: state.targetZoom };
+            state.targetRX = masCercano(VISTA2D.rx, state.rx);
+            state.targetRY = masCercano(VISTA2D.ry, state.ry);
+            state.targetZoom = zoom2D;
+            state.targetMezcla = 1;
+        } else {
+            const g = state.guard3d || VISTA;
+            state.targetRX = masCercano(g.rx, state.rx);
+            state.targetRY = masCercano(g.ry, state.ry);
+            state.targetZoom = g.zoom;
+            state.targetMezcla = 0;
+            state.targetPanX = 0;
+            state.targetPanY = 0;
+        }
+        state.autoRotate = false;
+
+        container.classList.toggle('modo-2d', m === '2d');
+        botonesModo.forEach(b => {
+            const on = b.dataset.modo === m;
+            b.classList.toggle('activo', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (pista) {
+            pista.textContent = m === '2d'
+                ? 'Arrastre para mover · clic en cualquier elemento'
+                : 'Arrastre para girar · clic en cualquier elemento';
+        }
+    }
+
+    botonesModo.forEach(b => b.addEventListener('click', () => fijarModo(b.dataset.modo)));
+
     octaViewer = {
+        modo: fijarModo,
         enfocar(oct, tipo, idx) {
             const p = piezaDe(oct, tipo, idx);
             if (!p) return;
+            // En plano el dibujo ya está de frente: no hay nada que girar
+            if (state.modo === '2d') { seleccionar(p); return; }
             // El punto medio del cruce cae sobre la bisectriz del lado idx+1; el
             // lado, corrido hacia el vértice al que apunta.
             const ang = tipo === 'vertice' ? anguloVertice(idx)
@@ -1127,9 +1419,12 @@ function initialize3DOctagon() {
             if (on) resaltar(p); else normalizar(p);
         },
         reiniciar() {
-            state.targetRX = VISTA.rx;
-            state.targetRY = masCercano(VISTA.ry, state.targetRY);   // vuelta más corta
-            state.targetZoom = VISTA.zoom;
+            const V = state.modo === '2d' ? VISTA2D : VISTA;
+            state.targetRX = masCercano(V.rx, state.targetRX);
+            state.targetRY = masCercano(V.ry, state.targetRY);       // vuelta más corta
+            state.targetZoom = state.modo === '2d' ? zoom2D : VISTA.zoom;
+            state.targetPanX = 0;
+            state.targetPanY = 0;
             state.autoRotate = false;
             if (state.seleccionado) { state.seleccionado.userData.activo = false; normalizar(state.seleccionado); state.seleccionado = null; }
             limpiarIndice();
@@ -1143,15 +1438,21 @@ function initialize3DOctagon() {
         requestAnimationFrame(animar);
         t += 0.016;
 
-        if (state.autoRotate && !state.drag) state.targetRY += 0.0022;
+        if (state.autoRotate && !state.drag && state.modo === '3d') state.targetRY += 0.0022;
 
         state.rx += (state.targetRX - state.rx) * 0.08;
         state.ry += (state.targetRY - state.ry) * 0.08;
         state.zoom += (state.targetZoom - state.zoom) * 0.1;
+        state.mezcla += (state.targetMezcla - state.mezcla) * 0.075;
+        state.panX += (state.targetPanX - state.panX) * 0.12;
+        state.panY += (state.targetPanY - state.panY) * 0.12;
 
         root.rotation.x = state.rx;
         root.rotation.y = state.ry;
+        root.position.set(state.panX, state.panY, 0);
         camera.position.z = state.zoom;
+
+        aplicarAcomodo(state.mezcla);
 
         // Pulso sutil en las auras no resaltadas
         const pulso = 1 + Math.sin(t * 1.6) * 0.03;
@@ -1168,6 +1469,8 @@ function initialize3DOctagon() {
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h, false);
+        acomodar2D(w / h);
+        if (state.modo === '2d') state.targetZoom = zoom2D;
     }
     window.addEventListener('resize', redimensionar);
     redimensionar();
@@ -1284,6 +1587,8 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                 <div class="oct-grad" style="background:${cfg.color}12; color:${cfg.color};">${d.gradiente}</div>
             </div>`;
     } else {
+        // Las cuatro letras del código son los cuatro cuadrantes de su círculo
+        const cuads = cuadrantesDe(d);
         titulo = `${d.nombre} · ${d.personaje}`;
         cuerpo = `
             <div class="oct-sub">${d.cargo}</div>
@@ -1295,8 +1600,15 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                 <span class="oct-chip lisa">Modo de ser: <b>${d.modo}</b></span>
             </div>
             <div class="oct-caja" style="border-color:${cfg.color}22;">
-                ${d.qa.map(q => `<div class="oct-qa"><span>${q[0]}</span><b>${q[1]}</b></div>`).join('')}
-                <div class="oct-nota">E: Empatía · R: Racionalidad</div>
+                <div class="oct-caja-tit">Perfil caracterológico: las cuatro letras de
+                    <b>${d.mbti}</b> son los cuatro cuadrantes de su círculo en la vista plana</div>
+                ${d.qa.map((q, k) => `
+                    <div class="oct-qa cuad">
+                        <i style="background:${cuads[k].color}; color:${tintaSobre(cuads[k].color)};"
+                           title="${cuads[k].clave}: ${cuads[k].nombre}">${cuads[k].letra}</i>
+                        <span>${q[0]}</span><b>${q[1]}</b>
+                    </div>`).join('')}
+                <div class="oct-nota">En la fórmula, E es Empatía y R es Racionalidad.</div>
             </div>`;
     }
 
