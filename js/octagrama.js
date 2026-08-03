@@ -612,6 +612,10 @@ function initialize3DOctagon() {
        ---------------------------------------------------------------------- */
     const VISTA2D = { rx: Math.PI / 2, ry: 0, sep: 2.0 };
 
+    // Tope del cabeceo: de mirar la cara de arriba de frente a mirar la de
+    // abajo, y ni un grado más.
+    const TOPE_RX = Math.PI / 2;
+
     // Estado de interacción
     const state = {
         drag: false, lastX: 0, lastY: 0,
@@ -621,7 +625,7 @@ function initialize3DOctagon() {
         panX: 0, panY: 0, targetPanX: 0, targetPanY: 0,
         modo: '3d',
         mezcla: 0, targetMezcla: 0,     // 0 = maqueta 3D, 1 = diagrama plano
-        volteo: 0, targetVolteo: 0,     // 0 = piezas arriba, 1 = piezas abajo
+        volteo: 0,                      // 0 = piezas arriba, 1 = piezas abajo
         guard3d: null,                  // desde dónde se dejó el 3D al aplanar
         autoRotate: false,
         hovered: null,
@@ -647,6 +651,13 @@ function initialize3DOctagon() {
         root.add(grupo);
 
         const yTop = OCT_ESPESOR / 2;
+
+        /* La carga: todo lo que va apoyado sobre la cara de la placa, en un
+           grupo aparte. La placa y su marco quedan fuera, colgados del grupo
+           del octagrama, y por eso no se mueven nunca de donde los deja el
+           ratón. La carga sí: es la que cambia de cara. Ver aplicarVolteo(). */
+        const carga = new THREE.Group();
+        grupo.add(carga);
 
         // Placa: cilindro de 8 segmentos girado para que el lado 1 quede vertical
         const placaGeo = new THREE.CylinderGeometry(OCT_R, OCT_R, OCT_ESPESOR, 8, 1);
@@ -698,7 +709,7 @@ function initialize3DOctagon() {
                     new THREE.Vector3(P[i].x, yEstrella, P[i].z),
                     new THREE.Vector3(P[j].x, yEstrella, P[j].z)
                 ]);
-                grupo.add(new THREE.Line(geo, mallaMat));
+                carga.add(new THREE.Line(geo, mallaMat));
             };
             for (let i = 0; i < 8; i++) par(i, (i + 2) % 8);   // cruces cortos
             for (let i = 0; i < 4; i++) par(i, i + 4);         // diagonales largas
@@ -707,7 +718,7 @@ function initialize3DOctagon() {
         cfg.procesos.forEach((pr, i) => {
             const a = P[i], b = P[(i + 3) % 8];
             const g = crearProceso(a, b, yEstrella, cfg, i, pr);
-            grupo.add(g);
+            carga.add(g);
             piezas.push(g);
 
             // La insignia no va al centro de la cuerda, donde se amontonarían las
@@ -716,7 +727,7 @@ function initialize3DOctagon() {
             const badge = crearInsignia(String(pr.n), cfg.color, '#ffffff', 'rombo');
             badge.position.set(
                 a.x + (b.x - a.x) * t, yEstrella + 0.06, a.z + (b.z - a.z) * t);
-            grupo.add(badge);
+            carga.add(badge);
             g.userData.badge = badge;
         });
 
@@ -725,7 +736,7 @@ function initialize3DOctagon() {
             color: cfg.hexOscuro, transparent: true, opacity: 0.35
         });
         for (let i = 0; i < 8; i++) {
-            grupo.add(viga(P[i], P[(i + 1) % 8], 0.012, aristaMat, yTop + 0.006));
+            carga.add(viga(P[i], P[(i + 1) % 8], 0.012, aristaMat, yTop + 0.006));
         }
 
         // ── Vértices ─────────────────────────────────────────────────────────
@@ -733,7 +744,7 @@ function initialize3DOctagon() {
             const a = anguloVertice(i);
             const pos = new THREE.Vector3(Math.cos(a) * OCT_R, yTop + 0.02, Math.sin(a) * OCT_R);
             const g = crearVertice(pos, cfg, i, v);
-            grupo.add(g);
+            carga.add(g);
             piezas.push(g);
 
             // Insignia numérica siempre legible. En el Cerebral se corre hacia
@@ -741,7 +752,7 @@ function initialize3DOctagon() {
             const r = OCT_R + (cfg.id === 2 ? 0.32 : 0.17);
             const badge = crearInsignia(String(v.n), cfg.color, '#ffffff');
             badge.position.set(Math.cos(a) * r, yTop + 0.08, Math.sin(a) * r);
-            grupo.add(badge);
+            carga.add(badge);
             g.userData.badge = badge;
         });
 
@@ -750,23 +761,23 @@ function initialize3DOctagon() {
             const gl = geometriaLado(cfg, i);
             const pos = new THREE.Vector3(gl.x, yTop + 0.02, gl.z);
             const g = crearLado(pos, gl.ang, cfg, i, l);
-            grupo.add(g);
+            carga.add(g);
             piezas.push(g);
 
             // La insignia acompaña a la flecha, un poco hacia el interior
             const r = Math.hypot(gl.x, gl.z), k = (r - 0.19) / r;
             const badge = crearInsignia(String(l.n), '#ffffff', cfg.color, 'anillo');
             badge.position.set(gl.x * k, yTop + 0.07, gl.z * k);
-            grupo.add(badge);
+            carga.add(badge);
             g.userData.badge = badge;
         });
 
         // Título al centro de la placa, justo sobre la cara superior.
         const titulo = crearTituloCentral(cfg.centro, cfg.color);
         titulo.position.set(0, yTop + 0.20, 0);
-        grupo.add(titulo);
+        carga.add(titulo);
 
-        return { grupo, placaMat, titulo, yTitulo3D: yTop + 0.20, yTitulo2D: yTop + 0.03 };
+        return { grupo, carga, placaMat, titulo, yTitulo3D: yTop + 0.20, yTitulo2D: yTop + 0.03 };
     }
 
     // ── Helpers de geometría ─────────────────────────────────────────────────
@@ -1129,30 +1140,69 @@ function initialize3DOctagon() {
     /* ─── El volteo: las piezas siempre en la cara que se está mirando ────────
        Las piezas de cada octagrama van montadas sobre la cara de arriba de su
        placa. Al girar el modelo para ver una placa por debajo, la placa misma
-       las tapaba y el octagrama quedaba mudo. Ahora, cuando la cámara cruza el
-       canto, cada octagrama gira media vuelta sobre su propio eje horizontal y
-       sus piezas quedan del lado que se ve.
+       las tapaba y el octagrama quedaba mudo. La solución es que la carga dé
+       media vuelta sobre el eje horizontal de su placa: nombres, insignias,
+       flechas, cruces y círculos se despegan de la cara de arriba y aterrizan
+       en la de abajo, que es la que se está mirando.
 
-       Media vuelta sobre X, y no un espejo, es lo que importa: al mirar desde
-       abajo un octagrama volteado se ve exactamente igual que desde arriba sin
-       voltear, con el mismo sentido de giro de los ciclos. Un espejo lo
-       invertiría. Los dos octagramas voltean a la vez, así que sus vértices
-       siguen encontrándose, y como el juego de vértices del octágono es
-       simétrico, las barras de aprendizaje siguen cayendo en su sitio; sólo se
-       desvanecen mientras dura el giro.
+       Media vuelta y no un espejo: así, visto desde abajo, el octagrama se lee
+       igual que desde arriba, con el mismo sentido de giro de los ciclos. Un
+       espejo invertiría el orden de los vértices.
+
+       Lo que no se toca es la placa: la media vuelta se le aplica sólo al grupo
+       de la carga, y placa, marco y modelo entero se quedan girando con el
+       ratón y nada más. Se puede porque el juego de vértices del octágono es
+       simétrico bajo z → -z: la placa volteada se ve idéntica a la placa
+       quieta, y las barras de aprendizaje siguen cayendo en un vértice. Antes
+       se volteaba el grupo entero y el octagrama pegaba el brinco.
+
+       El truco para voltear la carga es la escala, no el giro: `(1, c, c)` con
+       c de +1 a -1. En c = -1 eso es exactamente media vuelta sobre X, porque
+       invertir dos ejes es un giro, no un espejo. Y de paso da el camino
+       bueno: en vez de que las piezas salgan volando por fuera de la placa
+       describiendo su arco, toda la carga se recoge sobre el diámetro de la
+       placa y vuelve a abrirse del otro lado. Girándola de verdad, las barras
+       largas de los cruces se paraban de punta y era un desastre.
+
+       El avance sale directo del ángulo de la vista, sin destino ni animación
+       aparte: se adelanta y se devuelve con la mano, al mismo ritmo que el
+       giro, y cae en la franja en que el modelo queda de canto, que es cuando
+       no hay nada que leer.
        ---------------------------------------------------------------------- */
     const ejeCamara = new THREE.Vector3();
     const giroAux = new THREE.Quaternion();
+    const qVolteo = new THREE.Quaternion();
+    const EJE_VOLTEO = new THREE.Vector3(1, 0, 0);
     const DESPEGUE_RUEDA = 0.14;      // lo justo para librar el núcleo del vértice
+    // Franja de canto, medida sobre el seno del cabeceo, en la que la carga
+    // cambia de cara. Angosta, para que el cambio caiga donde el modelo está de
+    // filo y no se vea la carga recogida sobre una placa bien visible.
+    const BANDA_VOLTEO = 0.20;
+    // Con la carga recogida del todo la matriz se vuelve degenerada, así que en
+    // ese pelo de camino se apaga: de canto no hay nada que ver ahí.
+    const CARGA_MINIMA = 0.03;
+
+    // Curva en ese, para que el cruce entre y salga sin tirones en los bordes.
+    function suavizar(x) {
+        const k = x < 0 ? 0 : x > 1 ? 1 : x;
+        return k * k * (3 - 2 * k);
+    }
 
     function aplicarVolteo(f) {
-        const ang = Math.PI * f;
-        octValor.grupo.rotation.x = ang;
-        octCerebral.grupo.rotation.x = ang;
+        const c = 1 - 2 * f;                       // +1 cara de arriba, -1 la de abajo
+        const visible = Math.abs(c) > CARGA_MINIMA;
+        const k = c < 0 ? Math.min(c, -CARGA_MINIMA) : Math.max(c, CARGA_MINIMA);
+        [octValor, octCerebral].forEach(o => {
+            o.carga.visible = visible;
+            o.carga.scale.set(1, k, k);
+        });
 
         // Los círculos de perfil se despegan hacia la cámara, no hacia arriba,
-        // para que en pantalla no se corran de su vértice.
-        giroAux.copy(root.quaternion).multiply(octCerebral.grupo.quaternion).invert();
+        // para que en pantalla no se corran de su vértice. Van colgados del
+        // vértice, así que el eje de la cámara hay que traerlo hasta ahí
+        // deshaciendo el giro del modelo y el volteo de la carga.
+        qVolteo.setFromAxisAngle(EJE_VOLTEO, Math.PI * f);
+        giroAux.copy(root.quaternion).multiply(qVolteo).invert();
         ejeCamara.set(0, 0, 1).applyQuaternion(giroAux).multiplyScalar(DESPEGUE_RUEDA);
         ruedas.forEach(r => r.position.copy(ejeCamara));
     }
@@ -1161,8 +1211,10 @@ function initialize3DOctagon() {
         octValor.grupo.position.lerpVectors(POS3D.valor, POS2D.valor, m);
         octCerebral.grupo.position.lerpVectors(POS3D.cerebral, POS2D.cerebral, m);
 
-        // Se apagan al aplanar y también mientras los octagramas dan la vuelta
-        const opAp = 0.5 * Math.max(0, 1 - m * 2.4) * Math.abs(Math.cos(Math.PI * state.volteo));
+        // Se apagan al aplanar: irían de un dibujo al otro cruzando todo. Ya no
+        // hace falta apagarlas por el volteo, porque las placas se quedan
+        // quietas y las barras siguen uniendo canto con canto todo el tiempo.
+        const opAp = 0.5 * Math.max(0, 1 - m * 2.4);
         aprendizajeMat.opacity = opAp;
         if (aprendizaje[0].visible !== opAp > 0.01) {
             aprendizaje.forEach(b => { b.visible = opAp > 0.01; });
@@ -1174,6 +1226,7 @@ function initialize3DOctagon() {
            del eje, la perspectiva lo corre hacia afuera. Al aplanar se baja casi
            hasta la placa y se corre hacia adentro lo que la perspectiva lo va a
            correr hacia afuera, de modo que caiga clavado en el centro. */
+        // El nombre va dentro de la carga, así que cambia de cara solo.
         [octValor, octCerebral].forEach(o => {
             const y0 = o.yTitulo3D - (o.yTitulo3D - o.yTitulo2D) * m;
             const k = m * y0 / Math.max(1, state.zoom);
@@ -1342,10 +1395,13 @@ function initialize3DOctagon() {
                 state.targetPanX = Math.max(-4, Math.min(4, state.targetPanX + dx * k));
                 state.targetPanY = Math.max(-4, Math.min(4, state.targetPanY - dy * k));
             } else {
-                // Giro libre en las dos direcciones: la vuelta completa deja ver
-                // el octagrama de abajo por su propia cara.
+                // Giro libre en redondo, y cabeceo hasta el tope de mirar la
+                // cara de arriba o la de abajo de frente. Pasarse de ahí sólo
+                // servía para poner el modelo de cabeza y para que el arrastre
+                // horizontal se invirtiera, que era buena parte del brinco.
                 state.targetRY += dx * 0.008;
-                state.targetRX += dy * 0.006;
+                state.targetRX = Math.max(-TOPE_RX,
+                    Math.min(TOPE_RX, state.targetRX + dy * 0.006));
             }
             state.lastX = ev.clientX; state.lastY = ev.clientY;
             state.autoRotate = false;
@@ -1494,12 +1550,11 @@ function initialize3DOctagon() {
         state.panY += (state.targetPanY - state.panY) * 0.12;
 
         // ¿Qué cara de las placas está mirando la cámara? La normal de la placa
-        // apunta hacia el objetivo cuando sen(rx) es positivo. La franja muerta
-        // evita que el volteo tiemble justo cuando el modelo queda de canto.
-        const cara = Math.sin(state.rx);
-        if (cara < -0.04) state.targetVolteo = 1;
-        else if (cara > 0.04) state.targetVolteo = 0;
-        state.volteo += (state.targetVolteo - state.volteo) * 0.09;
+        // apunta hacia el objetivo cuando sen(rx) es positivo. El paso de una
+        // cara a la otra se lee directo de ese seno, sin destino ni animación
+        // aparte: así la carga avanza y se devuelve con el ratón, al mismo
+        // ritmo que el giro, y no hay un movimiento suelto que dé el brinco.
+        state.volteo = suavizar(0.5 - Math.sin(state.rx) / (2 * BANDA_VOLTEO));
 
         root.rotation.x = state.rx;
         root.rotation.y = state.ry;
