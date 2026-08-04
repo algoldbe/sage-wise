@@ -634,6 +634,13 @@ function initialize3DOctagon() {
 
     const piezas = [];      // elementos interactivos (vértices y lados)
     const ruedas = [];      // círculos de perfil caracterológico (sólo Cerebral)
+    const cabezas = [];     // esferas de vértice que hay que despegar (sólo Cerebral)
+
+    // Esfera del vértice, igual en los dos octagramas. Antes era casi el doble
+    // de ancha; se achicó para que en el Cerebral quepa dentro del círculo del
+    // perfil sin comerse los cuadrantes.
+    const R_NUCLEO = 0.062;
+    const R_AURA = 0.085;
 
     // ── Materiales base ──────────────────────────────────────────────────────
     const COL = {
@@ -797,17 +804,25 @@ function initialize3DOctagon() {
     function crearVertice(pos, cfg, i, datos) {
         const g = new THREE.Group();
 
+        // La esfera va en su propio grupo, la «cabeza», porque en el Cerebral
+        // hay que despegarla hacia la cámara para que no se la trague el
+        // círculo del perfil. Es la misma en los dos octagramas: chica, para
+        // que en el Cerebral quepa en el ojo del círculo sin taparle los
+        // cuadrantes ni las letras.
+        const cabeza = new THREE.Group();
+        g.add(cabeza);
+
         const nucleoMat = new THREE.MeshPhongMaterial({
             color: COL.marca, emissive: cfg.hexOscuro, emissiveIntensity: 0.35, shininess: 120
         });
-        g.add(new THREE.Mesh(new THREE.SphereGeometry(0.085, 24, 24), nucleoMat));
+        cabeza.add(new THREE.Mesh(new THREE.SphereGeometry(R_NUCLEO, 24, 24), nucleoMat));
 
         // Burbuja discreta: apenas sobresale del núcleo y pulsa suave
         const auraMat = new THREE.MeshBasicMaterial({
             color: cfg.hex, transparent: true, opacity: 0.12, depthWrite: false
         });
-        const aura = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 20), auraMat);
-        g.add(aura);
+        const aura = new THREE.Mesh(new THREE.SphereGeometry(R_AURA, 20, 20), auraMat);
+        cabeza.add(aura);
 
         // En el Cerebral, el círculo de perfil es mucho más ancho que el núcleo.
         // Esta esfera invisible hace que casi todo el círculo sea sensible al
@@ -842,6 +857,13 @@ function initialize3DOctagon() {
             g.add(rueda);
             g.userData.rueda = rueda;
             ruedas.push(rueda);
+
+            // La cabeza se despega un pelo más que el círculo, así la esfera
+            // queda posada en el centro del perfil y no detrás de él. El aura
+            // se pinta después del sprite para que el resalte del ratón se vea
+            // sobre el círculo (el sprite no escribe profundidad).
+            cabezas.push(cabeza);
+            aura.renderOrder = 7;
         }
         return g;
     }
@@ -1173,7 +1195,10 @@ function initialize3DOctagon() {
     const giroAux = new THREE.Quaternion();
     const qVolteo = new THREE.Quaternion();
     const EJE_VOLTEO = new THREE.Vector3(1, 0, 0);
-    const DESPEGUE_RUEDA = 0.14;      // lo justo para librar el núcleo del vértice
+    const DESPEGUE_RUEDA = 0.14;      // lo justo para librar el canto de la placa
+    // La esfera del vértice va un poco por delante del círculo, de modo que se
+    // vea posada en su centro. Basta con que su cara de atrás libre el sprite.
+    const DESPEGUE_NUCLEO = DESPEGUE_RUEDA + R_NUCLEO + 0.01;
     // Franja de canto, medida sobre el seno del cabeceo, en la que la carga
     // cambia de cara. Angosta, para que el cambio caiga donde el modelo está de
     // filo y no se vea la carga recogida sobre una placa bien visible.
@@ -1203,8 +1228,9 @@ function initialize3DOctagon() {
         // deshaciendo el giro del modelo y el volteo de la carga.
         qVolteo.setFromAxisAngle(EJE_VOLTEO, Math.PI * f);
         giroAux.copy(root.quaternion).multiply(qVolteo).invert();
-        ejeCamara.set(0, 0, 1).applyQuaternion(giroAux).multiplyScalar(DESPEGUE_RUEDA);
-        ruedas.forEach(r => r.position.copy(ejeCamara));
+        ejeCamara.set(0, 0, 1).applyQuaternion(giroAux);
+        ruedas.forEach(r => r.position.copy(ejeCamara).multiplyScalar(DESPEGUE_RUEDA));
+        cabezas.forEach(c => c.position.copy(ejeCamara).multiplyScalar(DESPEGUE_NUCLEO));
     }
 
     function aplicarAcomodo(m) {
