@@ -419,35 +419,35 @@ const OCTAGRAMAS = {
         lados: [
             {
                 n: 1, nombre: 'Mercados de clientes', rol: 'CSO', vertice: 1,
-                desc: 'El <strong>CSO</strong> interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas. Obtiene retroalimentación de sus clientes para mejorar los procesos de suministro de valor.'
+                desc: 'El <strong>CSO</strong> interviene en los mercados de clientes, consumidores finales o intermedios, donde identifica las necesidades que la empresa puede atender y negocia los términos y condiciones para atenderlas. Obtiene retroalimentación de sus clientes para mejorar los procesos de suministro de valor. Participa, junto al <em>CMO</em>, en la estimación de precios.'
             },
             {
                 n: 2, nombre: 'Mercados fabriles', rol: 'COO', vertice: 2,
-                desc: 'El <strong>COO</strong> es el encargado de que las cosas sucedan en la organización. Si bien permanece la mayor parte del tiempo dentro de la empresa liderando grupos de trabajo, ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones y contratar el mantenimiento de los activos fijos de la empresa.'
+                desc: 'El <strong>COO</strong> es el encargado de que las cosas sucedan en la organización. Si bien permanece la mayor parte del tiempo dentro de la empresa liderando grupos de trabajo, ocasionalmente atiende los mercados fabriles para conseguir equipo o refacciones, gestionar el mantenimiento de los activos fijos de la empresa o subcontratar maquilas. Gestiona la <em>salida</em> de la cadena de suministro.'
             },
             {
                 n: 3, nombre: 'Mercados tecnológicos', rol: 'CTO', vertice: 3,
-                desc: 'El <strong>CTO</strong> interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos. Negocia acuerdos de licencia tecnológica, adjudicación de patentes, desarrollos de productos innovadores, entre otros.'
+                desc: 'El <strong>CTO</strong> interviene en los mercados tecnológicos, donde identifica las tecnologías de vanguardia aplicables a los prototipos que desarrolla la empresa o a sus procesos. Negocia acuerdos de licencia tecnológica, adjudicación de patentes, desarrollos de productos innovadores, entre otros. Es el encargado de la <em>innovación</em> y la <em>diferenciación</em> de productos y procesos.'
             },
             {
                 n: 4, nombre: 'Mercados de medios', rol: 'CMO', vertice: 4,
-                desc: 'El <strong>CMO</strong> interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas. Lleva a cabo estudios de mercado para formular e implementar las estrategias de precio y cobertura de clientes.'
+                desc: 'El <strong>CMO</strong> interviene en los mercados de medios publicitarios, donde identifica la mejor manera de promover los productos y servicios de la empresa y de desarrollar una buena imagen de sus marcas. Lleva a cabo estudios de mercado para formular e implementar las estrategias de precio y cobertura de clientes. Participa, junto al <em>CSO</em>, en la estimación de precios.'
             },
             {
                 n: 5, nombre: 'Mercados de proveedores', rol: 'CPO', vertice: 5,
-                desc: 'El <strong>CPO</strong> interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios y negocia con los proveedores las mejores condiciones de entrega y plazos de pago.'
+                desc: 'El <strong>CPO</strong> interviene en los mercados de proveedores de insumos para la empresa. Es responsable de la estructura de costos primarios y negocia con los proveedores las mejores condiciones de entrega y plazos de pago. Gestiona la <em>entrada</em> a la cadena de suministro. Participa, junto al <em>CFO</em>, en la determinación de la estructura de costos.'
             },
             {
                 n: 6, nombre: 'Mercados de TIC’s', rol: 'CIO', vertice: 6,
-                desc: 'El <strong>CIO</strong> interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones y el aprendizaje organizacional.'
+                desc: 'El <strong>CIO</strong> interviene en los mercados de tecnologías de información y comunicaciones para adquirir los sistemas informáticos que brinden las mejores herramientas para la toma de decisiones y el aprendizaje organizacional. Identifica e implementa las mejores herramientas de <em>información gerencial</em>. Coadyuva al aprovechamiento de la retroalimentación de los clientes para mejorar el modelo de negocio.'
             },
             {
                 n: 7, nombre: 'Mercados laborales', rol: 'CHO', vertice: 7,
-                desc: 'El <strong>CHO</strong> interviene en los mercados laborales para seleccionar y contratar a la mejor gente para la empresa. Es responsable de establecer los medios para aprovechar el talento del personal y de capacitarlo, así como de establecer métricas adecuadas para la evaluación del desempeño.'
+                desc: 'El <strong>CHO</strong> interviene en los mercados laborales para seleccionar y contratar a la mejor gente para la empresa. Es responsable de establecer los medios para aprovechar el talento del personal y de capacitarlo, así como de establecer métricas adecuadas para la evaluación del desempeño. Junto al <em>COO</em>, coadyuva al desarrollo de las capacidades organizacionales.'
             },
             {
                 n: 8, nombre: 'Mercados financieros', rol: 'CFO', vertice: 8,
-                desc: 'El <strong>CFO</strong> interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa para financiar sus inversiones fijas y en capital de trabajo. Es responsable también de la cobranza.'
+                desc: 'El <strong>CFO</strong> interviene en los mercados financieros, sea de capitales o de deuda, para obtener en las mejores condiciones posibles el dinero que requiere la empresa para financiar sus inversiones fijas y de capital de trabajo. Es responsable también de la <em>cobranza</em> a los clientes. Junto con el <em>CTO</em> participa en la evaluación financiera de proyectos.'
             }
         ]
     }
@@ -515,6 +515,44 @@ function cicloDe(cfg, tipo, i) {
     if (!cfg.ciclos) return null;
     const d = (tipo === 'proceso' ? cfg.procesos : cfg.lados)[i];
     return d && d.ciclo ? cfg.ciclos[d.ciclo - 1] : null;
+}
+
+/* ─── Perfil funcional: qué procesos del Valor le tocan a cada gerente ────────
+   Confirmado por Guillermo en «PR 01 PERFILES FUNCIONALES». No hace falta
+   guardar la tabla: sale entera de la geometría que ya está en los datos.
+
+     · El lado N del Valor es del gerente N. La flecha del lado apunta al
+       vértice destino, y el gerente dueño es el del mismo número de lado.
+     · El cruce N lo comparten los dos gerentes de sus extremos (`de` y `a`),
+       que por la estrella {8/3} son el N y el N+3. Por eso cada gerente sale
+       con tres procesos: un lado propio y dos cruces compartidos, y cada cruce
+       aparece exactamente en dos perfiles.
+
+   Se verificó pieza por pieza contra las flechas de las nueve láminas de
+   Guillermo: los 24 sentidos coinciden con los campos `de`/`a` de los datos.
+   -------------------------------------------------------------------------- */
+function perfilFuncional(idx) {
+    const val = OCTAGRAMAS[1];
+    return {
+        lado: idx,                                    // su proceso propio
+        procesos: val.procesos.reduce(function (acc, pr, i) {
+            if (pr.de - 1 === idx || pr.a - 1 === idx) acc.push(i);
+            return acc;
+        }, [])
+    };
+}
+
+// Gerentes dueños de un proceso del Valor, como índices 0-based del Cerebral
+function duenosDe(tipo, idx) {
+    if (tipo === 'lado') return [idx];
+    const pr = OCTAGRAMAS[1].procesos[idx];
+    return [pr.de - 1, pr.a - 1];
+}
+
+// Nombre corto de un gerente: «CSO · Vendedor»
+function nombreGerente(idx) {
+    const v = OCTAGRAMAS[2].vertices[idx];
+    return v.nombre + ' · ' + v.personaje;
 }
 
 // Etiquetas cortas (compatibilidad con el resto del sitio)
@@ -1658,6 +1696,63 @@ function bloqueCiclo(cfg, tipo, idx) {
         </div>`;
 }
 
+/* Bloque «Perfil funcional»: los tres procesos del Octagrama de Valor que le
+   tocan al gerente idx, más el mercado que atiende en el Cerebral. Los dos
+   cruces se comparten con otro gerente, y se dice con cuál. */
+function bloquePerfilFuncional(idx) {
+    const val = OCTAGRAMAS[1];
+    const perfil = perfilFuncional(idx);
+
+    const propio = val.lados[perfil.lado];
+    const filas = [`
+        <li class="oct-pf-propio">
+            <span class="oct-pf-num cuadro">${propio.n}</span>
+            <span class="oct-pf-txt">
+                <a href="#" onclick="octIr(1,'lado',${perfil.lado});return false;">${propio.nombre}</a>
+                <em>Propio · ${propio.de} → ${propio.a}</em>
+            </span>
+        </li>`];
+
+    perfil.procesos.forEach(function (i) {
+        const pr = val.procesos[i];
+        const socio = duenosDe('proceso', i).filter(k => k !== idx)[0];
+        filas.push(`
+            <li>
+                <span class="oct-pf-num rombo">${pr.n}</span>
+                <span class="oct-pf-txt">
+                    <a href="#" onclick="octIr(1,'proceso',${i});return false;">${pr.nombre}</a>
+                    <em>Junto al <a href="#" onclick="octIr(2,'vertice',${socio});return false;">${
+                        OCTAGRAMAS[2].vertices[socio].nombre}</a> · ${pr.de} → ${pr.a}</em>
+                </span>
+            </li>`);
+    });
+
+    return `
+        <div class="oct-caja oct-pf" style="border-color:${OCTAGRAMAS[1].color}33;">
+            <div class="oct-caja-tit">Perfil funcional: los procesos de los que es dueño
+                en el <b>Octagrama de Valor</b></div>
+            <ol class="oct-pf-lista">${filas.join('')}</ol>
+            <div class="oct-nota">Atiende los
+                <a href="#" onclick="octIr(2,'lado',${idx});return false;">${
+                    OCTAGRAMAS[2].lados[idx].nombre.toLowerCase()}</a>,
+                donde toma decisiones y resuelve problemas.</div>
+        </div>`;
+}
+
+/* Línea «Dueño del proceso»: quién responde por un lado o un cruce del Valor */
+function lineaDuenos(tipo, idx) {
+    const duenos = duenosDe(tipo, idx);
+    const enlaces = duenos.map(k =>
+        `<a href="#" onclick="octIr(2,'vertice',${k});return false;">${k + 1} · ${nombreGerente(k)}</a>`
+    ).join('<span>y</span>');
+    return `
+        <div class="oct-vincula oct-dueno">${duenos.length > 1 ? 'Dueños' : 'Dueño'}
+            ${enlaces}
+            <span class="oct-vincula-nota">${duenos.length > 1
+                ? '(cruce compartido)' : '(su proceso propio)'}</span>
+        </div>`;
+}
+
 function mostrarInfoOctagrama(oct, tipo, idx) {
     const panel = document.getElementById('octagon-info');
     if (!panel) return;
@@ -1696,6 +1791,7 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                 <span>↔</span>
                 <a href="#" onclick="octIr(${oct},'vertice',${j});return false;">${j + 1} · ${nomV(cfg, j)}</a>
             </div>`) +
+            (oct === 1 ? lineaDuenos('proceso', idx) : '') +
             `<p class="oct-p">${descProceso(cfg, idx)}</p>` +
             bloqueCiclo(cfg, tipo, idx);
     } else if (oct === 2 && tipo === 'lado') {
@@ -1710,6 +1806,7 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
     } else if (oct === 1 && tipo === 'lado') {
         titulo = d.nombre;
         cuerpo = flujo(d, 'Va de') +
+            lineaDuenos('lado', idx) +
             (d.alias ? `<div class="oct-alias">También llamado <b>${d.alias}</b></div>` : '') +
             `<p class="oct-p">${d.desc}</p>` +
             bloqueCiclo(cfg, tipo, idx);
@@ -1745,7 +1842,8 @@ function mostrarInfoOctagrama(oct, tipo, idx) {
                         <span>${q[0]}</span><b>${q[1]}</b>
                     </div>`).join('')}
                 <div class="oct-nota">En la fórmula, E es Empatía y R es Racionalidad.</div>
-            </div>`;
+            </div>
+            ${bloquePerfilFuncional(idx)}`;
     }
 
     const otroNombre = tipo === 'proceso'
