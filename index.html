@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260805c" rel="stylesheet">
+    <link href="css/styles.css?v=20260805d" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -591,9 +591,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260805c"></script>
-    <script src="js/octagrama.js?v=20260805c"></script>
-    <script src="js/main.js?v=20260805c"></script>
+    <script src="js/relatorias.js?v=20260805d"></script>
+    <script src="js/octagrama.js?v=20260805d"></script>
+    <script src="js/main.js?v=20260805d"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
@@ -744,18 +744,19 @@
 
     <!-- Modal Visor de PDF -->
     <div id="pdf-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center;">
-        <div style="background:#fff; border-radius:12px; width:90%; max-width:900px; height:90vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+        <!-- El ancho lo fija renderPage(), para que el marco calce con la lámina -->
+        <div id="pdf-dialog" style="background:#fff; border-radius:12px; width:900px; max-width:96vw; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
             <!-- Header -->
-            <div style="background:var(--primary-color,#1a73e8); color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between;">
+            <div id="pdf-header" style="background:var(--primary-color,#1a73e8); color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between;">
                 <span style="font-weight:600; font-size:1.1rem;"><i class="fas fa-file-pdf" style="margin-right:0.5rem;"></i>Presentación de Portada</span>
                 <button onclick="closePdfViewer()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; padding:0 0.3rem;" title="Cerrar"><i class="fas fa-times"></i></button>
             </div>
-            <!-- Canvas -->
-            <div id="pdf-canvas-wrapper" style="flex:1; overflow:auto; background:#e8e8e8; display:flex; justify-content:center; align-items:flex-start; padding:1rem;">
-                <canvas id="pdf-canvas" style="max-width:100%; box-shadow:0 2px 12px rgba(0,0,0,0.15);"></canvas>
+            <!-- Canvas: la lámina va a sangre, sin margen alrededor -->
+            <div id="pdf-canvas-wrapper" style="background:#fff; display:flex; justify-content:center; align-items:center; overflow:hidden; line-height:0;">
+                <canvas id="pdf-canvas" style="display:block; max-width:100%;"></canvas>
             </div>
             <!-- Navigation -->
-            <div style="background:#f5f5f5; border-top:1px solid #ddd; padding:0.6rem 1rem; display:flex; align-items:center; justify-content:center; gap:1rem;">
+            <div id="pdf-nav" style="background:#f5f5f5; border-top:1px solid #ddd; padding:0.6rem 1rem; display:flex; align-items:center; justify-content:center; gap:1rem;">
                 <button id="pdf-prev" onclick="pdfChangePage(-1)" style="background:var(--primary-color,#1a73e8); color:#fff; border:none; border-radius:6px; padding:0.5rem 1rem; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
                     <i class="fas fa-chevron-left"></i> Anterior
                 </button>
@@ -782,14 +783,29 @@
             pdfDoc.getPage(num).then(function(page) {
                 const canvas = document.getElementById('pdf-canvas');
                 const ctx = canvas.getContext('2d');
-                const wrapper = document.getElementById('pdf-canvas-wrapper');
-                const wrapperWidth = wrapper.clientWidth - 32;
-                const unscaledViewport = page.getViewport({ scale: 1 });
-                const scale = Math.min(wrapperWidth / unscaledViewport.width, 2);
-                const viewport = page.getViewport({ scale: scale });
+                const dialog = document.getElementById('pdf-dialog');
+                const base = page.getViewport({ scale: 1 });
 
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+                // El marco se ajusta a la forma de la lámina: se busca el
+                // tamaño más grande que quepa a lo ancho y a lo alto, y el
+                // cuadro se encoge a esa medida para no dejar hueco.
+                const cromo = document.getElementById('pdf-header').offsetHeight +
+                              document.getElementById('pdf-nav').offsetHeight;
+                const anchoTope = Math.min(window.innerWidth * 0.96, 1600);
+                const altoTope = window.innerHeight * 0.94 - cromo;
+                const escala = Math.min(anchoTope / base.width, altoTope / base.height);
+                const anchoCss = Math.floor(base.width * escala);
+                const altoCss = Math.floor(base.height * escala);
+
+                // Se dibuja a la densidad real de la pantalla, para que no
+                // se vea borroso en monitores de alta resolución.
+                const dpr = window.devicePixelRatio || 1;
+                const viewport = page.getViewport({ scale: escala * dpr });
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+                canvas.style.width = anchoCss + 'px';
+                canvas.style.height = altoCss + 'px';
+                dialog.style.width = anchoCss + 'px';
 
                 page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() {
                     rendering = false;
@@ -800,9 +816,19 @@
                 document.getElementById('pdf-next').disabled = (num >= pdfDoc.numPages);
                 document.getElementById('pdf-prev').style.opacity = (num <= 1) ? '0.5' : '1';
                 document.getElementById('pdf-next').style.opacity = (num >= pdfDoc.numPages) ? '0.5' : '1';
-                wrapper.scrollTop = 0;
             });
         }
+
+        // Si cambia el tamaño de la ventana, se vuelve a calcular el marco.
+        var temporizadorPdf = null;
+        window.addEventListener('resize', function() {
+            if (!pdfDoc || document.getElementById('pdf-modal').style.display !== 'flex') return;
+            clearTimeout(temporizadorPdf);
+            temporizadorPdf = setTimeout(function() {
+                rendering = false;
+                renderPage(currentPage);
+            }, 150);
+        });
 
         window.openPdfViewer = function() {
             var modal = document.getElementById('pdf-modal');
@@ -810,7 +836,7 @@
             document.body.style.overflow = 'hidden';
 
             if (!pdfDoc) {
-                pdfjsLib.getDocument('intro.pdf?v=20260805c').promise.then(function(pdf) {
+                pdfjsLib.getDocument('intro.pdf?v=20260805d').promise.then(function(pdf) {
                     pdfDoc = pdf;
                     currentPage = 1;
                     renderPage(currentPage);
