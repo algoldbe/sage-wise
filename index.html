@@ -159,6 +159,38 @@
                             <i class="fas fa-external-link-alt"></i> Abrir Rentímetro
                         </a>
                     </div>
+
+                    <!-- Laboratorio de Segmentación -->
+                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#faf5fd,#f3e9fa); border-radius:12px; border-left:4px solid #8e44ad; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+                            <i class="fas fa-layer-group" style="color:#8e44ad; font-size:1.2rem;"></i>
+                            <h3 style="color:#6c3483; margin:0;">Laboratorio de Segmentación</h3>
+                            <span style="font-size:0.72rem; background:#8e44ad; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">EJERCICIO PRÁCTICO</span>
+                        </div>
+                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Un mismo mercado de cereales partido de tres maneras distintas. El participante cuenta el anaquel, arma la tabla de ventas, calcula el crecimiento y la posición competitiva relativa, y grafica el portafolio de cada empresa.</p>
+                        <a href="laboratorios/segmentacion.html" target="_blank" rel="noopener"
+                            onclick="openLab('laboratorios/segmentacion.html','Laboratorio de Segmentación','#8e44ad','fa-layer-group'); return false;"
+                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#8e44ad; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
+                            onmouseover="this.style.background='#6c3483'" onmouseout="this.style.background='#8e44ad'">
+                            <i class="fas fa-external-link-alt"></i> Abrir Laboratorio
+                        </a>
+                    </div>
+
+                    <!-- Matriz BCG -->
+                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#f2fbf8,#e6f6f1); border-radius:12px; border-left:4px solid #16a085; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+                            <i class="fas fa-table-cells-large" style="color:#16a085; font-size:1.2rem;"></i>
+                            <h3 style="color:#0e6655; margin:0;">Matriz BCG</h3>
+                            <span style="font-size:0.72rem; background:#16a085; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">HERRAMIENTA</span>
+                        </div>
+                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Graficador del portafolio de sectores de negocio. Se capturan el tamaño, el crecimiento anual y la posición frente al competidor más grande, y la matriz ubica cada sector en su cuadrante.</p>
+                        <a href="laboratorios/matriz-bcg.html" target="_blank" rel="noopener"
+                            onclick="openLab('laboratorios/matriz-bcg.html','Matriz BCG','#16a085','fa-table-cells-large'); return false;"
+                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#16a085; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
+                            onmouseover="this.style.background='#0e6655'" onmouseout="this.style.background='#16a085'">
+                            <i class="fas fa-external-link-alt"></i> Abrir Matriz BCG
+                        </a>
+                    </div>
                     <!-- Audios: son una serie, así que la tarjeta es una lista que crece -->
                     <div class="recurso-audios">
                         <div class="recurso-audios-cab">
@@ -740,6 +772,51 @@
         document.getElementById('rentimetro-modal').style.display = 'none';
         document.body.style.overflow = '';
     };
+    </script>
+
+    <!-- Modal de laboratorios: lo comparten la Segmentación y la Matriz BCG.
+         Para agregar otro basta una tarjeta que llame a openLab(...). -->
+    <div id="lab-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; overflow:hidden;">
+        <div style="background:#fff; border-radius:12px; width:94%; max-width:1240px; height:94vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div id="lab-modal-header" style="color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+                <span id="lab-modal-title" style="font-weight:600; font-size:1.1rem;"></span>
+                <span style="display:flex; align-items:center; gap:0.9rem;">
+                    <a id="lab-modal-nueva" href="#" target="_blank" rel="noopener" title="Abrir en una pestaña aparte"
+                       style="color:#fff; font-size:0.95rem; text-decoration:none; opacity:0.9;"><i class="fas fa-up-right-from-square"></i></a>
+                    <button onclick="closeLab()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; padding:0 0.3rem;" title="Cerrar"><i class="fas fa-times"></i></button>
+                </span>
+            </div>
+            <iframe id="lab-modal-iframe" src="" title="Laboratorio" style="flex:1; border:none; width:100%; height:100%;"></iframe>
+        </div>
+    </div>
+
+    <script>
+    window.openLab = function(url, titulo, color, icono) {
+        var modal  = document.getElementById('lab-modal');
+        var iframe = document.getElementById('lab-modal-iframe');
+        if (iframe.getAttribute('data-url') !== url) {
+            iframe.src = url;                       // sólo se carga al abrirlo
+            iframe.setAttribute('data-url', url);
+        }
+        document.getElementById('lab-modal-header').style.background = color;
+        document.getElementById('lab-modal-title').innerHTML =
+            '<i class="fas ' + icono + '" style="margin-right:0.5rem;"></i>' + titulo;
+        document.getElementById('lab-modal-nueva').href = url;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeLab = function() {
+        document.getElementById('lab-modal').style.display = 'none';
+        document.body.style.overflow = '';
+    };
+
+    document.getElementById('lab-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeLab();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('lab-modal').style.display === 'flex') closeLab();
+    });
     </script>
 
     <!-- Modal Visor de PDF -->

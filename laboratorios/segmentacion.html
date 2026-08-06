@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Segmentación | Sage-Wise</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%238e44ad'/><g fill='%23fff'><rect x='7' y='7' width='8' height='8' rx='1'/><rect x='17' y='7' width='8' height='8' rx='1'/><rect x='7' y='17' width='8' height='8' rx='1'/><rect x='17' y='17' width='8' height='8' rx='1'/></g></svg>">
+<link rel="stylesheet" href="css/labs.css?v=1">
+<link rel="stylesheet" href="css/segmentacion.css?v=1">
+</head>
+<body>
+
+<div class="lab">
+
+  <header class="lab-cab">
+    <div class="lab-cab-txt">
+      <h1>Laboratorio de Segmentación de Negocios</h1>
+      <p>El mismo mercado de cereales, partido de tres maneras distintas. Cuente el anaquel,
+         arme la tabla y grafique el portafolio de cada empresa.</p>
+    </div>
+    <div class="lab-cab-acciones">
+      <button class="btn fantasma" id="btn-instrucciones">Instrucciones</button>
+      <button class="btn fantasma" id="btn-catalogo">Tabla de marcas</button>
+      <button class="btn fantasma" id="btn-reiniciar">Reiniciar</button>
+    </div>
+  </header>
+
+  <div class="lab-cuerpo">
+
+    <!-- ------------------------------------------------ 1. criterio + anaquel -->
+    <section class="panel">
+      <h2><span class="paso">1</span> Elija el criterio de segmentación y cuente el anaquel</h2>
+      <p class="ayuda">Cada caja es una marca, y su color dice de qué empresa es.
+         Haga clic en una caja para ver cuántas unidades tiene en exhibición. Para saber a qué
+         segmento pertenece cada marca, abra la <strong>Tabla de marcas</strong>.</p>
+
+      <div class="criterios" id="criterios"></div>
+
+      <div class="tienda">
+        <img class="compradora" src="img/compradora.jpg" alt="Clienta frente al anaquel de cereales">
+        <div class="anaquel" id="anaquel"></div>
+      </div>
+
+      <div class="empresas-leyenda">
+        <span><i class="alfa"></i> Empresa Alfa</span>
+        <span><i class="beta"></i> Empresa Beta</span>
+        <span><i class="gama"></i> Empresa Gama</span>
+        <span><i class="delta"></i> Empresa Delta</span>
+        <button class="btn claro chico" id="btn-destapar">Destapar todas</button>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------- 2. tabla de ventas -->
+    <section class="panel">
+      <h2><span class="paso">2</span> Ventas por segmento <span class="rotulo-criterio" id="rotulo-1"></span></h2>
+      <p class="ayuda">Sume las unidades de cada empresa en cada segmento. Cuando la tabla esté
+         completa, pulse Comprobar: si todo cuadra se calculan los totales y el crecimiento anual.</p>
+
+      <div class="tabla-marco">
+        <table class="rejilla" id="tabla-ventas">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="acciones-tabla">
+        <button class="btn" id="btn-comprobar-1">Comprobar ventas</button>
+        <button class="btn claro" id="btn-limpiar-1">Limpiar</button>
+      </div>
+      <div class="aviso" id="aviso-1"></div>
+    </section>
+
+    <!-- ------------------------------------- 3. posición competitiva relativa -->
+    <section class="panel" id="panel-posicion">
+      <h2><span class="paso">3</span> Posición competitiva relativa</h2>
+      <p class="ayuda">En cada segmento, divida las ventas de la empresa entre las del competidor
+         más grande de ese segmento. Si la empresa <em>es</em> la más grande, divídalas entre las
+         del segundo lugar. Dos decimales.</p>
+
+      <div class="tabla-marco">
+        <table class="rejilla" id="tabla-posicion">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="acciones-tabla">
+        <button class="btn" id="btn-comprobar-2">Comprobar posiciones</button>
+        <button class="btn claro" id="btn-limpiar-2">Limpiar</button>
+      </div>
+      <div class="aviso" id="aviso-2"></div>
+    </section>
+
+    <!-- --------------------------------------------------------- 4. gráfica -->
+    <section class="panel" id="panel-grafica">
+      <h2><span class="paso">4</span> Matriz del portafolio</h2>
+      <p class="ayuda">Elija una empresa para ver su portafolio. La línea horizontal es el
+         crecimiento promedio de la industria; la vertical, el punto donde usted vende lo mismo
+         que su competidor más grande.</p>
+
+      <div class="selector-empresa" id="selector-empresa"></div>
+
+      <div class="grafica-caja">
+        <canvas id="lienzo"></canvas>
+      </div>
+
+      <div class="leyenda" id="leyenda"></div>
+
+      <div class="acciones-tabla">
+        <button class="btn claro" id="btn-png">Descargar imagen</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ------------------------------------------------------ diálogo genérico -->
+<div class="velo" id="velo">
+  <div class="velo-caja">
+    <div class="velo-cab">
+      <span id="velo-titulo"></span>
+      <button type="button" id="velo-cerrar" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="velo-cuerpo" id="velo-cuerpo"></div>
+  </div>
+</div>
+
+<script src="js/bcg-chart.js?v=1"></script>
+<script src="js/segmentacion.js?v=1"></script>
+</body>
+</html>

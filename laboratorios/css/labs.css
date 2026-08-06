@@ -1,0 +1,339 @@
+/* labs.css — base común de los laboratorios de Sage-Wise.
+   Se cargan dentro de un modal del portal, así que la página es la app entera. */
+
+:root {
+  --primary-color: #1a73e8;
+  --accent-color: #0d47a1;
+  --light-color: #e8f0fe;
+  --dark-text: #202124;
+  --light-text: #5f6368;
+  --linea: #dfe3e8;
+  --fondo: #f6f7f9;
+
+  --alfa: #c0392b;
+  --beta: #1e8449;
+  --gama: #d4a017;
+  --delta: #1f6fd0;
+
+  --ok: #1e8449;
+  --mal: #c0392b;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--fondo);
+  color: var(--dark-text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  -webkit-text-size-adjust: 100%;
+}
+
+.lab {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- cabecera ---------------------------------------------------------- */
+
+.lab-cab {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  color: #fff;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+.lab-cab h1 {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+.lab-cab p {
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
+  opacity: 0.86;
+  max-width: 60ch;
+}
+.lab-cab-txt { flex: 1 1 260px; min-width: 0; }
+.lab-cab-acciones { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+
+/* ---- cuerpo ------------------------------------------------------------ */
+
+.lab-cuerpo {
+  flex: 1;
+  padding: 1rem 1.25rem 1.75rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid var(--linea);
+  border-radius: 10px;
+  padding: 0.9rem 1rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-width: 0;
+}
+.panel > h2 {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.panel > .ayuda {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  color: var(--light-text);
+  line-height: 1.45;
+}
+
+.paso {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  flex: none;
+}
+
+/* ---- botones ----------------------------------------------------------- */
+
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--primary-color);
+  color: #fff;
+  transition: background 0.15s, box-shadow 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--accent-color); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
+
+.btn.claro {
+  background: #fff;
+  color: var(--primary-color);
+  border-color: #c6d6ee;
+}
+.btn.claro:hover { background: var(--light-color); }
+
+.btn.fantasma {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.btn.fantasma:hover { background: rgba(255, 255, 255, 0.28); }
+
+.btn.chico { padding: 0.28rem 0.6rem; font-size: 0.76rem; }
+
+/* ---- campos ------------------------------------------------------------ */
+
+label.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+input[type="text"],
+input[type="number"],
+select {
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #ccd2da;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--dark-text);
+  width: 100%;
+  min-width: 0;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.16);
+}
+input[readonly] { background: #f1f3f5; color: var(--light-text); }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* ---- tablas ------------------------------------------------------------ */
+
+.tabla-marco { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table.rejilla {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: 460px;
+  font-size: 0.82rem;
+}
+table.rejilla th,
+table.rejilla td {
+  border-bottom: 1px solid var(--linea);
+  border-right: 1px solid var(--linea);
+  padding: 0.3rem 0.4rem;
+  text-align: center;
+  vertical-align: middle;
+}
+table.rejilla thead th {
+  background: #f3f5f7;
+  font-size: 0.74rem;
+  font-weight: 650;
+  color: var(--light-text);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-top: 1px solid var(--linea);
+  white-space: nowrap;
+}
+table.rejilla tbody th {
+  background: #fafbfc;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+table.rejilla th:first-child,
+table.rejilla td:first-child { border-left: 1px solid var(--linea); }
+table.rejilla thead th:first-child { border-top-left-radius: 7px; }
+table.rejilla thead th:last-child { border-top-right-radius: 7px; }
+table.rejilla tr.total th,
+table.rejilla tr.total td { background: #eef3fb; font-weight: 700; }
+table.rejilla td.calc { background: #f7f9fc; color: var(--accent-color); font-weight: 650; }
+
+table.rejilla input {
+  width: 100%;
+  min-width: 3.6rem;
+  text-align: center;
+  padding: 0.28rem 0.2rem;
+  font-size: 0.83rem;
+  font-variant-numeric: tabular-nums;
+}
+table.rejilla input.bien { border-color: var(--ok); background: #eaf7ef; }
+table.rejilla input.error { border-color: var(--mal); background: #fdeeec; }
+
+/* franjas de color que identifican a cada empresa */
+.franja { display: block; height: 5px; border-radius: 3px; margin-top: 0.25rem; }
+.franja.alfa  { background: var(--alfa); }
+.franja.beta  { background: var(--beta); }
+.franja.gama  { background: var(--gama); }
+.franja.delta { background: var(--delta); }
+
+/* ---- gráfica ----------------------------------------------------------- */
+
+.grafica-caja {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 46vh, 480px);
+}
+.grafica-caja canvas { display: block; touch-action: none; }
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--light-text);
+}
+.leyenda span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.leyenda i {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+
+/* ---- avisos ------------------------------------------------------------ */
+
+.aviso {
+  margin-top: 0.7rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  display: none;
+}
+.aviso.visible { display: block; }
+.aviso.ok   { background: #eaf7ef; color: #14663a; border: 1px solid #b7e0c6; }
+.aviso.mal  { background: #fdeeec; color: #922b21; border: 1px solid #f2c2bc; }
+.aviso.info { background: var(--light-color); color: var(--accent-color); border: 1px solid #c3d9f7; }
+
+/* ---- diálogo ----------------------------------------------------------- */
+
+.velo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 60;
+}
+.velo.visible { display: flex; }
+.velo-caja {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 940px;
+  width: 100%;
+  max-height: 92vh;
+  overflow: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.velo-cab {
+  position: sticky;
+  top: 0;
+  background: var(--accent-color);
+  color: #fff;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+.velo-cab button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
+.velo-cuerpo { padding: 1rem 1.1rem 1.3rem; }
+.velo-cuerpo img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+  .lab-cuerpo { padding: 0.8rem 0.7rem 1.4rem; }
+  .panel { padding: 0.8rem 0.7rem 0.9rem; }
+  .lab-cab { padding: 0.75rem 0.9rem; }
+}

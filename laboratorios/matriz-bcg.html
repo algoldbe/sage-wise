@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz BCG | Sage-Wise</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2316a085'/><g fill='none' stroke='%23fff' stroke-width='2'><path d='M16 6v20M6 16h20'/></g><circle cx='22' cy='11' r='3.5' fill='%23fff'/><circle cx='10' cy='21' r='2.5' fill='%23fff'/></svg>">
+<link rel="stylesheet" href="css/labs.css?v=1">
+<link rel="stylesheet" href="css/matriz-bcg.css?v=1">
+</head>
+<body>
+
+<div class="lab">
+
+  <header class="lab-cab">
+    <div class="lab-cab-txt">
+      <h1>Graficador de Sectores de Negocio</h1>
+      <p>Matriz del portafolio: ubique cada sector según su crecimiento y su posición
+         frente al competidor más grande.</p>
+    </div>
+    <div class="lab-cab-acciones">
+      <button class="btn fantasma" id="btn-instrucciones">Cómo se lee</button>
+      <button class="btn fantasma" id="btn-ejemplo">Cargar ejemplo</button>
+      <button class="btn fantasma" id="btn-png">Descargar imagen</button>
+    </div>
+  </header>
+
+  <div class="lab-cuerpo bcg-rejilla">
+
+    <!-- ------------------------------------------------------------- alta -->
+    <section class="panel">
+      <h2><span class="paso">1</span> Agregar un sector de negocio</h2>
+      <p class="ayuda">Cada sector es una línea de negocio de la empresa. Necesita tres
+         datos y un nombre.</p>
+
+      <form id="forma" class="forma" autocomplete="off">
+        <label class="campo">
+          Nombre del sector
+          <input type="text" id="f-nombre" maxlength="24" placeholder="Ej. Cereal de arroz" required>
+        </label>
+
+        <label class="campo">
+          Tamaño del sector <small>ventas, en la unidad que use</small>
+          <input type="number" id="f-tamano" step="any" min="0.01" placeholder="14" required>
+        </label>
+
+        <label class="campo">
+          Crecimiento anual <small>por ciento, puede ser negativo</small>
+          <input type="number" id="f-crecimiento" step="any" placeholder="3" required>
+        </label>
+
+        <label class="campo">
+          Posición competitiva relativa <small>sus ventas ÷ las del competidor más grande</small>
+          <input type="number" id="f-posicion" step="any" min="0.01" placeholder="0.24" required>
+        </label>
+
+        <div class="forma-botones">
+          <button type="submit" class="btn" id="btn-agregar">Agregar sector</button>
+          <button type="button" class="btn claro" id="btn-limpiar">Nuevo diagrama</button>
+        </div>
+      </form>
+
+      <div class="aviso" id="aviso-forma"></div>
+
+      <div class="tabla-marco sectores-marco">
+        <table class="rejilla" id="tabla-sectores">
+          <thead>
+            <tr>
+              <th style="text-align:left">Sector</th>
+              <th>Tamaño</th>
+              <th>Crec.&nbsp;%</th>
+              <th>Pos.</th>
+              <th>Cuadrante</th>
+              <th style="width:1%"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="vacio" id="sin-sectores">Todavía no hay sectores. Agregue el primero
+         arriba, o pulse <strong>Cargar ejemplo</strong>.</p>
+    </section>
+
+    <!-- ---------------------------------------------------------- gráfica -->
+    <section class="panel">
+      <h2><span class="paso">2</span> Matriz del portafolio</h2>
+      <p class="ayuda">Arrastre las dos líneas verdes para mover los cortes. El área de
+         cada círculo representa el tamaño del sector.</p>
+
+      <div class="grafica-caja">
+        <canvas id="lienzo"></canvas>
+      </div>
+
+      <div class="cortes">
+        <label class="campo">
+          Corte vertical <small>posición competitiva</small>
+          <input type="number" id="corte-x" step="0.01" min="0.06" max="8" value="1">
+        </label>
+        <label class="campo">
+          Corte horizontal <small>crecimiento %</small>
+          <input type="number" id="corte-y" step="0.01" value="0">
+        </label>
+        <label class="auto">
+          <input type="checkbox" id="auto-y" checked>
+          Ponerlo en el crecimiento promedio de la industria
+        </label>
+      </div>
+
+      <div class="leyenda" id="leyenda"></div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ------------------------------------------------------------ diálogo -->
+<div class="velo" id="velo">
+  <div class="velo-caja">
+    <div class="velo-cab">
+      <span>Cómo se lee la matriz</span>
+      <button type="button" id="velo-cerrar" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="velo-cuerpo">
+      <img src="img/matriz-explicacion.jpg" alt="Indicaciones para la aplicación de la matriz del portafolio de sectores de negocio">
+      <div class="cuadrantes-guia">
+        <div><b style="color:#8e44ad">? Interrogación</b><span>Mercado que crece rápido, pero usted es chico en él. Hay que decidir: invertir fuerte o salirse.</span></div>
+        <div><b style="color:#e67e22">★ Estrella</b><span>Crece rápido y usted manda. Consume mucho dinero, pero es el futuro del negocio.</span></div>
+        <div><b style="color:#16a085">$ Vaca lechera</b><span>Ya no crece, pero usted manda. Da dinero: de aquí sale con qué financiar a las estrellas.</span></div>
+        <div><b style="color:#7f8c8d">✝ Perro</b><span>Ni crece ni usted manda. Consume atención y devuelve poco.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/bcg-chart.js?v=1"></script>
+<script src="js/matriz-bcg.js?v=1"></script>
+</body>
+</html>

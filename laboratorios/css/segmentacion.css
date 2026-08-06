@@ -1,0 +1,276 @@
+/* segmentacion.css — lo propio del laboratorio de cereales. */
+
+.lab-cuerpo { max-width: 1180px; margin: 0 auto; width: 100%; }
+
+/* ---- criterios de segmentación ---------------------------------------- */
+
+.criterios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.criterio {
+  appearance: none;
+  text-align: left;
+  font-family: inherit;
+  background: #fff;
+  border: 1.5px solid var(--linea);
+  border-radius: 9px;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.criterio:hover { border-color: #a9c6ee; background: #fbfcfe; }
+.criterio.activo {
+  border-color: var(--primary-color);
+  background: var(--light-color);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.13);
+}
+.criterio b {
+  display: block;
+  font-size: 0.87rem;
+  color: var(--accent-color);
+  margin-bottom: 0.12rem;
+}
+.criterio span { font-size: 0.75rem; color: var(--light-text); line-height: 1.35; }
+
+/* ---- anaquel ----------------------------------------------------------- */
+
+.tienda {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  background: linear-gradient(180deg, #eef2f4 0%, #e2e8ea 62%, #cdd6d8 100%);
+  border: 1px solid var(--linea);
+  border-radius: 10px;
+  padding: 0.85rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+.compradora {
+  height: 268px;
+  width: auto;
+  border-radius: 6px 0 0 6px;
+  flex: none;
+}
+
+.anaquel {
+  display: grid;
+  grid-template-columns: repeat(5, 62px);
+  justify-content: center;
+  gap: 0.3rem 0.5rem;
+  background: #9aa7ab;
+  background-image: repeating-linear-gradient(
+    180deg, transparent 0, transparent calc(25% - 4px),
+    rgba(0, 0, 0, 0.22) calc(25% - 4px), rgba(0, 0, 0, 0.22) 25%);
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+  align-content: start;
+}
+
+.caja {
+  appearance: none;
+  font-family: inherit;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.caja-cuerpo {
+  width: 46px;
+  aspect-ratio: 26 / 33;
+  border-radius: 4px 4px 3px 3px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset -3px 0 6px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.caja:hover .caja-cuerpo { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.34); }
+.caja:focus-visible .caja-cuerpo { outline: 3px solid #fff; outline-offset: 2px; }
+
+.caja-letra {
+  flex: 1.35;
+  background: #fff;
+  margin: 3px 3px 0;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+  font-family: Georgia, "Times New Roman", serif;
+}
+.caja-pie { flex: 1; }
+
+.caja[data-empresa="0"] .caja-cuerpo { background: #b8271b; }
+.caja[data-empresa="0"] .caja-letra  { color: #b8271b; }
+.caja[data-empresa="1"] .caja-cuerpo { background: #2f9e44; }
+.caja[data-empresa="1"] .caja-letra  { color: #17612a; }
+.caja[data-empresa="2"] .caja-cuerpo { background: #f2b705; }
+.caja[data-empresa="2"] .caja-letra  { color: #a1720a; }
+.caja[data-empresa="3"] .caja-cuerpo { background: #1f6fd0; }
+.caja[data-empresa="3"] .caja-letra  { color: #124481; }
+
+.caja-conteo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 10px;
+  padding: 0.05rem 0.42rem;
+  min-height: 1.05rem;
+  line-height: 1.05rem;
+}
+.caja-conteo:empty { background: rgba(0, 0, 0, 0.16); min-width: 1.6rem; }
+.caja.vista .caja-conteo { background: rgba(0, 0, 0, 0.72); }
+
+.empresas-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.1rem;
+  margin-top: 0.7rem;
+  font-size: 0.79rem;
+  color: var(--light-text);
+}
+.empresas-leyenda span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.empresas-leyenda i {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 3px;
+  display: inline-block;
+}
+.empresas-leyenda i.alfa  { background: #b8271b; }
+.empresas-leyenda i.beta  { background: #2f9e44; }
+.empresas-leyenda i.gama  { background: #f2b705; }
+.empresas-leyenda i.delta { background: #1f6fd0; }
+.empresas-leyenda .btn { margin-left: auto; }
+
+/* ---- tablas ------------------------------------------------------------ */
+
+.rotulo-criterio {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #fff;
+  background: var(--primary-color);
+  border-radius: 20px;
+  padding: 0.1rem 0.6rem;
+}
+
+table.rejilla th.emp-0 { color: var(--alfa); }
+table.rejilla th.emp-1 { color: var(--beta); }
+table.rejilla th.emp-2 { color: #a1720a; }
+table.rejilla th.emp-3 { color: var(--delta); }
+
+.acciones-tabla {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.panel.bloqueado { opacity: 0.55; pointer-events: none; filter: grayscale(0.35); }
+
+/* ---- selector de empresa ---------------------------------------------- */
+
+.selector-empresa {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+.pastilla {
+  appearance: none;
+  font-family: inherit;
+  font-size: 0.83rem;
+  font-weight: 650;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--linea);
+  background: #fff;
+  color: var(--light-text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pastilla:hover { border-color: #a9c6ee; }
+.pastilla.activo { color: #fff; border-color: transparent; }
+.pastilla.activo[data-empresa="0"] { background: var(--alfa); }
+.pastilla.activo[data-empresa="1"] { background: var(--beta); }
+.pastilla.activo[data-empresa="2"] { background: #b8860b; }
+.pastilla.activo[data-empresa="3"] { background: var(--delta); }
+
+/* ---- catálogo de marcas ------------------------------------------------ */
+
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.9rem;
+}
+.catalogo-empresa {
+  border: 1px solid var(--linea);
+  border-radius: 9px;
+  overflow: hidden;
+}
+.catalogo-empresa > h4 {
+  margin: 0;
+  padding: 0.42rem 0.7rem;
+  font-size: 0.84rem;
+  color: #fff;
+}
+.catalogo-empresa table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.catalogo-empresa th {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--light-text);
+  background: #fafbfc;
+  padding: 0.25rem 0.4rem;
+  text-align: left;
+  font-weight: 650;
+}
+.catalogo-empresa td {
+  padding: 0.28rem 0.4rem;
+  border-top: 1px solid #eef1f4;
+}
+.catalogo-empresa td:first-child {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  width: 2.2rem;
+}
+
+.pasos-guia { counter-reset: p; }
+.pasos-guia li {
+  margin-bottom: 0.65rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #3c4043;
+}
+.pasos-guia li b { color: var(--accent-color); }
+.velo-cuerpo h3 {
+  margin: 1.2rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--accent-color);
+}
+.velo-cuerpo h3:first-child { margin-top: 0; }
+.velo-cuerpo p { font-size: 0.86rem; line-height: 1.6; color: #3c4043; }
+
+@media (max-width: 720px) {
+  .compradora { display: none; }
+  .anaquel { grid-template-columns: repeat(5, 56px); gap: 0.28rem 0.3rem; }
+  .caja-cuerpo { width: 42px; }
+  .caja-letra { font-size: 1rem; }
+}
