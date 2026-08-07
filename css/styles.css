@@ -1370,10 +1370,24 @@ header {
 .inv-columnas {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.6rem;
+    gap: 1.4rem;
     align-items: stretch;
     max-width: 1800px;
-    margin: 0 auto 4rem;
+    margin: 0 auto 3rem;
+}
+
+/* En pantalla de escritorio la sección se sale del margen de la página y se
+   lleva el ancho de la ventana entera, menos un respiro a los lados. Es lo que
+   pidió Alex: aprovechar el espacio para no tener que bajar con la rueda. En
+   celular y tableta no aplica, ahí se queda con el margen normal y se baja. */
+@media (min-width: 1000px) {
+    .inv-columnas {
+        width: calc(100vw - 4rem);
+        max-width: 2200px;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 .inv-col {
@@ -1381,7 +1395,7 @@ header {
     border: 1px solid rgba(15, 33, 62, 0.07);
     border-radius: 14px;
     box-shadow: 0 12px 32px -24px rgba(15, 33, 62, 0.6);
-    padding: 1.75rem;
+    padding: 1.5rem 1.6rem;
 }
 
 .inv-col-tit {
@@ -1402,27 +1416,29 @@ header {
     color: #5f6368;
     font-size: 0.92rem;
     line-height: 1.6;
-    margin: 0.8rem 0 1rem;
+    margin: 0.7rem 0 0.85rem;
 }
 
-/* La entradilla de esta sección es corta: no hace falta tanto aire debajo */
-#recursos .pagina-cab { margin-bottom: 1.5rem; }
+/* La entradilla de esta sección va más ancha y con menos aire debajo: así cabe
+   en un renglón y le deja el alto a las tarjetas, que es lo que interesa ver */
+#recursos .pagina-cab { max-width: 940px; margin-bottom: 1.4rem; }
 
 /* Tarjeta de laboratorio. El color va por variables, así cada una lleva el
    suyo y el resto del estilo se escribe una sola vez.
 
-   El botón se pone al lado del texto en vez de debajo, que es un renglón menos
-   de alto por tarjeta. Y lo hace solo: el texto no baja de 340 px, así que en
-   cuanto el botón deja de caber a su lado se pasa al renglón de abajo, sin
-   depender de ningún ancho de pantalla en particular. */
+   El botón «Abrir» va arriba a la derecha, en el mismo renglón del título,
+   donde de todos modos sobraba hueco. Así la tarjeta se ahorra un renglón
+   entero de alto, que por tres tarjetas es lo que hacía falta para que la
+   columna quepa sin bajar con la rueda. Si algún día no cupiera a lo ancho, el
+   renglón está preparado para partirse y el botón cae debajo. */
 .inv-tarjeta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.9rem 1.4rem;
-    padding: 1.15rem 1.4rem;
-    margin-bottom: 1rem;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 0.85rem;
     background: linear-gradient(135deg, var(--fondo1), var(--fondo2));
     border-radius: 12px;
     border-left: 4px solid var(--c);
@@ -1435,28 +1451,31 @@ header {
     flex: 1 0 100%;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     margin-bottom: -0.15rem;    /* el hueco lo pone el row-gap de la tarjeta */
 }
 
-.inv-tarjeta-cab i { color: var(--c); font-size: 1.2rem; }
+.inv-tarjeta-cab i { color: var(--c); font-size: 1.15rem; }
 
 .inv-tarjeta-cab h4 {
     margin: 0;
     color: var(--tit);
-    font-size: 1.08rem;
+    font-size: 1.02rem;
     line-height: 1.25;
 }
 
+/* Compactos a propósito: el título, la etiqueta y el botón tienen que caber en
+   un solo renglón, que es de donde sale el ahorro de alto de la tarjeta. */
 .inv-tag {
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
     background: var(--c);
     color: #fff;
     border-radius: 4px;
-    padding: 0.18rem 0.5rem;
+    padding: 0.18rem 0.45rem;
 }
 
 .inv-tarjeta p {
@@ -1469,14 +1488,15 @@ header {
 
 .inv-tarjeta a {
     flex: 0 0 auto;
+    margin-left: auto;          /* pegado a la derecha del renglón del título */
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     background: var(--c);
     color: #fff;
     border-radius: 6px;
-    padding: 0.55rem 1.1rem;
-    font-size: 0.9rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.88rem;
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
