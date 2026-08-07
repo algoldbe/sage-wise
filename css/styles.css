@@ -1362,13 +1362,18 @@ header {
    Cada columna es una tarjeta blanca con su título, y dentro va lo que le toca:
    los laboratorios, los audios y las lecturas. Las columnas se apilan solas
    cuando la pantalla se angosta.
+
+   Aprovechan todo el ancho que dé la ventana: mientras más ancho, menos
+   renglones parte cada texto y menos hay que bajar con la rueda. La columna de
+   los laboratorios se lleva la parte más grande, porque es la que carga con
+   tres tarjetas, y las tres columnas quedan de la misma altura.
    ========================================================================== */
 .inv-columnas {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-    align-items: start;
-    max-width: 1280px;
+    grid-template-columns: 1.85fr 1fr 1fr;
+    gap: 1.6rem;
+    align-items: stretch;
+    max-width: 1800px;
     margin: 0 auto 4rem;
 }
 
@@ -1377,7 +1382,7 @@ header {
     border: 1px solid rgba(15, 33, 62, 0.07);
     border-radius: 14px;
     box-shadow: 0 12px 32px -24px rgba(15, 33, 62, 0.6);
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 .inv-col-tit {
@@ -1396,16 +1401,29 @@ header {
 
 .inv-col-desc {
     color: #5f6368;
-    font-size: 0.86rem;
-    line-height: 1.55;
-    margin: 0.8rem 0 1.1rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0.8rem 0 1rem;
 }
 
+/* La entradilla de esta sección es corta: no hace falta tanto aire debajo */
+#recursos .pagina-cab { margin-bottom: 1.5rem; }
+
 /* Tarjeta de laboratorio. El color va por variables, así cada una lleva el
-   suyo y el resto del estilo se escribe una sola vez. */
+   suyo y el resto del estilo se escribe una sola vez.
+
+   El botón se pone al lado del texto en vez de debajo, que es un renglón menos
+   de alto por tarjeta. Y lo hace solo: el texto no baja de 340 px, así que en
+   cuanto el botón deja de caber a su lado se pasa al renglón de abajo, sin
+   depender de ningún ancho de pantalla en particular. */
 .inv-tarjeta {
-    padding: 1.1rem 1.2rem;
-    margin-bottom: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem 1.4rem;
+    padding: 1.15rem 1.4rem;
+    margin-bottom: 1rem;
     background: linear-gradient(135deg, var(--fondo1), var(--fondo2));
     border-radius: 12px;
     border-left: 4px solid var(--c);
@@ -1415,50 +1433,54 @@ header {
 .inv-tarjeta:last-child { margin-bottom: 0; }
 
 .inv-tarjeta-cab {
+    flex: 1 0 100%;
     display: flex;
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
-    margin-bottom: 0.5rem;
+    margin-bottom: -0.15rem;    /* el hueco lo pone el row-gap de la tarjeta */
 }
 
-.inv-tarjeta-cab i { color: var(--c); font-size: 1.1rem; }
+.inv-tarjeta-cab i { color: var(--c); font-size: 1.2rem; }
 
 .inv-tarjeta-cab h4 {
     margin: 0;
     color: var(--tit);
-    font-size: 1rem;
+    font-size: 1.08rem;
     line-height: 1.25;
 }
 
 .inv-tag {
-    font-size: 0.66rem;
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     background: var(--c);
     color: #fff;
     border-radius: 4px;
-    padding: 0.15rem 0.45rem;
+    padding: 0.18rem 0.5rem;
 }
 
 .inv-tarjeta p {
+    flex: 1 1 340px;
     color: #5f6368;
-    font-size: 0.86rem;
-    line-height: 1.55;
-    margin: 0 0 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .inv-tarjeta a {
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     background: var(--c);
     color: #fff;
     border-radius: 6px;
-    padding: 0.45rem 1rem;
-    font-size: 0.86rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
+    white-space: nowrap;
     transition: background 0.2s;
 }
 
@@ -1469,19 +1491,23 @@ header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 1.1rem 1.2rem;
+    padding: 1.25rem 1.4rem;
     border: 1px dashed rgba(15, 33, 62, 0.18);
     border-radius: 10px;
     color: #8b96a5;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     margin: 0;
 }
 
-@media (max-width: 1080px) {
-    .inv-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* En la columna ancha los episodios también se leen más grandes */
+.inv-col .recurso-audios-lista button { font-size: 0.95rem; padding: 0.7rem 1rem; }
+.inv-col .recurso-audios-dur { font-size: 0.83rem; }
+
+@media (max-width: 1320px) {
+    .inv-columnas { grid-template-columns: 1.35fr 1fr; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 820px) {
     .inv-columnas { grid-template-columns: 1fr; }
     .inv-col { padding: 1.2rem 1.1rem; }
 }
