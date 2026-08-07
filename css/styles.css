@@ -1364,13 +1364,12 @@ header {
    cuando la pantalla se angosta.
 
    Aprovechan todo el ancho que dé la ventana: mientras más ancho, menos
-   renglones parte cada texto y menos hay que bajar con la rueda. La columna de
-   los laboratorios se lleva la parte más grande, porque es la que carga con
-   tres tarjetas, y las tres columnas quedan de la misma altura.
+   renglones parte cada texto y menos hay que bajar con la rueda. Las tres van
+   del mismo ancho y de la misma altura, como las pidió Alex.
    ========================================================================== */
 .inv-columnas {
     display: grid;
-    grid-template-columns: 1.85fr 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.6rem;
     align-items: stretch;
     max-width: 1800px;
@@ -1504,7 +1503,7 @@ header {
 .inv-col .recurso-audios-dur { font-size: 0.83rem; }
 
 @media (max-width: 1320px) {
-    .inv-columnas { grid-template-columns: 1.35fr 1fr; }
+    .inv-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 820px) {
