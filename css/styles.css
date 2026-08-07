@@ -17,11 +17,21 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* La página se arma en columna y el contenido se estira, para que el pie
+   quede pegado al fondo de la ventana en todas las secciones y no en unas sí
+   y en otras no. Antes el alto lo daba un `min-height` calculado a ojo en
+   .content, y en las secciones cortas se quedaba corto y asomaba una franja
+   blanca debajo del pie. */
 body {
     background-color: var(--white-color);
     color: var(--dark-text);
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+
+body > footer { margin-top: auto; }
 
 /* Header Styles */
 header {
