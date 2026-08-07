@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260805d" rel="stylesheet">
+    <link href="css/styles.css?v=20260807a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -20,6 +20,8 @@
                 <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
                 <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
                 <li><a href="#glossary" class="tab-link" data-tab="glossary">Glosario</a></li>
+                <li><a href="#recursos" class="tab-link" data-tab="recursos">Inventario de Recursos</a></li>
+                <li><a href="#genesis" class="tab-link" data-tab="genesis">Génesis del Octagrama</a></li>
                 <li><a href="#contacto" class="tab-link" data-tab="contacto">Contacto</a></li>
             </ul>
         </div>
@@ -109,17 +111,18 @@
                         </div>
                         <div class="octagon-canvas" id="octagon-container">
                             <!-- El modelo 3D se dibuja aquí (js/octagrama.js) -->
+                            <!-- La vista de arranque es la plana; el 3D queda a un clic -->
                             <div class="oct-modo" role="group" aria-label="Vista del modelo">
-                                <button type="button" class="oct-modo-btn activo" data-modo="3d" aria-pressed="true"
-                                    title="Maqueta: los dos octagramas apilados, se gira con el ratón">3D</button>
-                                <button type="button" class="oct-modo-btn" data-modo="2d" aria-pressed="false"
+                                <button type="button" class="oct-modo-btn activo" data-modo="2d" aria-pressed="true"
                                     title="Diagrama plano: los dos octagramas lado a lado">2D</button>
+                                <button type="button" class="oct-modo-btn" data-modo="3d" aria-pressed="false"
+                                    title="Maqueta: los dos octagramas apilados, se gira con el ratón">3D</button>
                             </div>
                             <span class="oct-rotulo valor">Octagrama de Valor</span>
                             <span class="oct-rotulo cerebral">Octagrama Cerebral</span>
                             <div class="octagon-hint">
                                 <i class="fas fa-hand-pointer"></i>
-                                <span class="octagon-hint-txt">Arrastre para girar · clic en cualquier elemento</span>
+                                <span class="octagon-hint-txt">Arrastre para mover · clic en cualquier elemento</span>
                             </div>
                         </div>
                     </div>
@@ -141,75 +144,188 @@
                 </div>
             </section>
 
-            <h2 class="section-title">Inventario de Recursos</h2>
-            <section class="glossary-section">
-                <div class="glossary-container">
+        </div>
+
+        <!-- ═══ Inventario de Recursos ═══════════════════════════════════════
+             Tres columnas: los laboratorios, la serie de audios y las lecturas.
+             Para agregar algo basta una tarjeta más en su columna. -->
+        <div id="recursos" class="tab-content">
+            <div class="pagina-cab">
+                <span class="pagina-eyebrow"><i class="fas fa-toolbox"></i> Materiales</span>
+                <h2>Inventario de Recursos</h2>
+                <p>Todo lo que acompaña al modelo octagramal en un solo lugar: las
+                aplicaciones para practicar, las conversaciones para escuchar y las
+                lecturas para profundizar.</p>
+            </div>
+
+            <div class="inv-columnas">
+
+                <!-- ── Columna 1: laboratorios ─────────────────────────────── -->
+                <section class="inv-col">
+                    <h3 class="inv-col-tit"><i class="fas fa-flask"></i>Aplicaciones de laboratorio</h3>
+                    <p class="inv-col-desc">Herramientas para trabajar con el modelo:
+                    se abren aquí mismo, en una ventana.</p>
+
                     <!-- Rentímetro -->
-                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#fff8f0,#fff3e0); border-radius:12px; border-left:4px solid #e67e22; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
-                            <i class="fas fa-chart-line" style="color:#e67e22; font-size:1.2rem;"></i>
-                            <h3 style="color:#c0392b; margin:0;">Rentímetro</h3>
-                            <span style="font-size:0.72rem; background:#e67e22; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">DE LO ANALÓGICO A LO DIGITAL</span>
+                    <article class="inv-tarjeta" style="--c:#e67e22; --c2:#d35400; --tit:#c0392b; --fondo1:#fff8f0; --fondo2:#fff3e0;">
+                        <div class="inv-tarjeta-cab">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Rentímetro</h4>
+                            <span class="inv-tag">DE LO ANALÓGICO A LO DIGITAL</span>
                         </div>
-                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Herramienta de diagnóstico que permite evaluar el grado de digitalización de los procesos de negocio de la empresa y su impacto en la rentabilidad.</p>
+                        <p>Herramienta de diagnóstico que permite evaluar el grado de digitalización
+                        de los procesos de negocio de la empresa y su impacto en la rentabilidad.</p>
                         <a href="rentimetro/rentimetro.html" target="_blank" rel="noopener"
-                            onclick="openRentimetro(); return false;"
-                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#e67e22; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
-                            onmouseover="this.style.background='#d35400'" onmouseout="this.style.background='#e67e22'">
+                            onclick="openRentimetro(); return false;">
                             <i class="fas fa-external-link-alt"></i> Abrir Rentímetro
                         </a>
-                    </div>
+                    </article>
 
                     <!-- Laboratorio de Segmentación -->
-                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#faf5fd,#f3e9fa); border-radius:12px; border-left:4px solid #8e44ad; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
-                            <i class="fas fa-layer-group" style="color:#8e44ad; font-size:1.2rem;"></i>
-                            <h3 style="color:#6c3483; margin:0;">Laboratorio de Segmentación</h3>
-                            <span style="font-size:0.72rem; background:#8e44ad; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">EJERCICIO PRÁCTICO</span>
+                    <article class="inv-tarjeta" style="--c:#8e44ad; --c2:#6c3483; --tit:#6c3483; --fondo1:#faf5fd; --fondo2:#f3e9fa;">
+                        <div class="inv-tarjeta-cab">
+                            <i class="fas fa-layer-group"></i>
+                            <h4>Laboratorio de Segmentación</h4>
+                            <span class="inv-tag">EJERCICIO PRÁCTICO</span>
                         </div>
-                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Un mismo mercado de cereales partido de tres maneras distintas. El participante cuenta el anaquel, arma la tabla de ventas, calcula el crecimiento y la posición competitiva relativa, y grafica el portafolio de cada empresa.</p>
+                        <p>Un mismo mercado de cereales partido de tres maneras distintas. El
+                        participante cuenta el anaquel, arma la tabla de ventas, calcula el
+                        crecimiento y la posición competitiva relativa, y grafica el portafolio de
+                        cada empresa.</p>
                         <a href="laboratorios/segmentacion.html" target="_blank" rel="noopener"
-                            onclick="openLab('laboratorios/segmentacion.html','Laboratorio de Segmentación','#8e44ad','fa-layer-group'); return false;"
-                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#8e44ad; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
-                            onmouseover="this.style.background='#6c3483'" onmouseout="this.style.background='#8e44ad'">
+                            onclick="openLab('laboratorios/segmentacion.html','Laboratorio de Segmentación','#8e44ad','fa-layer-group'); return false;">
                             <i class="fas fa-external-link-alt"></i> Abrir Laboratorio
                         </a>
-                    </div>
+                    </article>
 
                     <!-- Matriz BCG -->
-                    <div style="margin-bottom:1.5rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#f2fbf8,#e6f6f1); border-radius:12px; border-left:4px solid #16a085; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
-                            <i class="fas fa-table-cells-large" style="color:#16a085; font-size:1.2rem;"></i>
-                            <h3 style="color:#0e6655; margin:0;">Matriz BCG</h3>
-                            <span style="font-size:0.72rem; background:#16a085; color:#fff; border-radius:4px; padding:0.15rem 0.5rem; font-weight:600;">HERRAMIENTA</span>
+                    <article class="inv-tarjeta" style="--c:#16a085; --c2:#0e6655; --tit:#0e6655; --fondo1:#f2fbf8; --fondo2:#e6f6f1;">
+                        <div class="inv-tarjeta-cab">
+                            <i class="fas fa-table-cells-large"></i>
+                            <h4>Matriz BCG</h4>
+                            <span class="inv-tag">HERRAMIENTA</span>
                         </div>
-                        <p style="color:#5f6368; font-size:0.9rem; margin-bottom:0.75rem;">Graficador del portafolio de sectores de negocio. Se capturan el tamaño, el crecimiento anual y la posición frente al competidor más grande, y la matriz ubica cada sector en su cuadrante.</p>
+                        <p>Graficador del portafolio de sectores de negocio. Se capturan el tamaño,
+                        el crecimiento anual y la posición frente al competidor más grande, y la
+                        matriz ubica cada sector en su cuadrante.</p>
                         <a href="laboratorios/matriz-bcg.html" target="_blank" rel="noopener"
-                            onclick="openLab('laboratorios/matriz-bcg.html','Matriz BCG','#16a085','fa-table-cells-large'); return false;"
-                            style="display:inline-flex; align-items:center; gap:0.4rem; background:#16a085; color:#fff; border-radius:6px; padding:0.45rem 1rem; font-size:0.88rem; font-weight:600; text-decoration:none; transition:background 0.2s;"
-                            onmouseover="this.style.background='#0e6655'" onmouseout="this.style.background='#16a085'">
+                            onclick="openLab('laboratorios/matriz-bcg.html','Matriz BCG','#16a085','fa-table-cells-large'); return false;">
                             <i class="fas fa-external-link-alt"></i> Abrir Matriz BCG
                         </a>
-                    </div>
-                    <!-- Audios: son una serie, así que la tarjeta es una lista que crece -->
-                    <div class="recurso-audios">
-                        <div class="recurso-audios-cab">
-                            <i class="fas fa-headphones"></i>
-                            <h3>Conversaciones sobre el modelo</h3>
-                            <span class="recurso-audios-tag">SERIE</span>
-                        </div>
-                        <p class="recurso-audios-desc">Charlas de fondo sobre los temas del modelo
-                        octagramal, para escuchar con calma. Se irán agregando nuevos episodios.</p>
+                    </article>
+                </section>
 
-                        <!-- La lista se arma sola con AUDIOS, allá abajo: para agregar
-                             un episodio basta una línea ahí, aquí no se toca nada. -->
-                        <ul class="recurso-audios-lista" id="recurso-audios-lista"></ul>
-                    </div>
-                    <!-- Más recursos se agregarán aquí -->
-                </div>
-            </section>
+                <!-- ── Columna 2: la serie de audios ───────────────────────── -->
+                <section class="inv-col">
+                    <h3 class="inv-col-tit"><i class="fas fa-headphones"></i>Conversaciones sobre el modelo</h3>
+                    <p class="inv-col-desc">Charlas de fondo sobre los temas del modelo
+                    octagramal, para escuchar con calma. Se irán agregando nuevos episodios.</p>
+
+                    <!-- La lista se arma sola con AUDIOS, allá abajo: para agregar
+                         un episodio basta una línea ahí, aquí no se toca nada. -->
+                    <ul class="recurso-audios-lista" id="recurso-audios-lista"></ul>
+                </section>
+
+                <!-- ── Columna 3: lecturas. Vacía a propósito: el material viene
+                     en camino y la columna ya le guarda el lugar. ──────────── -->
+                <section class="inv-col">
+                    <h3 class="inv-col-tit"><i class="fas fa-book-open"></i>Artículos y lecturas</h3>
+                    <p class="inv-col-desc">Textos para profundizar en los conceptos del modelo.</p>
+                    <p class="inv-vacio"><i class="fas fa-hourglass-half"></i> Próximamente.</p>
+                </section>
+
+            </div>
         </div>
-        
+
+        <!-- ═══ Génesis del Octagrama ════════════════════════════════════════
+             De dónde sale la figura. Cada componente abre su presentación y su
+             texto en la misma ventanita del visor de PDF. -->
+        <div id="genesis" class="tab-content">
+            <div class="pagina-cab">
+                <span class="pagina-eyebrow">
+                    <svg class="icono-octagono" viewBox="0 0 24 24" aria-hidden="true">
+                        <polygon points="21.2,8.2 15.8,2.8 8.2,2.8 2.8,8.2 2.8,15.8 8.2,21.2 15.8,21.2 21.2,15.8"/>
+                    </svg>
+                    Origen del modelo
+                </span>
+                <h2>Génesis del Octagrama</h2>
+                <p>De dónde sale la figura y por qué tiene ocho lados. Tres piezas que cuentan
+                el origen del modelo: dos metáforas y las propiedades del número ocho.</p>
+            </div>
+
+            <div class="gen-caja">
+                <div class="gen-scroll">
+                    <table class="gen-tabla">
+                        <thead>
+                            <tr>
+                                <th>Componente</th>
+                                <th>De qué trata</th>
+                                <th>Presentación</th>
+                                <th>Texto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="gen-nom"><span class="gen-num">1</span>Metáfora rosantina</td>
+                                <td class="gen-desc">El Octagrama sobre la Rosa de los Vientos. De ahí
+                                salen los cuatro valores cardinales de la empresa y las cuatro
+                                preguntas que los ordenan: el valor de qué, a quién se le entrega,
+                                en dónde y cómo.</td>
+                                <td>
+                                    <button type="button" class="gen-btn ppt"
+                                        onclick="openPdfViewer('genesis/metafora-rosantina.pdf','Metáfora rosantina','fa-file-powerpoint')">
+                                        <i class="fas fa-file-powerpoint"></i> Presentación
+                                        <span>14 láminas</span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="gen-btn doc"
+                                        onclick="openPdfViewer('genesis/metafora-rosantina-texto.pdf','Metáfora rosantina · texto','fa-file-word')">
+                                        <i class="fas fa-file-word"></i> Texto
+                                        <span>4 páginas</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="gen-nom"><span class="gen-num">2</span>Metáfora diamantina</td>
+                                <td class="gen-desc">El Octagrama sobre un brillante de 58 facetas.
+                                Organizaciones jerárquicas frente a orgánicas: carbón, grafito y
+                                diamante son el mismo átomo acomodado de otra manera, y valen cosas
+                                muy distintas.</td>
+                                <td>
+                                    <button type="button" class="gen-btn ppt"
+                                        onclick="openPdfViewer('genesis/metafora-diamantina.pdf','Metáfora diamantina','fa-file-powerpoint')">
+                                        <i class="fas fa-file-powerpoint"></i> Presentación
+                                        <span>9 láminas</span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="gen-btn doc"
+                                        onclick="openPdfViewer('genesis/metafora-diamantina-texto.pdf','Metáfora diamantina · texto','fa-file-word')">
+                                        <i class="fas fa-file-word"></i> Texto
+                                        <span>6 páginas</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="gen-nom"><span class="gen-num">3</span>El número 8</td>
+                                <td class="gen-desc">Simetrías y otras propiedades del número ocho,
+                                y por qué el modelo se construye justo sobre un octágono regular.</td>
+                                <td>
+                                    <button type="button" class="gen-btn ppt"
+                                        onclick="openPdfViewer('genesis/el-numero-ocho.pdf','El número 8','fa-file-powerpoint')">
+                                        <i class="fas fa-file-powerpoint"></i> Presentación
+                                        <span>39 láminas</span>
+                                    </button>
+                                </td>
+                                <td class="gen-vacio">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- Quiz Tab -->
         <div id="quiz" class="tab-content">
             <div class="quiz-container">
@@ -623,9 +739,9 @@
         </div>
     </footer>
     
-    <script src="js/relatorias.js?v=20260805d"></script>
-    <script src="js/octagrama.js?v=20260805d"></script>
-    <script src="js/main.js?v=20260805d"></script>
+    <script src="js/relatorias.js?v=20260807a"></script>
+    <script src="js/octagrama.js?v=20260807a"></script>
+    <script src="js/main.js?v=20260807a"></script>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
@@ -777,7 +893,9 @@
     <!-- Modal de laboratorios: lo comparten la Segmentación y la Matriz BCG.
          Para agregar otro basta una tarjeta que llame a openLab(...). -->
     <div id="lab-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; overflow:hidden;">
-        <div style="background:#fff; border-radius:12px; width:94%; max-width:1240px; height:94vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+        <!-- El alto lo fija ajustarLab(): la ventana calca lo que ocupa el
+             laboratorio, con tope en la pantalla. -->
+        <div id="lab-modal-caja" style="background:#fff; border-radius:12px; width:94%; max-width:1240px; height:94vh; max-height:94vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
             <div id="lab-modal-header" style="color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                 <span id="lab-modal-title" style="font-weight:600; font-size:1.1rem;"></span>
                 <span style="display:flex; align-items:center; gap:0.9rem;">
@@ -791,25 +909,108 @@
     </div>
 
     <script>
-    window.openLab = function(url, titulo, color, icono) {
-        var modal  = document.getElementById('lab-modal');
+    (function () {
+        var caja   = document.getElementById('lab-modal-caja');
         var iframe = document.getElementById('lab-modal-iframe');
-        if (iframe.getAttribute('data-url') !== url) {
-            iframe.src = url;                       // sólo se carga al abrirlo
-            iframe.setAttribute('data-url', url);
-        }
-        document.getElementById('lab-modal-header').style.background = color;
-        document.getElementById('lab-modal-title').innerHTML =
-            '<i class="fas ' + icono + '" style="margin-right:0.5rem;"></i>' + titulo;
-        document.getElementById('lab-modal-nueva').href = url;
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
+        var cab    = document.getElementById('lab-modal-header');
+        var vigilado = null;        // documento al que ya se le pusieron oyentes
+        var pendiente = null;
 
-    window.closeLab = function() {
-        document.getElementById('lab-modal').style.display = 'none';
-        document.body.style.overflow = '';
-    };
+        function topeAlto() { return window.innerHeight * 0.94; }
+
+        /* Cuánto ocupa de verdad el laboratorio. Su hoja de estilo estira html,
+           body y .lab a lo alto del marco (height/min-height al 100%), así que
+           medir de frente devuelve siempre el alto del marco, que es justo lo
+           que dejaba el hueco gris abajo. Se les suelta esa altura un instante,
+           se mide y se les devuelve: como todo pasa dentro de la misma vuelta
+           del código, el navegador no llega a repintar nada. */
+        function altoDelContenido(doc) {
+            var html = doc.documentElement, body = doc.body;
+            var lab = doc.querySelector('.lab');
+            var scroll = html.scrollTop || body.scrollTop || 0;
+            var previo = [html.style.height, body.style.height, lab && lab.style.minHeight];
+
+            html.style.height = 'auto';
+            body.style.height = 'auto';
+            if (lab) lab.style.minHeight = '0';
+
+            var alto = Math.max(body.scrollHeight, body.offsetHeight);
+
+            html.style.height = previo[0];
+            body.style.height = previo[1];
+            if (lab) lab.style.minHeight = previo[2];
+            html.scrollTop = body.scrollTop = scroll;
+
+            return alto;
+        }
+
+        function ajustarLab() {
+            var doc;
+            try { doc = iframe.contentDocument; } catch (e) { return; }
+            if (!doc || !doc.body) return;
+
+            var alto;
+            if (doc.querySelector('.velo.visible')) {
+                // Con un diálogo abierto encima (Instrucciones, Tabla de marcas)
+                // la ventana se abre del todo, para no apretarlo.
+                alto = topeAlto();
+            } else {
+                alto = Math.min(topeAlto(), altoDelContenido(doc) + cab.offsetHeight + 2);
+            }
+            alto = Math.round(Math.max(260, alto));
+            if (Math.abs(parseFloat(caja.style.height) - alto) > 2) {
+                caja.style.height = alto + 'px';
+            }
+        }
+
+        function pedirAjuste() {
+            clearTimeout(pendiente);
+            pendiente = setTimeout(ajustarLab, 60);
+        }
+
+        /* El laboratorio crece y se encoge mientras se usa (se abren paneles, se
+           agregan renglones), así que la ventana lo sigue. */
+        function vigilar(doc) {
+            if (!doc || vigilado === doc) return;
+            vigilado = doc;
+            ['click', 'change', 'input'].forEach(function (t) {
+                doc.addEventListener(t, pedirAjuste, true);
+            });
+            if (window.ResizeObserver) {
+                new ResizeObserver(pedirAjuste).observe(doc.body);
+            }
+        }
+
+        window.openLab = function(url, titulo, color, icono) {
+            var modal = document.getElementById('lab-modal');
+            var nuevo = iframe.getAttribute('data-url') !== url;
+            if (nuevo) {
+                vigilado = null;
+                iframe.src = url;                   // sólo se carga al abrirlo
+                iframe.setAttribute('data-url', url);
+                iframe.onload = function () {
+                    vigilar(iframe.contentDocument);
+                    ajustarLab();
+                };
+            }
+            cab.style.background = color;
+            document.getElementById('lab-modal-title').innerHTML =
+                '<i class="fas ' + icono + '" style="margin-right:0.5rem;"></i>' + titulo;
+            document.getElementById('lab-modal-nueva').href = url;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            if (!nuevo) { vigilar(iframe.contentDocument); ajustarLab(); }
+        };
+
+        window.closeLab = function() {
+            document.getElementById('lab-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        window.addEventListener('resize', function () {
+            if (document.getElementById('lab-modal').style.display === 'flex') pedirAjuste();
+        });
+    })();
 
     document.getElementById('lab-modal').addEventListener('click', function(e) {
         if (e.target === this) closeLab();
@@ -825,7 +1026,7 @@
         <div id="pdf-dialog" style="background:#fff; border-radius:12px; width:900px; max-width:96vw; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.3);">
             <!-- Header -->
             <div id="pdf-header" style="background:var(--primary-color,#1a73e8); color:#fff; padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between;">
-                <span style="font-weight:600; font-size:1.1rem;"><i class="fas fa-file-pdf" style="margin-right:0.5rem;"></i>Presentación de Portada</span>
+                <span id="pdf-title" style="font-weight:600; font-size:1.1rem;"><i class="fas fa-file-pdf" style="margin-right:0.5rem;"></i>Presentación de Portada</span>
                 <button onclick="closePdfViewer()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; padding:0 0.3rem;" title="Cerrar"><i class="fas fa-times"></i></button>
             </div>
             <!-- Canvas: la lámina va a sangre, sin margen alrededor -->
@@ -850,9 +1051,14 @@
     (function() {
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+        // El visor sirve a cualquier documento: la presentación de portada y las
+        // piezas de la Génesis del Octagrama. Cada archivo se descarga una sola
+        // vez y se queda guardado por si vuelven a abrirlo.
+        const PORTADA = 'intro.pdf?v=20260805d';
         let pdfDoc = null;
         let currentPage = 1;
         let rendering = false;
+        const guardados = {};
 
         function renderPage(num) {
             if (rendering) return;
@@ -907,20 +1113,30 @@
             }, 150);
         });
 
-        window.openPdfViewer = function() {
+        window.openPdfViewer = function(url, titulo, icono) {
+            url = url || PORTADA;
             var modal = document.getElementById('pdf-modal');
+
+            document.getElementById('pdf-title').innerHTML =
+                '<i class="fas ' + (icono || 'fa-file-pdf') + '" style="margin-right:0.5rem;"></i>' +
+                (titulo || 'Presentación de Portada');
+
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            if (!pdfDoc) {
-                pdfjsLib.getDocument('intro.pdf?v=20260805d').promise.then(function(pdf) {
+            currentPage = 1;
+            rendering = false;
+            if (guardados[url]) {
+                pdfDoc = guardados[url];
+                renderPage(currentPage);
+            } else {
+                pdfDoc = null;
+                pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                    guardados[url] = pdf;
                     pdfDoc = pdf;
                     currentPage = 1;
                     renderPage(currentPage);
                 });
-            } else {
-                currentPage = 1;
-                renderPage(currentPage);
             }
         };
 
@@ -930,6 +1146,7 @@
         };
 
         window.pdfChangePage = function(delta) {
+            if (!pdfDoc) return;              // todavía se está descargando
             var newPage = currentPage + delta;
             if (newPage >= 1 && newPage <= pdfDoc.numPages) {
                 currentPage = newPage;

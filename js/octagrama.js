@@ -654,15 +654,16 @@ function initialize3DOctagon() {
     // abajo, y ni un grado más.
     const TOPE_RX = Math.PI / 2;
 
-    // Estado de interacción
+    // Estado de interacción. Se arranca en plano: es la lectura por defecto del
+    // modelo, y la maqueta 3D queda a un clic del conmutador.
     const state = {
         drag: false, lastX: 0, lastY: 0,
-        targetRX: VISTA.rx, targetRY: VISTA.ry,
-        rx: VISTA.rx, ry: VISTA.ry,
-        zoom: VISTA.zoom, targetZoom: VISTA.zoom,
+        targetRX: VISTA2D.rx, targetRY: VISTA2D.ry,
+        rx: VISTA2D.rx, ry: VISTA2D.ry,
+        zoom: VISTA.zoom, targetZoom: VISTA.zoom,   // el zoom plano lo fija redimensionar()
         panX: 0, panY: 0, targetPanX: 0, targetPanY: 0,
-        modo: '3d',
-        mezcla: 0, targetMezcla: 0,     // 0 = maqueta 3D, 1 = diagrama plano
+        modo: '2d',
+        mezcla: 1, targetMezcla: 1,     // 0 = maqueta 3D, 1 = diagrama plano
         volteo: 0,                      // 0 = piezas arriba, 1 = piezas abajo
         guard3d: null,                  // desde dónde se dejó el 3D al aplanar
         autoRotate: false,
@@ -1648,6 +1649,13 @@ function initialize3DOctagon() {
     }
     window.addEventListener('resize', redimensionar);
     redimensionar();
+
+    // Arranque en plano, sin animación de entrada: redimensionar() ya calculó el
+    // zoom que le toca al recuadro, así que el primer cuadro sale ya colocado en
+    // vez de aterrizar desde la maqueta.
+    container.classList.add('modo-2d');
+    state.zoom = state.targetZoom = zoom2D;
+
     animar();
 }
 

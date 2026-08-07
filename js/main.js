@@ -7,6 +7,7 @@ let userAnswers = [];
 // Document ready initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabNavigation();
+    ajustarAlturaCabecera();
     // El modelo del Octagrama se inicializa en js/octagrama.js
     try { initializeChat(); } catch(e) { console.error('Chat error:', e); }
     try { loadQuizData(); } catch(e) { console.error('Quiz error:', e); }
@@ -14,6 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Glossary search moved to inline script in index.html
+
+/* La cabecera va fija y su alto cambia: si las pestañas no caben en un renglón
+   pasan al siguiente y la barra crece. Antes el margen de arriba del contenido
+   estaba clavado en el CSS y la cabecera se le montaba encima. Ahora se mide y
+   se le pasa, al cargar y cada vez que cambia el ancho de la ventana. */
+function ajustarAlturaCabecera() {
+    const cabecera = document.querySelector('header');
+    const contenido = document.querySelector('.content');
+    if (!cabecera || !contenido) return;
+
+    const medir = () => {
+        contenido.style.marginTop = (cabecera.offsetHeight + 20) + 'px';
+    };
+    medir();
+    window.addEventListener('resize', medir);
+    // La barra puede crecer al cargar el logotipo, que llega de fuera
+    const logo = cabecera.querySelector('.logo img');
+    if (logo && !logo.complete) logo.addEventListener('load', medir);
+}
 
 // Tab Navigation Functions
 function initializeTabNavigation() {

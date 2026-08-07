@@ -1,15 +1,27 @@
 # Material de trabajo que no va al repositorio (es público).
-# En media/ van sólo las versiones preparadas para web.
+# Todo lo que llega de Guillermo, Jorge o Sergio vive en fuentes/, ordenado por
+# tipo, y de ahí salen las versiones que sí se publican:
+#   fuentes/genesis/          -> genesis/*.pdf
+#   fuentes/presentaciones/   -> intro.pdf
+#   fuentes/medios-originales/-> media/*.m4a y media/*.mp4 (ya comprimidos)
+fuentes/
+
+# Notas de trabajo
+PLAN_CONTACTO.md
+
+# Por si algún archivo de trabajo vuelve a caer suelto en la raíz
 TEXTOS OCTAGRAMA DE VALOR.pptx
 TEXTOS OCTAGRAMA CEREBRAL.pptx
 PROCESOS EN EL OCTAGRAMA DE VALOR.pptx
 PR 00 PRESENTACIÓN DE PORTADA 1.pptx
+PR 00 PORTADA rediseno.pptx
 PR 01 PERFILES FUNCIONALES.pptx
 E30 ENTROPIA ECONOMICA.docx
-PLAN_CONTACTO.md
+METAFORA ROSANTINA.pptx
+METAFORA ROSANTINA.docx
+METAFORA DIAMANTINA.pptx
+METAFORA DIAMANTINA.docx
+EL PODER EXPLICATIVO DEL NUMERO OCHO.pptx
 Modelo_Octagramal.mp4
 Física_y_ficciones_del_Octagrama.m4a
 Por_qué_la_termodinámica_quiebra_empresas.m4a
-
-# Rediseño de la portada (archivo de trabajo)
-PR 00 PORTADA rediseno.pptx

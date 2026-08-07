@@ -58,13 +58,19 @@ header {
 }
 
 /* Navigation Styles */
+/* Con siete pestañas ya no siempre caben en un renglón: se dejan pasar al
+   siguiente, y el alto real de la cabecera se lo pasa el JS a .content, que va
+   por debajo de una cabecera fija. */
 .nav-tabs {
     display: flex;
     list-style: none;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1.9rem;
 }
 
 .nav-tabs li {
-    margin-left: 2rem;
+    margin-left: 0;
 }
 
 .nav-tabs a {
@@ -1350,6 +1356,249 @@ header {
     .recurso-audios-cab { flex-wrap: wrap; gap: 0.5rem; }
     .recurso-audios-lista button { font-size: 0.86rem; padding: 0.55rem 0.7rem; }
     .recurso-audios-dur { margin-left: 0; width: 100%; }
+}
+
+/* ═══ Inventario de Recursos: las tres columnas ═══════════════════════════════
+   Cada columna es una tarjeta blanca con su título, y dentro va lo que le toca:
+   los laboratorios, los audios y las lecturas. Las columnas se apilan solas
+   cuando la pantalla se angosta.
+   ========================================================================== */
+.inv-columnas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+    max-width: 1280px;
+    margin: 0 auto 4rem;
+}
+
+.inv-col {
+    background-color: var(--white-color);
+    border: 1px solid rgba(15, 33, 62, 0.07);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px -24px rgba(15, 33, 62, 0.6);
+    padding: 1.5rem;
+}
+
+.inv-col-tit {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.5rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid rgba(15, 33, 62, 0.08);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: #14459c;
+}
+
+.inv-col-tit i { color: var(--primary-color, #1a73e8); font-size: 1.05rem; }
+
+.inv-col-desc {
+    color: #5f6368;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    margin: 0.8rem 0 1.1rem;
+}
+
+/* Tarjeta de laboratorio. El color va por variables, así cada una lleva el
+   suyo y el resto del estilo se escribe una sola vez. */
+.inv-tarjeta {
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.1rem;
+    background: linear-gradient(135deg, var(--fondo1), var(--fondo2));
+    border-radius: 12px;
+    border-left: 4px solid var(--c);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.inv-tarjeta:last-child { margin-bottom: 0; }
+
+.inv-tarjeta-cab {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.inv-tarjeta-cab i { color: var(--c); font-size: 1.1rem; }
+
+.inv-tarjeta-cab h4 {
+    margin: 0;
+    color: var(--tit);
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.inv-tag {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    background: var(--c);
+    color: #fff;
+    border-radius: 4px;
+    padding: 0.15rem 0.45rem;
+}
+
+.inv-tarjeta p {
+    color: #5f6368;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    margin: 0 0 0.9rem;
+}
+
+.inv-tarjeta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--c);
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.45rem 1rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.inv-tarjeta a:hover { background: var(--c2); }
+
+/* La columna que todavía no tiene material */
+.inv-vacio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px dashed rgba(15, 33, 62, 0.18);
+    border-radius: 10px;
+    color: #8b96a5;
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+@media (max-width: 1080px) {
+    .inv-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+    .inv-columnas { grid-template-columns: 1fr; }
+    .inv-col { padding: 1.2rem 1.1rem; }
+}
+
+/* ═══ Génesis del Octagrama: la tabla de componentes ══════════════════════════
+   Un renglón por pieza, con sus botones para abrir la presentación y el texto
+   en la ventanita del visor de PDF.
+   ========================================================================== */
+.gen-caja {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+    background-color: var(--white-color);
+    border: 1px solid rgba(15, 33, 62, 0.07);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px -26px rgba(15, 33, 62, 0.5);
+    overflow: hidden;
+}
+
+/* En pantallas angostas la tabla se recorre de lado, sin desbordar la página */
+.gen-scroll { overflow-x: auto; }
+
+.gen-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.gen-tabla th {
+    text-align: left;
+    padding: 0.9rem 1.1rem;
+    background: #f5f8ff;
+    border-bottom: 2px solid rgba(15, 33, 62, 0.1);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #14459c;
+    white-space: nowrap;
+}
+
+.gen-tabla td {
+    padding: 1.1rem;
+    border-bottom: 1px solid rgba(15, 33, 62, 0.07);
+    vertical-align: top;
+}
+
+.gen-tabla tr:last-child td { border-bottom: none; }
+.gen-tabla tbody tr:hover { background: rgba(26, 115, 232, 0.03); }
+
+.gen-nom {
+    font-weight: 600;
+    color: #16233d;
+    font-size: 0.98rem;
+    white-space: nowrap;
+}
+
+.gen-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.55rem;
+    border-radius: 50%;
+    background: var(--primary-color, #1a73e8);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.gen-desc {
+    color: #5f6368;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    min-width: 260px;
+}
+
+.gen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    background: #fff;
+    border: 1px solid rgba(15, 33, 62, 0.14);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #16233d;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gen-btn:hover {
+    border-color: var(--primary-color, #1a73e8);
+    box-shadow: 0 6px 16px -10px rgba(15, 33, 62, 0.8);
+}
+
+.gen-btn.ppt i { color: #c0392b; }      /* rojo de PowerPoint */
+.gen-btn.doc i { color: #2563eb; }      /* azul de Word */
+
+.gen-btn span {
+    font-weight: 500;
+    font-size: 0.76rem;
+    color: #8b96a5;
+}
+
+.gen-vacio {
+    color: #c3cad4;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 720px) {
+    .gen-tabla td, .gen-tabla th { padding: 0.8rem; }
+    .gen-btn { font-size: 0.82rem; padding: 0.45rem 0.7rem; }
 }
 
 .glossary-search-wrapper {
