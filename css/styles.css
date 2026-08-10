@@ -1599,15 +1599,6 @@ header {
     color: #6b7684;
 }
 
-.inv-arts-fuente {
-    margin: 0.9rem 0 0;
-    font-size: 0.8rem;
-    color: #8b96a5;
-}
-
-.inv-arts-fuente a { color: var(--primary-color, #1a73e8); text-decoration: none; }
-.inv-arts-fuente a:hover { text-decoration: underline; }
-
 @media (max-width: 1320px) {
     .inv-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
