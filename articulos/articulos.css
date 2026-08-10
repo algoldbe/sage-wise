@@ -1,0 +1,105 @@
+/* ═══ Artículos de interés ════════════════════════════════════════════════
+   Cada artículo de la Biblioteca de Sage-Wise es una página suelta que se abre
+   dentro de la ventanita del portal (el mismo modal de los laboratorios), así
+   que aquí sólo va la lectura: nada de cabecera ni de menú.
+
+   El texto va en una columna angosta, que es lo que se lee cómodo, y las
+   imágenes a todo el ancho de esa columna.
+   ====================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #fff;
+    color: #202124;
+    line-height: 1.7;
+}
+
+.art {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.2rem 1.6rem 3rem;
+}
+
+/* ── La cabecera del artículo ─────────────────────────────────────────── */
+.art-cab {
+    border-bottom: 2px solid #e8f0fe;
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.8rem;
+}
+
+.art-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #1a73e8;
+    margin-bottom: 0.45rem;
+}
+
+.art-cab h1 {
+    font-size: 1.55rem;
+    line-height: 1.25;
+    color: #14459c;
+    font-weight: 700;
+}
+
+/* El título largo con el que el artículo aparece en la Biblioteca. */
+.art-lead {
+    margin-top: 0.6rem;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #5f6368;
+    line-height: 1.45;
+}
+
+/* ── El cuerpo ────────────────────────────────────────────────────────── */
+.art-cuerpo p {
+    margin-bottom: 1.1rem;
+    text-align: justify;
+}
+
+.art-cuerpo ul,
+.art-cuerpo ol {
+    margin: 0 0 1.1rem 1.6rem;
+}
+
+.art-cuerpo li { margin-bottom: 0.45rem; }
+
+.art-cuerpo b,
+.art-cuerpo strong { color: #16233d; }
+
+/* Las imágenes son láminas anchas: se ajustan a la columna y se centran, con
+   un marco suave para despegarlas del texto. */
+.art-cuerpo figure {
+    margin: 1.6rem 0 1.8rem;
+    text-align: center;
+}
+
+.art-cuerpo figure img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e3e8ef;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.art-pie {
+    margin-top: 2.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e8ecf1;
+    font-size: 0.82rem;
+    color: #8b96a5;
+    text-align: center;
+}
+
+@media (max-width: 620px) {
+    .art { padding: 1.5rem 1.1rem 2.2rem; }
+    .art-cab h1 { font-size: 1.28rem; }
+    .art-cuerpo p { text-align: left; }
+}
