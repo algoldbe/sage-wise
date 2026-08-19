@@ -1392,8 +1392,15 @@ header {
    celular y tableta no aplica, ahí se queda con el margen normal y se baja. */
 @media (min-width: 1000px) {
     .inv-columnas {
-        width: calc(100vw - 4rem);
-        max-width: 2200px;
+        /* El ancho se toma de la ventana, con tope de 2200px en pantallas muy
+           anchas. Los márgenes van en cero a propósito: con `margin: 0 auto` y
+           el tope de ancho activo, el `auto` metía un desplazamiento extra que
+           el `translateX(-50%)` no descontaba y las tres columnas se recorrían
+           a la derecha (se veía en monitores de más de 2264px). */
+        width: min(calc(100vw - 4rem), 2200px);
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
@@ -1430,8 +1437,10 @@ header {
 }
 
 /* La entradilla de esta sección va más ancha y con menos aire debajo: así cabe
-   en un renglón y le deja el alto a las tarjetas, que es lo que interesa ver */
-#recursos .pagina-cab { max-width: 940px; margin-bottom: 1.4rem; }
+   en un renglón y le deja el alto a las tarjetas, que es lo que interesa ver.
+   El texto mide 1061px en un solo renglón, por eso el tope va en 1120px: le
+   sobra un poco por si la tipografía cambia de tamaño en otra máquina. */
+#recursos .pagina-cab { max-width: 1120px; margin-bottom: 1.4rem; }
 
 /* Tarjeta de laboratorio. El color va por variables, así cada una lleva el
    suyo y el resto del estilo se escribe una sola vez.
@@ -1612,6 +1621,10 @@ header {
    Un renglón por pieza, con sus botones para abrir la presentación y el texto
    en la ventanita del visor de PDF.
    ========================================================================== */
+/* La entradilla va del mismo ancho que la tabla de abajo, para que el bloque de
+   texto y la tabla queden alineados por los dos lados */
+#genesis .pagina-cab { max-width: 1100px; }
+
 .gen-caja {
     max-width: 1100px;
     margin: 0 auto 4rem;
