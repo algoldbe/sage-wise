@@ -1608,6 +1608,29 @@ header {
     color: #6b7684;
 }
 
+/* Los artículos van agrupados en las tres áreas que propuso Guillermo:
+   Negocios, Modelos y Aprendizaje. Cada grupo lleva su rótulo arriba. */
+.inv-arts-grupo + .inv-arts-grupo { margin-top: 1.3rem; }
+
+.inv-arts-grupo-tit {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary-color, #1a73e8);
+}
+
+.inv-arts-grupo-tit::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(26, 115, 232, 0.22);
+}
+
 @media (max-width: 1320px) {
     .inv-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

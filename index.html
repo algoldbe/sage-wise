@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260819" rel="stylesheet">
+    <link href="css/styles.css?v=20260823a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -228,70 +228,120 @@
 
                 <!-- ── Columna 3: los artículos de la Biblioteca ───────────────
                      Cada uno es una página suelta de articulos/ y se abre en la
-                     misma ventanita de los laboratorios. Para agregar otro basta
-                     un <li> más aquí y su página allá. ─────────────────────── -->
+                     misma ventanita de los laboratorios. Van agrupados en las
+                     tres áreas que propuso Guillermo (Negocios, Modelos y
+                     Aprendizaje). Para agregar otro basta un <li> más en su
+                     grupo y su página allá. ──────────────────────────────── -->
                 <section class="inv-col">
                     <h3 class="inv-col-tit"><i class="fas fa-book-open"></i>Artículos de interés</h3>
                     <p class="inv-col-desc">Textos para profundizar en los conceptos del
-                    modelo. Se abren aquí mismo, en una ventana.</p>
+                    modelo, ordenados por área. Se abren aquí mismo, en una ventana.</p>
 
-                    <ul class="inv-arts">
-                        <li>
-                            <button type="button"
-                                onclick="openArticulo('evolucion-de-los-negocios','Evolución de los negocios')">
-                                <i class="fas fa-file-lines"></i>
-                                <span>
-                                    <span class="inv-arts-tit">Evolución de los negocios</span>
-                                    <span class="inv-arts-sub">Las empresas evolucionan aprendiendo
-                                    y aprenden evolucionando</span>
-                                </span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button"
-                                onclick="openArticulo('modelos-para-decidir','Modelos para decidir y planes para ejecutar')">
-                                <i class="fas fa-file-lines"></i>
-                                <span>
-                                    <span class="inv-arts-tit">Modelos para decidir y planes para ejecutar</span>
-                                    <span class="inv-arts-sub">¿Por qué no siempre hacemos lo que
-                                    planeamos ni planeamos lo que hacemos?</span>
-                                </span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button"
-                                onclick="openArticulo('modelos-para-ensenar','Modelos para enseñar')">
-                                <i class="fas fa-file-lines"></i>
-                                <span>
-                                    <span class="inv-arts-tit">Modelos para enseñar</span>
-                                    <span class="inv-arts-sub">Existe una desconexión entre lo que
-                                    sabe la ciencia y lo que se hace en los negocios</span>
-                                </span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button"
-                                onclick="openArticulo('competitividad-y-competencia','Competitividad y competencia')">
-                                <i class="fas fa-file-lines"></i>
-                                <span>
-                                    <span class="inv-arts-tit">Competitividad y competencia</span>
-                                    <span class="inv-arts-sub">Una empresa exitosa es competitiva
-                                    y competente al mismo tiempo</span>
-                                </span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button"
-                                onclick="openArticulo('aprendizaje-continuo','Aprendizaje continuo')">
-                                <i class="fas fa-file-lines"></i>
-                                <span>
-                                    <span class="inv-arts-tit">Aprendizaje continuo</span>
-                                    <span class="inv-arts-sub">En la sociedad del conocimiento la
-                                    supervivencia depende del aprendizaje continuo</span>
-                                </span>
-                            </button>
-                        </li>
-                    </ul>
+                    <div class="inv-arts-grupo">
+                        <h4 class="inv-arts-grupo-tit">Negocios</h4>
+                        <ul class="inv-arts">
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('evolucion-de-los-negocios','Evolución de los negocios')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Evolución de los negocios</span>
+                                        <span class="inv-arts-sub">Las empresas evolucionan aprendiendo
+                                        y aprenden evolucionando</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('realidad-de-los-negocios','La realidad de los negocios')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">La realidad de los negocios</span>
+                                        <span class="inv-arts-sub">Interacción de las dimensiones
+                                        objetiva y subjetiva de las empresas</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('reglas-del-juego-en-los-negocios','Reglas del juego en los negocios')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Reglas del juego en los negocios</span>
+                                        <span class="inv-arts-sub">El poder político de los ciudadanos
+                                        y el poder económico de los consumidores</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('competitividad-y-competencia','Competitividad y competencia')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Competitividad y competencia</span>
+                                        <span class="inv-arts-sub">Una empresa exitosa es competitiva
+                                        y competente al mismo tiempo</span>
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="inv-arts-grupo">
+                        <h4 class="inv-arts-grupo-tit">Modelos</h4>
+                        <ul class="inv-arts">
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('modelos-para-decidir','Modelos para decidir y planes para ejecutar')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Modelos para decidir y planes para ejecutar</span>
+                                        <span class="inv-arts-sub">¿Por qué no siempre hacemos lo que
+                                        planeamos ni planeamos lo que hacemos?</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('modelos-para-ensenar','Modelos para enseñar')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Modelos para enseñar</span>
+                                        <span class="inv-arts-sub">Existe una desconexión entre lo que
+                                        sabe la ciencia y lo que se hace en los negocios</span>
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('dos-planes-y-dos-modelos','Dos planes y dos modelos')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Dos planes y dos modelos</span>
+                                        <span class="inv-arts-sub">Guías para lidiar con la incertidumbre
+                                        en el tiempo y la complejidad en el espacio</span>
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="inv-arts-grupo">
+                        <h4 class="inv-arts-grupo-tit">Aprendizaje</h4>
+                        <ul class="inv-arts">
+                            <li>
+                                <button type="button"
+                                    onclick="openArticulo('aprendizaje-continuo','Aprendizaje continuo')">
+                                    <i class="fas fa-file-lines"></i>
+                                    <span>
+                                        <span class="inv-arts-tit">Aprendizaje continuo</span>
+                                        <span class="inv-arts-sub">En la sociedad del conocimiento la
+                                        supervivencia depende del aprendizaje continuo</span>
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </section>
 
             </div>
@@ -1109,7 +1159,7 @@
        color, porque son una sola familia. Como el texto es largo, la ventana
        se abre al tope y el artículo se lee bajando dentro de ella. */
     window.openArticulo = function(slug, titulo) {
-        openLab('articulos/' + slug + '.html?v=20260810b', titulo, '#14459c', 'fa-file-lines');
+        openLab('articulos/' + slug + '.html?v=20260823a', titulo, '#14459c', 'fa-file-lines');
     };
 
     document.getElementById('lab-modal').addEventListener('click', function(e) {

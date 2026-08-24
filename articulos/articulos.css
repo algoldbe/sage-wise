@@ -89,6 +89,74 @@ body {
     background: #fff;
 }
 
+/* ── Los subtítulos de adentro ────────────────────────────────────────── */
+.art-cuerpo h2 {
+    font-size: 1.08rem;
+    line-height: 1.3;
+    color: #14459c;
+    font-weight: 700;
+    margin: 2rem 0 0.9rem;
+    padding-left: 0.7rem;
+    border-left: 4px solid #1a73e8;
+}
+
+/* ── Dos láminas que se leen juntas ───────────────────────────────────── */
+.art-par {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin: 1.6rem 0 1.8rem;
+}
+
+.art-par figure {
+    flex: 1 1 260px;
+    margin: 0;
+}
+
+.art-par figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #5f6368;
+    line-height: 1.35;
+}
+
+/* ── Los pares de rótulos del original ────────────────────────────────────
+   En el Word varias ideas vienen en parejas de etiquetas cortas, una frente a
+   la otra. Aquí se conservan como tarjetitas lado a lado; solas se acomodan a
+   lo ancho y en pantalla angosta caen una debajo de otra. */
+.art-etqs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 0.9rem;
+    margin: 1.4rem 0 1.6rem;
+}
+
+.art-etq {
+    background: #f7f9fc;
+    border: 1px solid #e3e8ef;
+    border-top: 3px solid #1a73e8;
+    border-radius: 8px;
+    padding: 0.85rem 0.95rem;
+}
+
+.art-etq-tit {
+    display: block;
+    font-size: 0.76rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #14459c;
+}
+
+.art-etq-txt {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.88rem;
+    color: #3c4043;
+    line-height: 1.45;
+}
+
 .art-pie {
     margin-top: 2.4rem;
     padding-top: 1rem;
