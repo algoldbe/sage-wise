@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260823a" rel="stylesheet">
+    <link href="css/styles.css?v=20260825a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -51,9 +51,13 @@
                         <a href="#" class="enlace-recurso" onclick="openPdfViewer(); return false;">
                             <i class="fas fa-file-pdf"></i>Ver Presentación de Portada
                         </a>
-                        <a href="#" class="enlace-recurso" onclick="abrirMedio('video'); return false;">
+                        <a href="#" class="enlace-recurso" onclick="abrirMedio('modelo-octagramal'); return false;">
                             <i class="fas fa-circle-play"></i>Ver el video del Modelo Octagramal
                             <span>8:28 min</span>
+                        </a>
+                        <a href="#" class="enlace-recurso" onclick="abrirMedio('filosofia-de-sage-wise'); return false;">
+                            <i class="fas fa-circle-play"></i>Ver el video Filosofía de Sage-Wise
+                            <span>6:41 min</span>
                         </a>
                     </div>
 
@@ -945,16 +949,34 @@
             }
         ];
 
-        var MEDIOS = {
-            video: {
-                titulo: '<i class="fas fa-circle-play"></i> El Modelo Octagramal',
-                html: '<video controls autoplay playsinline preload="metadata" ' +
-                      'poster="media/modelo-octagramal-poster.jpg">' +
-                      '<source src="media/modelo-octagramal.mp4" type="video/mp4">' +
-                      'Su navegador no puede reproducir el video. ' +
-                      '<a href="media/modelo-octagramal.mp4">Descárguelo aquí</a>.</video>'
+        /* Los videos, con el mismo criterio: una línea por video y de ahí sale
+           el reproductor. En media/ van el .mp4 ya comprimido para web y su
+           imagen de portada, «<id>-poster.jpg». */
+        var VIDEOS = [
+            {
+                id: 'modelo-octagramal',
+                titulo: 'El Modelo Octagramal'
+            },
+            {
+                id: 'filosofia-de-sage-wise',
+                titulo: 'Filosofía de Sage-Wise'
             }
-        };
+        ];
+
+        var MEDIOS = {};
+
+        VIDEOS.forEach(function (v) {
+            var src = 'media/' + v.id + '.mp4';
+            MEDIOS[v.id] = {
+                esVideo: true,
+                titulo: '<i class="fas fa-circle-play"></i> ' + v.titulo,
+                html: '<video controls autoplay playsinline preload="metadata" ' +
+                      'poster="media/' + v.id + '-poster.jpg">' +
+                      '<source src="' + src + '" type="video/mp4">' +
+                      'Su navegador no puede reproducir el video. ' +
+                      '<a href="' + src + '">Descárguelo aquí</a>.</video>'
+            };
+        });
 
         AUDIOS.forEach(function (a) {
             var src = 'media/' + a.id + '.m4a';
@@ -986,7 +1008,7 @@
         window.abrirMedio = function(tipo) {
             var m = MEDIOS[tipo];
             if (!m) return;
-            modal.classList.toggle('es-audio', tipo !== 'video');
+            modal.classList.toggle('es-audio', !m.esVideo);
             titulo.innerHTML = m.titulo;
             cuerpo.innerHTML = m.html;      // se crea al abrir: nada se descarga antes
             modal.style.display = 'flex';

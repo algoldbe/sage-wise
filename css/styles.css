@@ -1154,6 +1154,14 @@ header {
     box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
 }
 
+/* La ventana del video se ciñe al video mismo: el ancho lo manda la altura
+   disponible, así el 16:9 cabe entero y no quedan franjas negras a los lados
+   ni un borde blanco debajo. Las 7rem que se descuentan son el relleno del
+   modal más la barra del título. */
+.medio-modal:not(.es-audio) .medio-modal-caja {
+    width: min(100%, 900px, calc((100vh - 7rem) * 16 / 9));
+}
+
 .medio-modal.es-audio .medio-modal-caja { max-width: 520px; }
 
 .medio-modal-cab {
@@ -1192,7 +1200,7 @@ header {
 .medio-modal-cuerpo video {
     display: block;
     width: 100%;
-    max-height: 74vh;
+    aspect-ratio: 16 / 9;
     background: #0f1b33;
 }
 
