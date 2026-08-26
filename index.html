@@ -59,6 +59,10 @@
                             <i class="fas fa-circle-play"></i>Ver el video Filosofía de Sage-Wise
                             <span>6:41 min</span>
                         </a>
+                        <a href="#" class="enlace-recurso" onclick="abrirMedio('filosofia-voz-mejorada'); return false;">
+                            <i class="fas fa-circle-play"></i>Ver el video Filosofía de Sage-Wise, Voz Mejorada
+                            <span>7:43 min</span>
+                        </a>
                     </div>
 
                     <div class="oct-leyenda">
@@ -960,18 +964,25 @@
             {
                 id: 'filosofia-de-sage-wise',
                 titulo: 'Filosofía de Sage-Wise'
+            },
+            {
+                id: 'filosofia-voz-mejorada',
+                archivo: 'filosofia-de-sage-wise-voz-mejorada',
+                titulo: 'Filosofía de Sage-Wise, Voz Mejorada'
             }
         ];
 
         var MEDIOS = {};
 
         VIDEOS.forEach(function (v) {
-            var src = 'media/' + v.id + '.mp4';
+            // el archivo se llama como el id, salvo que la ficha traiga 'archivo'
+            var base = v.archivo || v.id;
+            var src = 'media/' + base + '.mp4';
             MEDIOS[v.id] = {
                 esVideo: true,
                 titulo: '<i class="fas fa-circle-play"></i> ' + v.titulo,
                 html: '<video controls autoplay playsinline preload="metadata" ' +
-                      'poster="media/' + v.id + '-poster.jpg">' +
+                      'poster="media/' + base + '-poster.jpg">' +
                       '<source src="' + src + '" type="video/mp4">' +
                       'Su navegador no puede reproducir el video. ' +
                       '<a href="' + src + '">Descárguelo aquí</a>.</video>'
