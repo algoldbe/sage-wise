@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260825a" rel="stylesheet">
+    <link href="css/styles.css?v=20260828a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -20,6 +20,7 @@
                 <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
                 <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
                 <li><a href="#genesis" class="tab-link" data-tab="genesis">Génesis del Octagrama</a></li>
+                <li><a href="#infografias" class="tab-link" data-tab="infografias">Infografías</a></li>
                 <li><a href="#recursos" class="tab-link" data-tab="recursos">Inventario de Recursos</a></li>
                 <li><a href="#glossary" class="tab-link" data-tab="glossary">Glosario</a></li>
                 <li><a href="#contacto" class="tab-link" data-tab="contacto">Contacto</a></li>
@@ -476,6 +477,34 @@
             </div>
         </div>
 
+        <!-- Infografías: las 7 láminas maestras del modelo, cada tema con su lado
+             positivo (a color, con las relaciones) y su lado negativo (con las
+             claves de los módulos). El armado vive en js/infografias.js. -->
+        <div id="infografias" class="tab-content">
+            <div class="pagina-cab">
+                <span class="pagina-eyebrow">
+                    <svg class="icono-octagono" viewBox="0 0 24 24" aria-hidden="true">
+                        <polygon points="21.2,8.2 15.8,2.8 8.2,2.8 2.8,8.2 2.8,15.8 8.2,21.2 15.8,21.2 21.2,15.8"/>
+                    </svg>
+                    Mapa del modelo
+                </span>
+                <h2>Infografías</h2>
+                <p>Siete infografías que ordenan los 22 temas y los 133 módulos que hay detrás
+                del modelo octagramal. Cada tema se ve de dos maneras: a color, con las
+                relaciones entre sus módulos, y en nomenclatura, donde cada clave abre el
+                módulo que le corresponde.</p>
+            </div>
+
+            <div class="info-aviso">
+                <i class="fas fa-flask"></i>
+                <span><b>Primer acercamiento.</b> Las 44 láminas ya están completas y todas las
+                claves son botones. Los módulos todavía no llegan, así que por ahora cada clave
+                abre una ficha con su nombre.</span>
+            </div>
+
+            <div id="info-cuerpo"></div>
+        </div>
+
         <!-- Quiz Tab -->
         <div id="quiz" class="tab-content">
             <div class="quiz-container">
@@ -892,6 +921,25 @@
     <script src="js/relatorias.js?v=20260810b"></script>
     <script src="js/octagrama.js?v=20260810b"></script>
     <script src="js/main.js?v=20260810b"></script>
+    <script src="js/infografias.js?v=20260828a"></script>
+
+    <!-- Ficha del módulo que abre una clave de la infografía. Mientras no lleguen
+         los 133 módulos, sólo dice de cuál se trata y dónde vive. -->
+    <div id="info-modal" class="info-modal" onclick="if(event.target===this) infoCerrarModulo()">
+        <div class="info-modal-caja" role="dialog" aria-modal="true" aria-labelledby="info-modal-tit">
+            <button type="button" class="info-modal-x" onclick="infoCerrarModulo()" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <span id="info-modal-clave" class="info-modal-clave"></span>
+            <h3 id="info-modal-tit" class="info-modal-tit"></h3>
+            <p id="info-modal-ruta" class="info-modal-ruta"></p>
+            <p class="info-modal-nota">
+                <i class="fas fa-clock"></i>
+                La presentación de este módulo está por publicarse. Aquí se abrirá en cuanto
+                llegue, sin salir de la infografía.
+            </p>
+        </div>
+    </div>
 
     <!-- Modal de Octagrama (MBTI / Roles) -->
     <div id="oct-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:11000; background:rgba(0,0,0,0.55); justify-content:center; align-items:center;">
