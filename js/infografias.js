@@ -15,9 +15,9 @@
    que abrir también desde file://, donde fetch() está bloqueado. Es la misma
    razón por la que quizData está incrustado en main.js.
 
-   Los 133 módulos todavía no llegan. Mientras tanto cada clave abre una
-   ventanita que dice de qué módulo se trata y que está por venir. Cuando
-   lleguen, lo único que cambia es infoModulo().
+   Los módulos van llegando por remesas. Los que ya están se listan en MODULOS,
+   más abajo, y se abren en el mismo visor de PDF de Génesis del Octagrama. Los
+   que faltan siguen abriendo la ventanita que dice que están por venir.
    ───────────────────────────────────────────────────────────────────────────── */
 
 const INFOGRAFIAS = [
@@ -698,7 +698,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "MC 01",
+      "c": "XC 01",
       "t": "Capacidad para sufrir",
       "x": 50.45,
       "y": 52.82,
@@ -714,7 +714,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "MC 02",
+      "c": "XC 02",
       "t": "Concientizando el planeta",
       "x": 50.08,
       "y": 65.08,
@@ -730,7 +730,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "MC 03",
+      "c": "XC 03",
       "t": "La persona consciente",
       "x": 50.45,
       "y": 76.64,
@@ -1118,7 +1118,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "PE 01",
+      "c": "FE 01",
       "t": "Racionalización",
       "x": 11.33,
       "y": 53.3,
@@ -1126,7 +1126,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "PE 02",
+      "c": "FE 02",
       "t": "Miopía probabilística",
       "x": 11.15,
       "y": 64.0,
@@ -1134,7 +1134,7 @@ const INFOGRAFIAS = [
       "h": 4.49
      },
      {
-      "c": "PE 03",
+      "c": "FE 03",
       "t": "Sesgos cognitivos",
       "x": 11.15,
       "y": 74.5,
@@ -1313,6 +1313,36 @@ const INFOGRAFIAS = [
  }
 ];
 
+/* ─── Los módulos que ya llegaron ─────────────────────────────────────────────
+   La clave manda, no la infografía: un módulo que sale en varias infografías,
+   como PR 00, se abre igual desde todas. Cada PowerPoint de Guillermo se
+   convierte a PDF y se agrega aquí; los que todavía no llegan simplemente no
+   están en la lista.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+const INFO_VERSION = '20260830a';
+
+const MODULOS = {
+ "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
+ "PR 01": { "pdf": "infografias/modulos/pr-01.pdf", "titulo": "Elementos para modelar empresas",     "laminas": 45 },
+ "PR 02": { "pdf": "infografias/modulos/pr-02.pdf", "titulo": "Recursos para modelar organizaciones", "laminas": 36 }
+};
+
+/* Cuántos módulos de un tema ya se pueden abrir. */
+function infoListos(tema) {
+    return tema.claves.filter(function (k) { return MODULOS[k.c]; }).length;
+}
+
+/* Lo mismo para una infografía entera, sin contar dos veces un módulo que sale
+   en varios de sus temas. */
+function infoListosInfografia(inf) {
+    var vistos = {};
+    inf.temas.forEach(function (t) {
+        t.claves.forEach(function (k) { if (MODULOS[k.c]) vistos[k.c] = 1; });
+    });
+    return Object.keys(vistos).length;
+}
+
 /* Estado del visor: qué infografía está abierta, en qué tema y de qué lado. */
 let infoAbierta = null;   // índice dentro de INFOGRAFIAS, o null si está el índice
 let infoTema    = 0;      // índice del tema dentro de la infografía
@@ -1346,6 +1376,13 @@ function infoPintarIndice() {
                            '<span class="info-tarjeta-dato">' +
                                infoPlural(inf.temas.length, 'tema', 'temas') + ' · ' +
                                infoPlural(infoTotalModulos(inf), 'módulo', 'módulos') +
+                               (infoListosInfografia(inf)
+                                   ? '<b class="info-tarjeta-listos">' +
+                                         infoListosInfografia(inf) +
+                                         (infoListosInfografia(inf) === 1
+                                             ? ' ya se abre' : ' ya se abren') +
+                                     '</b>'
+                                   : '') +
                            '</span>' +
                        '</span>' +
                    '</button>';
@@ -1418,7 +1455,12 @@ function infoPintarVisor() {
                       'abrir cada módulo.'
                     : '<i class="fas fa-hand-pointer"></i> Lado negativo: pique cualquier clave para ' +
                       'abrir su módulo. Este tema tiene ' +
-                      infoPlural(tema.claves.length, 'módulo', 'módulos') + '.') +
+                      infoPlural(tema.claves.length, 'módulo', 'módulos') + ', ' +
+                      (infoListos(tema) === 0
+                          ? 'todos por llegar.'
+                          : infoListos(tema) + ' ya se ' +
+                            (infoListos(tema) === 1 ? 'puede abrir' : 'pueden abrir') +
+                            ' y se marcan en verde.')) +
             '</p>' +
 
             '<div class="info-pasos">' +
@@ -1442,10 +1484,12 @@ function infoHotspots(tema) {
         var y = Math.max(0, k.y - 0.6);
         var w = Math.min(100 - x, k.w + 1.2);
         var h = Math.min(100 - y, k.h + 1.2);
+        var listo = !!MODULOS[k.c];
         var rotulo = k.c + (k.t ? ' · ' + k.t : '');
-        return '<button type="button" class="info-clave" ' +
+        return '<button type="button" class="info-clave' + (listo ? ' listo' : '') + '" ' +
                        'style="left:' + x + '%;top:' + y + '%;width:' + w + '%;height:' + h + '%" ' +
-                       'aria-label="Abrir el módulo ' + rotulo + '" ' +
+                       'aria-label="' + (listo ? 'Abrir' : 'Ver') + ' el módulo ' + rotulo +
+                           (listo ? '' : ', todavía por llegar') + '" ' +
                        'onclick="infoModulo(' + infoAbierta + ',' + infoTema + ',' + n + ')">' +
                    '<span class="info-clave-tip">' + rotulo + '</span>' +
                '</button>';
@@ -1474,6 +1518,17 @@ function infoSaltar(paso) {
 
 function infoModulo(i, t, n) {
     var k = INFOGRAFIAS[i].temas[t].claves[n];
+
+    /* Si el módulo ya llegó, se abre en el visor de PDF, el mismo de Génesis
+       del Octagrama, sin salir del portal y sin descargar nada. */
+    var mod = MODULOS[k.c];
+    if (mod && typeof window.openPdfViewer === 'function') {
+        openPdfViewer(mod.pdf + '?v=' + INFO_VERSION,
+                      k.c + ' · ' + (mod.titulo || k.t || ''),
+                      'fa-file-powerpoint');
+        return;
+    }
+
     var modal = document.getElementById('info-modal');
     document.getElementById('info-modal-clave').textContent = k.c;
     document.getElementById('info-modal-tit').textContent = k.t || ('Módulo ' + k.c);

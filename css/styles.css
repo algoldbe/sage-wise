@@ -3509,6 +3509,18 @@ footer {
     color: var(--light-text);
 }
 
+/* Cuántos módulos de esta infografía ya se abren de verdad. */
+.info-tarjeta-listos {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(15, 157, 88, 0.12);
+    color: #0b7a44;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
 /* Visor */
 
 .info-visor { max-width: 1080px; margin: 0 auto; }
@@ -3685,6 +3697,20 @@ footer {
     border: 1px solid var(--primary-color);
     box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.16);
     outline: none;
+}
+
+/* En verde y con línea continua, las claves cuyo módulo ya llegó y se abre de
+   verdad. Las punteadas en azul son las que todavía están por venir. */
+.info-clave.listo {
+    background: rgba(15, 157, 88, 0.12);
+    border: 1px solid rgba(15, 157, 88, 0.7);
+}
+
+.info-clave.listo:hover,
+.info-clave.listo:focus-visible {
+    background: rgba(15, 157, 88, 0.26);
+    border-color: #0f9d58;
+    box-shadow: 0 0 0 3px rgba(15, 157, 88, 0.2);
 }
 
 /* El rótulo que asoma al pasar por encima. Sobresale del recuadro de la clave,

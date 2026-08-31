@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260828a" rel="stylesheet">
+    <link href="css/styles.css?v=20260830a" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -489,7 +489,7 @@
                     Mapa del modelo
                 </span>
                 <h2>Infografías</h2>
-                <p>Siete infografías que ordenan los 22 temas y los 133 módulos que hay detrás
+                <p>Siete infografías que ordenan los 22 temas y los 118 módulos que hay detrás
                 del modelo octagramal. Cada tema se ve de dos maneras: a color, con las
                 relaciones entre sus módulos, y en nomenclatura, donde cada clave abre el
                 módulo que le corresponde.</p>
@@ -497,9 +497,10 @@
 
             <div class="info-aviso">
                 <i class="fas fa-flask"></i>
-                <span><b>Primer acercamiento.</b> Las 44 láminas ya están completas y todas las
-                claves son botones. Los módulos todavía no llegan, así que por ahora cada clave
-                abre una ficha con su nombre.</span>
+                <span><b>En construcción.</b> Las 44 láminas ya están completas y todas las
+                claves son botones. Los módulos van llegando por remesas: los que ya se pueden
+                abrir se marcan en verde y los que faltan, en azul, abren una ficha con su
+                nombre.</span>
             </div>
 
             <div id="info-cuerpo"></div>
@@ -921,10 +922,11 @@
     <script src="js/relatorias.js?v=20260810b"></script>
     <script src="js/octagrama.js?v=20260810b"></script>
     <script src="js/main.js?v=20260810b"></script>
-    <script src="js/infografias.js?v=20260828a"></script>
+    <script src="js/infografias.js?v=20260830a"></script>
 
-    <!-- Ficha del módulo que abre una clave de la infografía. Mientras no lleguen
-         los 133 módulos, sólo dice de cuál se trata y dónde vive. -->
+    <!-- Ficha del módulo que abre una clave de la infografía. Sólo sale con los
+         módulos que todavía no llegan: dice de cuál se trata y dónde vive. Los que
+         ya llegaron se abren directo en el visor de PDF, igual que en Génesis. -->
     <div id="info-modal" class="info-modal" onclick="if(event.target===this) infoCerrarModulo()">
         <div class="info-modal-caja" role="dialog" aria-modal="true" aria-labelledby="info-modal-tit">
             <button type="button" class="info-modal-x" onclick="infoCerrarModulo()" aria-label="Cerrar">
