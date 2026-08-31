@@ -3422,6 +3422,31 @@ footer {
 
 /* Índice */
 
+/* El encabezado de Infografías va tan ancho como la rejilla de tarjetas de
+   abajo, con el párrafo justificado, para que las dos orillas queden a
+   escuadra con las tarjetas. El separado de sílabas evita los huecos que deja
+   el justificado en renglones tan largos; funciona porque el <html> va con
+   lang="es". */
+#infografias .pagina-cab {
+    max-width: 1180px;
+}
+
+#infografias .pagina-cab p {
+    text-align: justify;
+    text-align-last: center;
+    hyphens: auto;
+    line-height: 1.7;
+}
+
+/* En pantallas angostas el justificado abre huecos feos, así que ahí se deja
+   el texto centrado y corriente. */
+@media (max-width: 700px) {
+    #infografias .pagina-cab p {
+        text-align: center;
+        hyphens: manual;
+    }
+}
+
 .info-rejilla {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
