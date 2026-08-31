@@ -1320,12 +1320,19 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260830a';
+const INFO_VERSION = '20260831a';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
  "PR 01": { "pdf": "infografias/modulos/pr-01.pdf", "titulo": "Elementos para modelar empresas",     "laminas": 45 },
- "PR 02": { "pdf": "infografias/modulos/pr-02.pdf", "titulo": "Recursos para modelar organizaciones", "laminas": 36 }
+ "PR 02": { "pdf": "infografias/modulos/pr-02.pdf", "titulo": "Recursos para modelar organizaciones", "laminas": 36 },
+ "PR 03": { "pdf": "infografias/modulos/pr-03.pdf", "titulo": "Bases teóricas para modelar",           "laminas": 40 },
+ "PR 04": { "pdf": "infografias/modulos/pr-04.pdf", "titulo": "Bases filosóficas para modelar",        "laminas": 24 },
+ "PR 05": { "pdf": "infografias/modulos/pr-05.pdf", "titulo": "Concepción de un modelo",               "laminas": 63 },
+ "OV 00": { "pdf": "infografias/modulos/ov-00.pdf", "titulo": "Octagrama de valor",                    "laminas": 19 },
+ "OC 00": { "pdf": "infografias/modulos/oc-00.pdf", "titulo": "Octagrama cerebral",                    "laminas": 18 },
+ "TV 00": { "pdf": "infografias/modulos/tv-00.pdf", "titulo": "Teoría del valor",                      "laminas": 24 },
+ "TI 00": { "pdf": "infografias/modulos/ti-00.pdf", "titulo": "Teoría de la Información",               "laminas": 25 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
