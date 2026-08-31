@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sage-Wise | Consultoría Empresarial</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/styles.css?v=20260830b" rel="stylesheet">
+    <link href="css/styles.css?v=20260830c" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -15,7 +15,19 @@
             <div class="logo">
                 <img src="https://www.sage-wise.net/pc/_img/Logo_Sage-Wise_Learning_Institute_50x150.png" alt="Sage-Wise Logo">
             </div>
-            <ul class="nav-tabs">
+            <!-- El botón de hamburguesa sólo se ve de 1024px para abajo, donde las
+                 ocho pestañas ya no caben. Lo maneja initializeMenuMovil() en
+                 js/main.js. -->
+            <button type="button" class="nav-hamburguesa" id="nav-hamburguesa"
+                    aria-label="Abrir el menú" aria-expanded="false" aria-controls="nav-tabs">
+                <span class="nav-hamburguesa-caja" aria-hidden="true">
+                    <span class="nav-hamburguesa-linea"></span>
+                    <span class="nav-hamburguesa-linea"></span>
+                    <span class="nav-hamburguesa-linea"></span>
+                </span>
+            </button>
+
+            <ul class="nav-tabs" id="nav-tabs">
                 <li><a href="#home" class="tab-link active" data-tab="home">Inicio</a></li>
                 <li><a href="#quiz" class="tab-link" data-tab="quiz">Diagnóstico</a></li>
                 <li><a href="#chat" class="tab-link" data-tab="chat">El Explicador</a></li>
@@ -926,7 +938,7 @@
     
     <script src="js/relatorias.js?v=20260810b"></script>
     <script src="js/octagrama.js?v=20260810b"></script>
-    <script src="js/main.js?v=20260810b"></script>
+    <script src="js/main.js?v=20260830c"></script>
     <script src="js/infografias.js?v=20260830a"></script>
 
     <!-- Ficha del módulo que abre una clave de la infografía. Sólo sale con los

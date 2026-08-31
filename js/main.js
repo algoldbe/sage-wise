@@ -7,6 +7,7 @@ let userAnswers = [];
 // Document ready initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabNavigation();
+    initializeMenuMovil();
     ajustarAlturaCabecera();
     // El modelo del Octagrama se inicializa en js/octagrama.js
     try { initializeChat(); } catch(e) { console.error('Chat error:', e); }
@@ -33,6 +34,53 @@ function ajustarAlturaCabecera() {
     // La barra puede crecer al cargar el logotipo, que llega de fuera
     const logo = cabecera.querySelector('.logo img');
     if (logo && !logo.complete) logo.addEventListener('load', medir);
+}
+
+/* El menú de hamburguesa, que sólo se ve de 1024px para abajo. El CSS decide
+   cuándo aparece; aquí sólo se prende y se apaga la clase `menu-abierto` en la
+   cabecera. Se cierra solo al escoger una sección, al picar fuera, con Escape y
+   si la ventana crece hasta donde el menú normal ya cabe. */
+const MENU_ANCHO_MAXIMO = 1024;
+
+function initializeMenuMovil() {
+    const cabecera = document.querySelector('header');
+    const boton = document.getElementById('nav-hamburguesa');
+    const menu = document.getElementById('nav-tabs');
+    if (!cabecera || !boton || !menu) return;
+
+    function cerrar() {
+        if (!cabecera.classList.contains('menu-abierto')) return;
+        cabecera.classList.remove('menu-abierto');
+        boton.setAttribute('aria-expanded', 'false');
+        boton.setAttribute('aria-label', 'Abrir el menú');
+    }
+
+    function abrir() {
+        cabecera.classList.add('menu-abierto');
+        boton.setAttribute('aria-expanded', 'true');
+        boton.setAttribute('aria-label', 'Cerrar el menú');
+    }
+
+    boton.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (cabecera.classList.contains('menu-abierto')) cerrar(); else abrir();
+    });
+
+    menu.addEventListener('click', function (e) {
+        if (e.target.closest('.tab-link')) cerrar();
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!cabecera.contains(e.target)) cerrar();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') cerrar();
+    });
+
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > MENU_ANCHO_MAXIMO) cerrar();
+    });
 }
 
 // Tab Navigation Functions

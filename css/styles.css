@@ -2855,21 +2855,8 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        padding: 1rem;
-    }
-    
-    .nav-tabs {
-        margin-top: 1rem;
-        width: 100%;
-        justify-content: space-around;
-    }
-    
-    .nav-tabs li {
-        margin: 0;
-    }
-    
+    /* La cabecera y las pestañas de aquí para abajo las maneja el bloque del
+       menú de hamburguesa, más adelante en este archivo. */
     .content {
         margin-top: 140px;
         padding: 1rem;
@@ -2912,6 +2899,136 @@ footer {
     }
 
     footer { padding: 0.7rem 5% 0.9rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Menú de hamburguesa
+   ─────────────────────────────────────────────────────────────────────────────
+   Las ocho pestañas necesitan como 1370px de ventana para caber en un renglón.
+   De 1024px para abajo, que es una tablet acostada y todo lo que sigue, se
+   esconden detrás del botón de hamburguesa.
+
+   El panel va posicionado absoluto, colgando de la cabecera, para que abrirlo
+   no cambie el alto de la barra. Si creciera, ajustarAlturaCabecera() en
+   js/main.js empujaría el contenido y la página brincaría al abrir el menú.
+
+   Cerrado se deja con visibility:hidden, no con display:none, por dos razones:
+   así se puede animar la entrada, y así los enlaces salen del orden del
+   tabulador, que con display:none también pasa pero sin transición.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.nav-hamburguesa {
+    display: none;
+    padding: 0.45rem;
+    background: none;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: background 0.15s;
+}
+
+.nav-hamburguesa:hover { background: var(--light-color); }
+
+.nav-hamburguesa:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.nav-hamburguesa-caja {
+    display: block;
+    position: relative;
+    width: 26px;
+    height: 18px;
+}
+
+.nav-hamburguesa-linea {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2.5px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.22s ease, opacity 0.16s ease;
+}
+
+.nav-hamburguesa-linea:nth-child(1) { top: 0; }
+.nav-hamburguesa-linea:nth-child(2) { top: 50%; margin-top: -1.25px; }
+.nav-hamburguesa-linea:nth-child(3) { bottom: 0; }
+
+/* Abierto, las tres rayas se vuelven una tacha. */
+header.menu-abierto .nav-hamburguesa-linea:nth-child(1) {
+    transform: translateY(7.75px) rotate(45deg);
+}
+header.menu-abierto .nav-hamburguesa-linea:nth-child(2) { opacity: 0; }
+header.menu-abierto .nav-hamburguesa-linea:nth-child(3) {
+    transform: translateY(-7.75px) rotate(-45deg);
+}
+
+@media (max-width: 1024px) {
+    .header-container {
+        flex-direction: row;
+        align-items: center;
+        padding: 0.85rem 5%;
+    }
+
+    .nav-hamburguesa { display: block; }
+
+    .nav-tabs {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 0.4rem 0 0.7rem;
+        background: var(--white-color);
+        border-top: 1px solid rgba(15, 33, 62, 0.08);
+        box-shadow: 0 14px 26px rgba(0, 0, 0, 0.12);
+        max-height: calc(100vh - 100%);
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    }
+
+    header.menu-abierto .nav-tabs {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .nav-tabs li { width: 100%; }
+
+    /* Renglones altos, para picarle con el dedo sin fallar. */
+    .nav-tabs a {
+        display: block;
+        padding: 0.85rem 5%;
+        font-size: 1rem;
+    }
+
+    .nav-tabs a:hover,
+    .nav-tabs a:focus-visible { background: var(--light-color); }
+
+    .nav-tabs a.active { background: var(--light-color); }
+
+    /* La rayita de abajo no funciona en una lista vertical: se cambia por una
+       barra a la izquierda del renglón. */
+    .nav-tabs a.active::after {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        height: auto;
+        border-radius: 0 3px 3px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img { width: 124px; }
 }
 
 /* ────────── Diagnóstico 3D - Resultados enriquecidos (relatoría) ────────── */
