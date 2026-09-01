@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260901a';
+const INFO_VERSION = '20260901b';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1336,7 +1336,14 @@ const MODULOS = {
  "EV 00": { "pdf": "infografias/modulos/ev-00.pdf", "titulo": "Evolución de las estructuras económicas y sociales", "laminas": 46 },
  "EV 01": { "pdf": "infografias/modulos/ev-01.pdf", "titulo": "Políticas económicas",                  "laminas": 53 },
  "EV 02": { "pdf": "infografias/modulos/ev-02.pdf", "titulo": "Políticas sociales",                    "laminas": 52 },
- "EV 03": { "pdf": "infografias/modulos/ev-03.pdf", "titulo": "Conciencia social",                     "laminas": 45 }
+ "EV 03": { "pdf": "infografias/modulos/ev-03.pdf", "titulo": "Conciencia social",                     "laminas": 45 },
+ "CP 00": { "pdf": "infografias/modulos/cp-00.pdf", "titulo": "Cambio de paradigmas tecnológicos e ideológicos", "laminas": 36 },
+ "RT 01": { "pdf": "infografias/modulos/rt-01.pdf", "titulo": "Progreso de la humanidad en dos pasos", "laminas": 31 },
+ "RT 02": { "pdf": "infografias/modulos/rt-02.pdf", "titulo": "Batallas tecnológicas del s XX",      "laminas": 29 },
+ "RT 03": { "pdf": "infografias/modulos/rt-03.pdf", "titulo": "Guerras tecnológicas del s XXI",      "laminas": 37 },
+ "RT 04": { "pdf": "infografias/modulos/rt-04.pdf", "titulo": "Convergencia de energía y datos",     "laminas": 22 },
+ "RT 05": { "pdf": "infografias/modulos/rt-05.pdf", "titulo": "El triunfo del algoritmo",             "laminas": 41 },
+ "RT 06": { "pdf": "infografias/modulos/rt-06.pdf", "titulo": "Educación en ciencias",              "laminas": 43 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
