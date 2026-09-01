@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260831a';
+const INFO_VERSION = '20260901a';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1332,7 +1332,11 @@ const MODULOS = {
  "OV 00": { "pdf": "infografias/modulos/ov-00.pdf", "titulo": "Octagrama de valor",                    "laminas": 19 },
  "OC 00": { "pdf": "infografias/modulos/oc-00.pdf", "titulo": "Octagrama cerebral",                    "laminas": 18 },
  "TV 00": { "pdf": "infografias/modulos/tv-00.pdf", "titulo": "Teoría del valor",                      "laminas": 24 },
- "TI 00": { "pdf": "infografias/modulos/ti-00.pdf", "titulo": "Teoría de la Información",               "laminas": 25 }
+ "TI 00": { "pdf": "infografias/modulos/ti-00.pdf", "titulo": "Teoría de la Información",               "laminas": 25 },
+ "EV 00": { "pdf": "infografias/modulos/ev-00.pdf", "titulo": "Evolución de las estructuras económicas y sociales", "laminas": 46 },
+ "EV 01": { "pdf": "infografias/modulos/ev-01.pdf", "titulo": "Políticas económicas",                  "laminas": 53 },
+ "EV 02": { "pdf": "infografias/modulos/ev-02.pdf", "titulo": "Políticas sociales",                    "laminas": 52 },
+ "EV 03": { "pdf": "infografias/modulos/ev-03.pdf", "titulo": "Conciencia social",                     "laminas": 45 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
