@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260902a';
+const INFO_VERSION = '20260902b';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1410,7 +1410,11 @@ let infoTema    = 0;      // índice del tema dentro de la infografía
 let infoLado    = 'pos';  // 'pos' (a color) o 'neg' (con claves)
 
 function infoTotalModulos(inf) {
-    return inf.temas.reduce(function (n, t) { return n + t.claves.length; }, 0);
+    var vistos = {};
+    inf.temas.forEach(function (t) {
+        t.claves.forEach(function (k) { vistos[k.c] = 1; });
+    });
+    return Object.keys(vistos).length;
 }
 
 function infoPlural(n, uno, varios) {
