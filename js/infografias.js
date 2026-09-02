@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260901b';
+const INFO_VERSION = '20260902a';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1343,7 +1343,50 @@ const MODULOS = {
  "RT 03": { "pdf": "infografias/modulos/rt-03.pdf", "titulo": "Guerras tecnológicas del s XXI",      "laminas": 37 },
  "RT 04": { "pdf": "infografias/modulos/rt-04.pdf", "titulo": "Convergencia de energía y datos",     "laminas": 22 },
  "RT 05": { "pdf": "infografias/modulos/rt-05.pdf", "titulo": "El triunfo del algoritmo",             "laminas": 41 },
- "RT 06": { "pdf": "infografias/modulos/rt-06.pdf", "titulo": "Educación en ciencias",              "laminas": 43 }
+ "RT 06": { "pdf": "infografias/modulos/rt-06.pdf", "titulo": "Educación en ciencias",              "laminas": 43 },
+ "CI 01": { "pdf": "infografias/modulos/ci-01.pdf", "titulo": "El drama de la humanidad en tres actos", "laminas": 36 },
+ "CI 02": { "pdf": "infografias/modulos/ci-02.pdf", "titulo": "Familias seculares",                     "laminas": 35 },
+ "CI 03": { "pdf": "infografias/modulos/ci-03.pdf", "titulo": "Proliferación de ideas y creencias",     "laminas": 32 },
+ "CI 04": { "pdf": "infografias/modulos/ci-04.pdf", "titulo": "Nuevo orden mundial",                    "laminas": 43 },
+ "CI 05": { "pdf": "infografias/modulos/ci-05.pdf", "titulo": "Información es poder",                   "laminas": 23 },
+ "ME 00": { "pdf": "infografias/modulos/me-00.pdf", "titulo": "Misión empresarial",                     "laminas": 42 },
+ "ME 01": { "pdf": "infografias/modulos/me-01.pdf", "titulo": "Elemento de la misión: propósito",       "laminas": 31 },
+ "ME 02": { "pdf": "infografias/modulos/me-02.pdf", "titulo": "Elemento de la misión: mandatos",        "laminas": 36 },
+ "PE 00": { "pdf": "infografias/modulos/pe-00.pdf", "titulo": "Principios empresariales",               "laminas": 19 },
+ "PE 01": { "pdf": "infografias/modulos/pe-01.pdf", "titulo": "Capacidad para sobrevivir",              "laminas": 14 },
+ "PE 02": { "pdf": "infografias/modulos/pe-02.pdf", "titulo": "Capacidad para crecer",                  "laminas": 21 },
+ "PE 03": { "pdf": "infografias/modulos/pe-03.pdf", "titulo": "Capacidad para rentar",                  "laminas": 22 },
+ "CE 00": { "pdf": "infografias/modulos/ce-00.pdf", "titulo": "Ciclos empresariales",                   "laminas": 29 },
+ "RV 00": { "pdf": "infografias/modulos/rv-00.pdf", "titulo": "Rastreo del flujo de valor",             "laminas": 55 },
+ "RV 01": { "pdf": "infografias/modulos/rv-01.pdf", "titulo": "Valor segmentado",                       "laminas": 46 },
+ "RV 02": { "pdf": "infografias/modulos/rv-02.pdf", "titulo": "Valor diferenciado",                     "laminas": 21 },
+ "RV 03": { "pdf": "infografias/modulos/rv-03.pdf", "titulo": "Valor prometido",                        "laminas": 40 },
+ "RV 04": { "pdf": "infografias/modulos/rv-04.pdf", "titulo": "Valor suministrado",                     "laminas": 52 },
+ "RV 05": { "pdf": "infografias/modulos/rv-05.pdf", "titulo": "Valor aprovechado",                      "laminas": 32 },
+ "RV 06": { "pdf": "infografias/modulos/rv-06.pdf", "titulo": "Valor capturado",                        "laminas": 52 },
+ "SG 00": { "pdf": "infografias/modulos/sg-00.pdf", "titulo": "Conectores sinérgicos",                  "laminas": 23 },
+ "SG 01": { "pdf": "infografias/modulos/sg-01.pdf", "titulo": "El valor de la innovación",              "laminas": 36 },
+ "SG 02": { "pdf": "infografias/modulos/sg-02.pdf", "titulo": "El valor del prestigio",                 "laminas": 15 },
+ "SG 03": { "pdf": "infografias/modulos/sg-03.pdf", "titulo": "Procesos efectivos",                     "laminas": 40 },
+ "SG 04": { "pdf": "infografias/modulos/sg-04.pdf", "titulo": "Mecánica financiera",                    "laminas": 33 },
+ "TV 01": { "pdf": "infografias/modulos/tv-01.pdf", "titulo": "Propósito universal de las empresas",    "laminas": 42 },
+ "TV 02": { "pdf": "infografias/modulos/tv-02.pdf", "titulo": "Valor primordial",                       "laminas": 40 },
+ "TV 03": { "pdf": "infografias/modulos/tv-03.pdf", "titulo": "Ausencia de valor",                      "laminas": 33 },
+ "TV 04": { "pdf": "infografias/modulos/tv-04.pdf", "titulo": "Valoración de la necesidad",             "laminas": 33 },
+ "TV 05": { "pdf": "infografias/modulos/tv-05.pdf", "titulo": "Valoración del recurso",                 "laminas": 27 },
+ "TV 06": { "pdf": "infografias/modulos/tv-06.pdf", "titulo": "Cuantificación del valor económico",     "laminas": 44 },
+ "TI 01": { "pdf": "infografias/modulos/ti-01.pdf", "titulo": "Acceso a la información",                "laminas": 19 },
+ "TI 02": { "pdf": "infografias/modulos/ti-02.pdf", "titulo": "La nueva división del trabajo",          "laminas": 23 },
+ "TI 03": { "pdf": "infografias/modulos/ti-03.pdf", "titulo": "Veracidad de la información",            "laminas": 20 },
+ "TI 04": { "pdf": "infografias/modulos/ti-04.pdf", "titulo": "Uso de la información",                  "laminas": 38 },
+ "TI 05": { "pdf": "infografias/modulos/ti-05.pdf", "titulo": "La tiranía de las creencias",            "laminas": 29 },
+ "TI 06": { "pdf": "infografias/modulos/ti-06.pdf", "titulo": "Creencias falsas",                       "laminas": 21 },
+ "TE 01": { "pdf": "infografias/modulos/te-01.pdf", "titulo": "Capacidad para realizar un trabajo",     "laminas": 31 },
+ "TE 02": { "pdf": "infografias/modulos/te-02.pdf", "titulo": "Energizando el planeta",                 "laminas": 57 },
+ "TE 03": { "pdf": "infografias/modulos/te-03.pdf", "titulo": "Conversión de los recursos",             "laminas": 41 },
+ "XC 01": { "pdf": "infografias/modulos/xc-01.pdf", "titulo": "Capacidad para sufrir",                  "laminas": 50 },
+ "XC 02": { "pdf": "infografias/modulos/xc-02.pdf", "titulo": "Concientizando el planeta",              "laminas": 41 },
+ "XC 03": { "pdf": "infografias/modulos/xc-03.pdf", "titulo": "La persona consciente",                  "laminas": 39 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
