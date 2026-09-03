@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260903a';
+const INFO_VERSION = '20260903b';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1400,7 +1400,18 @@ const MODULOS = {
  "CV 02": { "pdf": "infografias/modulos/cv-02.pdf", "titulo": "La era de la posverdad",                 "laminas": 31 },
  "CV 03": { "pdf": "infografias/modulos/cv-03.pdf", "titulo": "Pensamiento crítico",                    "laminas": 31 },
  "CV 04": { "pdf": "infografias/modulos/cv-04.pdf", "titulo": "Pensamiento motivado",                   "laminas": 34 },
- "CV 05": { "pdf": "infografias/modulos/cv-05.pdf", "titulo": "Pensamiento científico",                 "laminas": 43 }
+ "CV 05": { "pdf": "infografias/modulos/cv-05.pdf", "titulo": "Pensamiento científico",                 "laminas": 43 },
+ "OV 01": { "pdf": "infografias/modulos/ov-01.pdf", "titulo": "Econograma",                             "laminas": 32 },
+ "OC 01": { "pdf": "infografias/modulos/oc-01.pdf", "titulo": "Sociograma",                             "laminas": 31 },
+ "OC 02": { "pdf": "infografias/modulos/oc-02.pdf", "titulo": "Psicograma",                             "laminas": 41 },
+ "SO 00": { "pdf": "infografias/modulos/so-00.pdf", "titulo": "Sistema organizacional",                 "laminas": 11 },
+ "SO 01": { "pdf": "infografias/modulos/so-01.pdf", "titulo": "Principio de diferenciación",            "laminas": 26 },
+ "SO 02": { "pdf": "infografias/modulos/so-02.pdf", "titulo": "Principio de interdependencia",          "laminas": 37 },
+ "SO 03": { "pdf": "infografias/modulos/so-03.pdf", "titulo": "Principio de auto-organización",         "laminas": 29 },
+ "CO 00": { "pdf": "infografias/modulos/co-00.pdf", "titulo": "Cultura organizacional",                 "laminas": 16 },
+ "CO 01": { "pdf": "infografias/modulos/co-01.pdf", "titulo": "Organización con propósito",             "laminas": 31 },
+ "CO 02": { "pdf": "infografias/modulos/co-02.pdf", "titulo": "Organización altruista",                 "laminas": 35 },
+ "CO 03": { "pdf": "infografias/modulos/co-03.pdf", "titulo": "Organización moral",                     "laminas": 35 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
