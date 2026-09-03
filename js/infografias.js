@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260902b';
+const INFO_VERSION = '20260903a';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1386,7 +1386,21 @@ const MODULOS = {
  "TE 03": { "pdf": "infografias/modulos/te-03.pdf", "titulo": "Conversión de los recursos",             "laminas": 41 },
  "XC 01": { "pdf": "infografias/modulos/xc-01.pdf", "titulo": "Capacidad para sufrir",                  "laminas": 50 },
  "XC 02": { "pdf": "infografias/modulos/xc-02.pdf", "titulo": "Concientizando el planeta",              "laminas": 41 },
- "XC 03": { "pdf": "infografias/modulos/xc-03.pdf", "titulo": "La persona consciente",                  "laminas": 39 }
+ "XC 03": { "pdf": "infografias/modulos/xc-03.pdf", "titulo": "La persona consciente",                  "laminas": 39 },
+ "NC 00": { "pdf": "infografias/modulos/nc-00.pdf", "titulo": "Naturaleza o crianza",                   "laminas": 34 },
+ "NC 01": { "pdf": "infografias/modulos/nc-01.pdf", "titulo": "Capacidad para relacionarse",            "laminas": 32 },
+ "NC 02": { "pdf": "infografias/modulos/nc-02.pdf", "titulo": "Capacidad para aprender",                "laminas": 30 },
+ "NC 03": { "pdf": "infografias/modulos/nc-03.pdf", "titulo": "Capacidad para sufrir",                  "laminas": 47 },
+ "FC 00": { "pdf": "infografias/modulos/fc-00.pdf", "titulo": "Forja del carácter",                     "laminas": 54 },
+ "FC 01": { "pdf": "infografias/modulos/fc-01.pdf", "titulo": "Volición",                               "laminas": 37 },
+ "FC 02": { "pdf": "infografias/modulos/fc-02.pdf", "titulo": "Vitalidad",                              "laminas": 36 },
+ "FC 03": { "pdf": "infografias/modulos/fc-03.pdf", "titulo": "Apaciguamiento",                         "laminas": 33 },
+ "CV 00": { "pdf": "infografias/modulos/cv-00.pdf", "titulo": "Conocimiento verdadero",                 "laminas": 27 },
+ "CV 01": { "pdf": "infografias/modulos/cv-01.pdf", "titulo": "Aprehensión de la realidad",             "laminas": 44 },
+ "CV 02": { "pdf": "infografias/modulos/cv-02.pdf", "titulo": "La era de la posverdad",                 "laminas": 31 },
+ "CV 03": { "pdf": "infografias/modulos/cv-03.pdf", "titulo": "Pensamiento crítico",                    "laminas": 31 },
+ "CV 04": { "pdf": "infografias/modulos/cv-04.pdf", "titulo": "Pensamiento motivado",                   "laminas": 34 },
+ "CV 05": { "pdf": "infografias/modulos/cv-05.pdf", "titulo": "Pensamiento científico",                 "laminas": 43 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
