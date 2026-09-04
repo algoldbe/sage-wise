@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260903b';
+const INFO_VERSION = '20260904a';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1411,7 +1411,19 @@ const MODULOS = {
  "CO 00": { "pdf": "infografias/modulos/co-00.pdf", "titulo": "Cultura organizacional",                 "laminas": 16 },
  "CO 01": { "pdf": "infografias/modulos/co-01.pdf", "titulo": "Organización con propósito",             "laminas": 31 },
  "CO 02": { "pdf": "infografias/modulos/co-02.pdf", "titulo": "Organización altruista",                 "laminas": 35 },
- "CO 03": { "pdf": "infografias/modulos/co-03.pdf", "titulo": "Organización moral",                     "laminas": 35 }
+ "CO 03": { "pdf": "infografias/modulos/co-03.pdf", "titulo": "Organización moral",                     "laminas": 35 },
+ "FE 00": { "pdf": "infografias/modulos/fe-00.pdf", "titulo": "Fenómenos empresariales",               "laminas": 38 },
+ "FE 01": { "pdf": "infografias/modulos/fe-01.pdf", "titulo": "Racionalización",                       "laminas": 24 },
+ "FE 02": { "pdf": "infografias/modulos/fe-02.pdf", "titulo": "Miopía probabilística",                 "laminas": 40 },
+ "FE 03": { "pdf": "infografias/modulos/fe-03.pdf", "titulo": "Sesgos cognitivos",                     "laminas": 25 },
+ "PS 01": { "pdf": "infografias/modulos/ps-01.pdf", "titulo": "Estrategias de cooperación",            "laminas": 20 },
+ "PS 02": { "pdf": "infografias/modulos/ps-02.pdf", "titulo": "Cohesión social",                       "laminas": 28 },
+ "PS 03": { "pdf": "infografias/modulos/ps-03.pdf", "titulo": "Confianza social",                      "laminas": 37 },
+ "PS 04": { "pdf": "infografias/modulos/ps-04.pdf", "titulo": "Teoría de la estupidez humana",         "laminas": 30 },
+ "PS 05": { "pdf": "infografias/modulos/ps-05.pdf", "titulo": "Conformidad social",                    "laminas": 25 },
+ "SE 01": { "pdf": "infografias/modulos/se-01.pdf", "titulo": "Hábitos del pensamiento",               "laminas": 40 },
+ "SE 02": { "pdf": "infografias/modulos/se-02.pdf", "titulo": "Inteligencia empresarial",              "laminas": 27 },
+ "SE 03": { "pdf": "infografias/modulos/se-03.pdf", "titulo": "Inteligencia colectiva",                "laminas": 26 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
