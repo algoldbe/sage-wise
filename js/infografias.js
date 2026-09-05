@@ -1320,7 +1320,7 @@ const INFOGRAFIAS = [
    están en la lista.
    ───────────────────────────────────────────────────────────────────────────── */
 
-const INFO_VERSION = '20260904a';
+const INFO_VERSION = '20260904b';
 
 const MODULOS = {
  "PR 00": { "pdf": "infografias/modulos/pr-00.pdf", "titulo": "Diseño de empresas y organizaciones", "laminas": 29 },
@@ -1423,7 +1423,24 @@ const MODULOS = {
  "PS 05": { "pdf": "infografias/modulos/ps-05.pdf", "titulo": "Conformidad social",                    "laminas": 25 },
  "SE 01": { "pdf": "infografias/modulos/se-01.pdf", "titulo": "Hábitos del pensamiento",               "laminas": 40 },
  "SE 02": { "pdf": "infografias/modulos/se-02.pdf", "titulo": "Inteligencia empresarial",              "laminas": 27 },
- "SE 03": { "pdf": "infografias/modulos/se-03.pdf", "titulo": "Inteligencia colectiva",                "laminas": 26 }
+ "SE 03": { "pdf": "infografias/modulos/se-03.pdf", "titulo": "Inteligencia colectiva",                "laminas": 26 },
+ "MC 00": { "pdf": "infografias/modulos/mc-00.pdf", "titulo": "Modelos conductuales",                  "laminas": 36 },
+ "MC 01": { "pdf": "infografias/modulos/mc-01.pdf", "titulo": "Focalización",                          "laminas": 43 },
+ "MC 02": { "pdf": "infografias/modulos/mc-02.pdf", "titulo": "Determinismo",                          "laminas": 37 },
+ "MC 03": { "pdf": "infografias/modulos/mc-03.pdf", "titulo": "Paciencia",                             "laminas": 18 },
+ "MC 04": { "pdf": "infografias/modulos/mc-04.pdf", "titulo": "Temeridad",                             "laminas": 18 },
+ "RR 00": { "pdf": "infografias/modulos/rr-00.pdf", "titulo": "Relaciones de reciprocidad",            "laminas": 26 },
+ "RR 01": { "pdf": "infografias/modulos/rr-01.pdf", "titulo": "Colaboración para el comercio",         "laminas": 22 },
+ "RR 02": { "pdf": "infografias/modulos/rr-02.pdf", "titulo": "Colaboración para la sinergia",         "laminas": 38 },
+ "RC 00": { "pdf": "infografias/modulos/rc-00.pdf", "titulo": "Relaciones de civilidad",               "laminas": 19 },
+ "RC 01": { "pdf": "infografias/modulos/rc-01.pdf", "titulo": "Condición de igualdad",                 "laminas": 17 },
+ "RC 02": { "pdf": "infografias/modulos/rc-02.pdf", "titulo": "Condición de libertad",                 "laminas": 23 },
+ "RC 03": { "pdf": "infografias/modulos/rc-03.pdf", "titulo": "Condición de justicia",                 "laminas": 20 },
+ "RP 00": { "pdf": "infografias/modulos/rp-00.pdf", "titulo": "Relaciones de autoridad",               "laminas": 22 },
+ "RP 01": { "pdf": "infografias/modulos/rp-01.pdf", "titulo": "El problema del poder",                 "laminas": 22 },
+ "RP 02": { "pdf": "infografias/modulos/rp-02.pdf", "titulo": "Liderazgos extremos",                   "laminas": 24 },
+ "RP 03": { "pdf": "infografias/modulos/rp-03.pdf", "titulo": "Liderazgo transformador",               "laminas": 31 },
+ "RP 04": { "pdf": "infografias/modulos/rp-04.pdf", "titulo": "Liderazgo para la colaboración",        "laminas": 25 }
 };
 
 /* Cuántos módulos de un tema ya se pueden abrir. */
